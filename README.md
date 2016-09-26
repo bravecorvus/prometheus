@@ -25,7 +25,7 @@ hberg32 has already successfully implemented some of the code as well as the har
 My plan is to improve on his code as well as add the alarm remote capabilities in order create the Atomic Alarm Clock. At the same time, I have worked in implementing a software-hardware solution in a previous class which I entirely wrote in C++. However, this time, I am exited to be able to use the extensive Python libraries to make this a full project.
 
 ###Contact
-Feel free to contact me at (mailto:leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
+Feel free to contact me at (leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
 
 
 ###Special Thanks
