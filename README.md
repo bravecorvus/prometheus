@@ -27,6 +27,8 @@ My plan is to improve on his code as well as add the alarm remote capabilities i
 ###Contact
 Feel free to contact me at (leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
 
+###Note:
+Everything under the pialarm directory is the work of hberg32. I am currently in the process of reading through his code to adapt my own modifications on it.
 
 ###Special Thanks
 It goes without saying that the real work was done by hberg32, and I am just making improvements to what is already a amazing project.
