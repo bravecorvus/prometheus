@@ -13,7 +13,7 @@ Just to make things easier,
 The default cat_installer shell script file did not install the correct profiles and I needed to execute this file, use the outputs, and manually configure the configuration files. I am compiling this information for anyone who is having trouble connecting a single-board computer to the St. Olaf Eduroam Network specifically, or your eduroam network.
 
 
-## First Cycle of Installation (Forcing a Failed Script to generate the necessary configuration files)
+## First Cycle of Installation (Causing a failed script execution to generate the necessary configuration files)
 
 Basically, this is splitting the process into two parts. 1st, we will purposefully cause a failed eduroam installation in order to generate the necessary .pem key file and the correct wpa_supplicant.
 
