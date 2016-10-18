@@ -24,6 +24,11 @@ hberg32 has already successfully implemented some of the code as well as the har
 
 My plan is to improve on his code as well as add the alarm remote capabilities in order create the Atomic Alarm Clock. At the same time, I have worked in implementing a software-hardware solution in a previous class which I entirely wrote in C++. However, this time, I am exited to be able to use the extensive Python libraries to make this a full project.
 
+###Where's My WiFi?
+Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
+
+[Setting Up RPi to work with Eduroam](SetUpEduroamOnPi.md)
+
 ###Contact
 Feel free to contact me at (leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
 
