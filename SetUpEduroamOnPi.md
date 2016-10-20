@@ -42,7 +42,15 @@ Now the failed runthrough of the script generated the wpa_supplicant profile tha
 
 You will see 2 files in there: ca.pem and cat_installer.conf. Copy these files into a directory of your choice that you will remember later. Basically, even the next step of successfully installing the eduroam profile will not allow you to connect to the internet since the script fails to change some key configuration files.
 
+Create a new directory in root called .cat_installer, and copy the ca.pem key file in there.
+
+    cd /root
+    mkdir .cat_installer
+    cp /path-to-ca.pem /root/.cat_installer.ca.pem
+
+
 Next, we will do the successful installation of the network profile for eduroam
+
 
 
 ## Second Installation Cycle (Successful)
@@ -55,6 +63,19 @@ Before doing anything, install the following utilities in your linux distributio
     apt-get install re
     apt-get install uuid
     apt-get install network-manager
+
+### Modify NetworkManager.conf So it is the Default Controller for Wifi
+
+   nano /etc/NetworkManager/NetworkManager.conf
+
+   [main]
+   plugins=ifupdown.keyfile
+
+   [ifupdown]
+   managed=true
+
+Where is sas "managed=false", replace with "managed=true"
+
 
 ### Execute the CAT_INSTALLER Shell Script Again (This Time, it Will Run Successfully)
 
@@ -77,7 +98,7 @@ Leaving the top part as is
 
 remove the rest of the various network configurations
 
-copy and paste the information stored in cat_installer.conf into the wpa_supplicant.conf
+copy and paste the information stored in cat_installer.conf into the wpa_supplicant.confhow t
 
 Your final code should look something like this:
 
