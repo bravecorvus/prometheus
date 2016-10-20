@@ -112,12 +112,12 @@ By default, there is alot of stuff enabled.
 Now go through and comment out every line of the text by putting a "#" in front of each line. (we will comment out rather than delete just in case we need to reset everything)
 
 At the bottom, paste the following code:
-auto wlan0
-allow-hotplug wlan0
-iface wlan0 inet dhcp
-        wpa-ssid eduroam
-        pre-up wpa_supplicant -B -Dwext -i wlan0 -c/etc/w$
-        post-down killall -q wpa_supplicant
+    auto wlan0
+    allow-hotplug wlan0
+    iface wlan0 inet dhcp
+            wpa-ssid eduroam
+            pre-up wpa_supplicant -B -Dwext -i wlan0 -c/etc/w$
+            post-down killall -q wpa_supplicant
 
 ## Restart Machine
 
