@@ -46,7 +46,7 @@ Create a new directory in root called .cat_installer, and copy the ca.pem key fi
 
     cd /root
     mkdir .cat_installer
-    cp /path-to-ca.pem /root/.cat_installer.ca.pem
+    cp /path-to-ca.pem /root/.cat_installer/ca.pem
 
 
 Next, we will do the successful installation of the network profile for eduroam
@@ -145,6 +145,19 @@ At the bottom, paste the following code:
 
 Finally, restart the machine. At this point, you should see your machine as connected to eduroam
 
+If you are still stuck with no luck with connecting to eduroam, here is when the trial and error comes in. Basically, you will be editing 3 files:
+    /etc/network/interfaces
+    /etc/NetworkManager/NetworkManager.conf
+    /etc/wpa_supplicant/wpa_supplicant.conf
+
+So open them up using your favorite editor, then also have a spare Terminal open on the root user.
+
+Basically, using the picture I have down below, edit the various file settings. (Note: You should always create backup copies of any files before you edit them so you can replace the new one if it really screws up your settings)
+
+Every time you edit a file and save it, you will run the following command
+    systemctl daemon-reload
+    /etc/init.d/networking restart
+
 ## Fixing System Time
 
 After you restart there is just one more step. Because the Pi does not come with a built in internal clock, the system date/time values will be so off that you will not be able to connect to the internet. (Which means you can't connect to an NTP server to update your time)
@@ -152,6 +165,7 @@ After you restart there is just one more step. Because the Pi does not come with
 Therefore, manually change your time to the correct time. After this, you should be able to connect to the internet without an issue.
 
 Don't forget to remove the eduroam-linux-SOC.sh. We gave it 777 permissions (out of laziness) so after you get connected, you definitely don't want to leave this file around.
+
 
 ## Here is my current setup for reference
 ![Correct Set Up](assets/Confi.png)
