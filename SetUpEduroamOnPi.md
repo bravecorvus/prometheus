@@ -152,3 +152,6 @@ After you restart there is just one more step. Because the Pi does not come with
 Therefore, manually change your time to the correct time. After this, you should be able to connect to the internet without an issue.
 
 Don't forget to remove the eduroam-linux-SOC.sh. We gave it 777 permissions (out of laziness) so after you get connected, you definitely don't want to leave this file around.
+
+## Here is my current setup for reference
+![Correct Set Up](assets/Confi.png)
