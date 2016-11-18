@@ -4,7 +4,7 @@ from pygame.mixer import Sound
 
 pygame.mixer.init()
 
-drum= Sound("samples/panic_cord.wav")
+panic_cord = Sound("samples/panic_cord.wav")
 
 while True:
-    drum.play()
+    panic_cord.play()
