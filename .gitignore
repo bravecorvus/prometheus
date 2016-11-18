@@ -1,6 +1,7 @@
 PrivateCommands.txt
-pihomefuse
-projectfolderfuse
+pihomefuse/
+piatomicclockprojectfuse/
 AtomicClock.sublime-project
 AtomicClock.sublime-workspace
 .DS_Store
+Mounting.txt
