@@ -2,7 +2,7 @@
 import pygame.mixer
 from pygame.mixer import Sound
 
-pygame.mixer.init()
+# pygame.mixer.init()
 
 panic_cord = Sound("/home/pi/Projects/AtomicClock/source/samples/panic_cord.wav")
 
