@@ -19,7 +19,6 @@ GPIO.setup(23, GPIO.OUT)
 # alarms = []
 # inBedVal = 0
 # lastBedCheckTime = 0
-GPIO.cleanup()
 while True:
     userinput = input("On or Off")
     if userinput == "On":
