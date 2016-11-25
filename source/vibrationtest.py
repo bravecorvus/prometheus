@@ -7,7 +7,7 @@ import signal
 import sys
 from subprocess import call
 
-# GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BCM)
 # GPIO.setup(25, GPIO.IN)
 # GPIO.setup(22, GPIO.OUT)
 # GPIO.setup(23, GPIO.OUT)
