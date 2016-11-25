@@ -20,5 +20,5 @@ GPIO.setup(23, GPIO.OUT)
 # inBedVal = 0
 # lastBedCheckTime = 0
 
-while True:
-    GPIO.output(23, 0)
+# while True:
+GPIO.output(23, 1)
