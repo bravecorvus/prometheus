@@ -15,9 +15,9 @@ GPIO.setup(23, GPIO.OUT)
 while True:
     userinput = input("on or off\n")
     if userinput == "on":
-        GPIO.output(23, 1)
+        GPIO.output(23, True)
     elif userinput == "off":
-        GPIO.output(23, 0)
+        GPIO.output(23, False)
     else:
         break
 
