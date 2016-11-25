@@ -20,10 +20,10 @@ GPIO.setup(23, GPIO.OUT)
 # inBedVal = 0
 # lastBedCheckTime = 0
 while True:
-    userinput = input("On or Off")
-    if userinput == "On":
+    userinput = input("on or off\n")
+    if userinput == "on":
         GPIO.output(23, 1)
-    elif userinput == "Off":
+    elif userinput == "off":
         GPIO.output(23, 0)
     
 
