@@ -3,7 +3,6 @@ import time
 import datetime
 from pygame.locals import *
 import RPi.GPIO as GPIO
-from Adafruit_ADS1x15 import ADS1x15
 import signal
 import sys
 from subprocess import call
