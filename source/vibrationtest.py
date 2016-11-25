@@ -7,10 +7,10 @@ import signal
 import sys
 from subprocess import call
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(25, GPIO.IN)
-GPIO.setup(22, GPIO.OUT)
-GPIO.setup(23, GPIO.OUT)
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(25, GPIO.IN)
+# GPIO.setup(22, GPIO.OUT)
+# GPIO.setup(23, GPIO.OUT)
 
 # signal.signal(signal.SIGTERM, shutdown)
 # signal.signal(signal.SIGHUP, hup)
