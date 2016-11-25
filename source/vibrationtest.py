@@ -25,6 +25,7 @@ while True:
         GPIO.output(23, 1)
     elif userinput == "off":
         GPIO.output(23, 0)
-    
+    else:
+        break
 
 GPIO.cleanup()
