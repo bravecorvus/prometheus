@@ -7,16 +7,12 @@ $.getJSON( "alarm1.json", function( data ) {
     var alarm1sound = items[2];
     var alarm1vibration = items[3];
     document.getElementById("tit1").innerHTML = "<h1>"+alarm1time+"</h1>";
-    if(alarm1sound == "on") {
-        sound1toggleOn();
-    } else {
-        sound1toggleOff();
+    if(alarm1sound != "on") {
+        document.getElementById('sound1').click();
     }
-    if(alarm1vibration == "on") {
-        vibration1toggleOn();
-    } else {
-        vibration1toggleOff();
-    }
+    if(alarm1vibration != "on") {
+        document.getElementById('vibration1').click();
+    } 
 });
 
 
@@ -29,16 +25,12 @@ $.getJSON( "alarm2.json", function( data ) {
     var alarm2sound = items[2];
     var alarm2vibration = items[3];
     document.getElementById("tit2").innerHTML = "<h1>"+alarm2time+"</h1>";
-    if(alarm2sound == "on") {
-        sound2toggleOn();
-    } else {
-        sound2toggleOff();
-    }
-    if(alarm2vibration == "on") {
-        vibration2toggleOn();
-    } else {
-        vibration2toggleOff();
-    }
+    if(alarm2sound != "on") {
+        document.getElementById('sound2').click();
+    } 
+    if(alarm2vibration != "on") {
+        document.getElementById('vibration2').click();
+    } 
 });
 
 $.getJSON( "alarm3.json", function( data ) {
@@ -50,16 +42,12 @@ $.getJSON( "alarm3.json", function( data ) {
     var alarm3sound = items[2];
     var alarm3vibration = items[3];
     document.getElementById("tit3").innerHTML = "<h1>"+alarm3time+"</h1>";
-    if(alarm3sound == "on") {
-        sound3toggleOn();
-    } else {
-        sound3toggleOff();
-    }
-    if(alarm3vibration == "on") {
-        vibration3toggleOn();
-    } else {
-        vibration3toggleOff();
-    }
+    if(alarm3sound != "on") {
+        document.getElementById('sound3').click();
+    } 
+    if(alarm3vibration != "on") {
+        document.getElementById('vibration3').click();
+    } 
 });
 
 $.getJSON( "alarm4.json", function( data ) {
@@ -71,16 +59,12 @@ $.getJSON( "alarm4.json", function( data ) {
     var alarm4sound = items[2];
     var alarm4vibration = items[3];
     document.getElementById("tit4").innerHTML = "<h1>"+alarm4time+"</h1>";
-    if(alarm4sound == "on") {
-        sound4toggleOn();
-    } else {
-        sound4toggleOff();
-    }
-    if(alarm4vibration == "on") {
-        vibration4toggleOn();
-    } else {
-        vibration4toggleOff();
-    }
+    if(alarm4sound != "on") {
+        document.getElementById('sound4').click();
+    } 
+    if(alarm4vibration != "on") {
+        document.getElementById('vibration4').click();
+    } 
 });
 
 
@@ -136,7 +120,6 @@ function update_alarm3() {
 
 function update_alarm4() {
         var t = document.getElementById('mytime4').value;
-        // var s = document.getElementById('sound4').value;
         if($('#sound4:checked').val()==null) {
             var s = "off";
         } else {
