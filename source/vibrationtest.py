@@ -1,7 +1,4 @@
-import pygame
-import time
-import datetime
-from pygame.locals import *
+# python3 vibrationtest.py
 import RPi.GPIO as GPIO
 import signal
 import sys
