@@ -14,32 +14,48 @@ The idea was to have a clock that does everything. The 3 main things I want to i
 
 
 
-###Extra
-4) Display time using nixie cathode tubes.
+##Implementation
 
-###Implementation
-hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. My project however, will include a web framework of some sort to be able to pass the remote alarm commands into the main program. At the same time, I am really excited to implement a nixie tube clock to top it all off.
+###Inspiration
+hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. His original code as well as his original schematic is contained in the hberg32 directory of this repo. His project can be found at: [Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock).
 
-[Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock)
-
-My plan is to improve on his code as well as add the alarm remote capabilities in order create the Atomic Alarm Clock. At the same time, I have worked in implementing a software-hardware solution in a previous class which I entirely wrote in C++. However, this time, I am exited to be able to use the extensive Python libraries to make this a full project.
-
-
-The following chart describes the various classes, methods, and variables I would need to implement the AtomicClock program.
-
+###Implementation Plan
+I plan to implement the project in the following way. However, the project is liable to change.
 ![Implementation Diagram](assets/implementation.jpg)
 
+###Hardware
+hberg32 has been very helpful in setting up the hardware for this projecct. His schematic can be found at [Merciless Pi Alarm Schematic](hberg32/PiAlarm.fzz). The schematics of my project can be found at [Atomic Clock Schematic](/assets/AtomicClockSchematic.fzz).
 
-###Where's My WiFi?
+A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power source separate from the rest of the Atomic Clock. The rest of my Project is powered by a 12V @ 2000mA DC Power source, which powers both the Nixie Clock and the Bed Shaker.
+
+###Remote Control Functionality
+I plan to run a light-weight Django web server on the Raspberry Pi which can be accessed through the intranet. Django will serve a simple HTML form as the Graphical User Interface, 4 JSON files which hold the data for the 4 alarms, Javascript file, and a Stylesheet file. (found under source/webinterface/) At the point the HTML document loads, the Javascript file hotswaps the values of the various headings and forms to match those stored in the JSON files. In addition, when a form is filled out and submitted, Django will update the JSON files with the new submited information.
+
+A mockup of the web interface can be found here: [Web Interface Mockup](http://andrewshinsuke.me/alarm)
+Although it displays the information based on the JSON files:
+[Configuration for Alarm #1](http://andrewshinsuke.me/alarm/alarm1.json)
+[Configuration for Alarm #2](http://andrewshinsuke.me/alarm/alarm2.json)
+[Configuration for Alarm #3](http://andrewshinsuke.me/alarm/alarm3.json)
+[Configuration for Alarm #4](http://andrewshinsuke.me/alarm/alarm4.json)
+This configuration is only for display, and needs to be running on the Django server to have the Configuration update functionality (edit the values of the JSON files when submitted)
+
+I used the following technologies to make this website:
+The HTML is losely based on Gokul S Krishnan's [simple_alarm](https://github.com/gsk1692/simple_alarm).
+I used [Bootstrap Toggle](www.bootstraptoggle.com) for easily coded buttons.
+[Bootstrap](getbootstrap.com) itself was necessary to use Bootstrap Toggle.
+[jQuery](http://jquery.com/) is a dependency of Bootstrap.
+[Django Web Server](https://www.djangoproject.com/) provides the RESTful services needed to run the UI.
+
+###[Main Alarm Logic](source/main.py)
+Although it isn't complete, I will be running a separate main program which will have a constantly updating the values from the JSON configuration files that the user updates via the Web Interface GUI. Depending on if the Sound/Vibration functionality is turned on or off, it will play the [alarm song](source/samples/alarm.wav) via the pygame library (outputting the sound to my mean soundsystem) and/or turn on the bed vibrator via GPIO signal.
+
+##Where's My WiFi?
 Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
 
 [Setting Up RPi to work with Eduroam](SetUpEduroamOnPi.md)
 
-###Contact
+##Contact
 Feel free to contact me at (leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
 
-###Note:
-Everything under the hberg32/ directory is the work of hberg32. I am currently in the process of reading through his code to adapt my own modifications on it.
-
-###Special Thanks
+##Special Thanks
 It goes without saying that the real work was done by hberg32, and I am just making improvements to what is already a amazing project.

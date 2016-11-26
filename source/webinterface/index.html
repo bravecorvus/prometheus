@@ -1,0 +1,194 @@
+<!--Andrew Lee 2016-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ALARM</title>
+    <script src="jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="alarm.js"></script>    
+</head>
+<body>
+
+<script>
+  function sound1toggleOn() {
+    $('#sound1').bootstrapToggle('on');
+  }
+  function sound1toggleOff() {
+    $('#sound1').bootstrapToggle('off');  
+  }
+  function vibration1toggleOn() {
+    $('#vibration1').bootstrapToggle('on');
+  }
+  function vibration1toggleOff() {
+    $('#vibration1').bootstrapToggle('off');  
+  }
+  function sound2toggleOn() {
+    $('#sound2').bootstrapToggle('on');
+  }
+  function sound2toggleOff() {
+    $('#sound2').bootstrapToggle('off');  
+  }
+  function vibration2toggleOn() {
+    $('#vibration2').bootstrapToggle('on');
+  }
+  function vibration2toggleOff() {
+    $('#vibration2').bootstrapToggle('off');  
+  }
+  function sound3toggleOn() {
+    $('#sound3').bootstrapToggle('on');
+  }
+  function sound3toggleOff() {
+    $('#sound3').bootstrapToggle('off');  
+  }
+  function vibration3toggleOn() {
+    $('#vibration3').bootstrapToggle('on');
+  }
+  function vibration3toggleOff() {
+    $('#vibration3').bootstrapToggle('off');  
+  }
+  function sound4toggleOn() {
+    $('#sound4').bootstrapToggle('on');
+  }
+  function sound4toggleOff() {
+    $('#sound4').bootstrapToggle('off');  
+  }
+  function vibration4toggleOn() {
+    $('#vibration4').bootstrapToggle('on');
+  }
+  function vibration4toggleOff() {
+    $('#vibration4').bootstrapToggle('off');  
+  }
+</script>
+
+    <div id="main">
+      <div id="alarm1">
+        <h1 id="tit1">ALARM 1</h1>
+        <br>
+        <label>Enter Time: </label>
+        <input type="time" id="mytime1"></input>
+        <br>
+
+          <div class="checkbox">
+            <style>
+              .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+              .toggle.ios .toggle-handle { border-radius: 20px; }
+            </style>
+            <label>
+              <input id="sound1" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+              Sound
+            </label>
+          </div>
+          <div class="checkbox">
+            <style>
+              .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+              .toggle.ios .toggle-handle { border-radius: 20px; }
+            </style>
+            <label>
+              <input id="vibration1" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+              Vibration
+            </label>
+            <button class="submit" onclick="update_alarm1();">Submit</button>
+          </div>
+      </div>
+
+      <div id="alarm2">
+          <h1 id="tit2">ALARM 2</h1>
+          <br>
+          <label>Enter Time: </label>
+          <input type="time" id="mytime2"></input>
+          <br>
+
+          <div class="checkbox">
+            <style>
+              .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+              .toggle.ios .toggle-handle { border-radius: 20px; }
+            </style>
+            <label>
+              <input id="sound2" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+              Sound
+            </label>
+          </div>
+          <div class="checkbox">
+            <style>
+              .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+              .toggle.ios .toggle-handle { border-radius: 20px; }
+            </style>
+            <label>
+              <input id="vibration2" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+              Vibration
+            </label>
+            <button class="submit" onclick="update_alarm2();">Submit</button>
+          </div>
+      </div>
+
+      <div id="alarm3">
+        <h1 id="tit3">ALARM 3</h1>
+        <br>
+        <label>Enter Time: </label>
+        <input type="time" id="mytime3"></input>
+        <br>
+
+        <div class="checkbox">
+              <style>
+                .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+                .toggle.ios .toggle-handle { border-radius: 20px; }
+              </style>
+              <label>
+                <input id="sound3" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+                Sound
+              </label>
+            </div>
+            <div class="checkbox">
+              <style>
+                .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+                .toggle.ios .toggle-handle { border-radius: 20px; }
+              </style>
+              <label>
+                <input id="vibration3" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+                Vibration
+              </label>
+              <button class="submit" onclick="update_alarm3();">Submit</button>
+            </div>
+      </div>
+
+      <div id="alarm4">
+        <h1 id="tit4">ALARM 4</h1>
+        <br>
+        <label>Enter Time: </label>
+        <input type="time" id="mytime4"></input>
+        <br>
+        <div class="checkbox">
+              <style>
+                .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+                .toggle.ios .toggle-handle { border-radius: 20px; }
+              </style>
+              <label>
+                <input id="sound4" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+                Sound
+              </label>
+            </div>
+            <div class="checkbox">
+              <style>
+                .toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+                .toggle.ios .toggle-handle { border-radius: 20px; }
+              </style>
+              <label>
+                <input id="vibration4" type="checkbox" checked data-toggle="toggle" data-style="ios" data-onstyle="success">
+                Vibration
+              </label>
+              <button class="submit" onclick="update_alarm2();">Submit</button>
+          </div>
+    </div>
+
+</body>
+
+</html>

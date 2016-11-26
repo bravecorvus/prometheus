@@ -2,6 +2,19 @@ body {
     font-family: -apple-system, AppleSDGothicNeo-Regular;
 }
 
+#main {
+  column-count: 2;
+  padding:  54px 0px 54px 0px;
+}
+
+#alarm1, #alarm2, #alarm3, #alarm4 {
+  height: 100%;
+  width: auto;
+  margin:  -10px 0px 0px 0px;
+  padding:   0px 0px 40px 0px;
+  
+}
+
 .switch {
   position: relative;
   display: inline-block;
@@ -61,8 +74,8 @@ input:checked + .slider:before {
 }
 
 button {
-    padding: 15px 25px;
-    font-size: 24px;
+    padding: 7px 12px;
+    font-size: 12px;
     text-align: center;
     cursor: pointer;
     outline: none;
