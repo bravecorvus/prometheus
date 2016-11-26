@@ -6,18 +6,16 @@
 
 The idea was to have a clock that does everything. The 3 main things I want to integrate in this project are:
 
-1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roomate
+1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roomate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system.
 
-2) Utilize the Bluetooth capabilities of my Pi to utilize it as a Bluetooth audio receiver, which would then output to my speakers.
+2) Utilize the Bluetooth capabilities of my Pi to utilize it as a Bluetooth audio receiver, which would then output to my speakers (Making my Pi run a media receiver).
 
-3) A way to set the alarm via my phone. (Whether through internet triggerring applications such as IFFFT, or HomeKit RPi hacks has yet to be determined).
-
-
+3) A way to set the alarm via my phone, iPad, or Browser through a polished and intuitive web-interface.
 
 ##Implementation
 
 ###Inspiration
-hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. His original code as well as his original schematic is contained in the hberg32 directory of this repo. His project can be found at: [Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock).
+hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. His original code as well as his original schematic is contained in the [hberg32](https://github.com/gilgameshskytrooper/AtomicClock/tree/master/hberg32) directory of this repo. His project can be found at: [Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock).
 
 ###Implementation Plan
 I plan to implement the project in the following way. However, the project is liable to change.
