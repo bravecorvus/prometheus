@@ -4,13 +4,11 @@ body {
 
 #main {
   column-count: 2;
-  padding:  54px 0px 54px 0px;
 }
 
 #alarm1, #alarm2, #alarm3, #alarm4 {
-  width: auto;
-  margin:  -10px 20px 0px 20px;
-  padding:   0px 0px 40px 0px;
+  margin:  -20px 0px 0px 0px;
+  padding:  0px 0px 0px 0px;
   
 }
 
@@ -30,13 +28,10 @@ button {
     background-color: #4CAF50;
     border: none;
     border-radius: 15px;
-    box-shadow: 0 9px #999;
 }
 
 button:hover {background-color: #3e8e41}
 
 button:active {
   background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
 }
