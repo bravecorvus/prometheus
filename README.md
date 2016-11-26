@@ -6,7 +6,7 @@
 
 The idea was to have a clock that does everything. The 3 main things I want to integrate in this project are:
 
-1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roomate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system.
+1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roommate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system.
 
 2) Utilize the Bluetooth capabilities of my Pi to utilize it as a Bluetooth audio receiver, which would then output to my speakers (Making my Pi run a media receiver).
 
@@ -38,14 +38,14 @@ Although it displays the information based on the JSON files:
 This configuration is only for display, and needs to be running on the Django server to have the Configuration update functionality (edit the values of the JSON files when submitted)
 
 I used the following technologies to make this website:
-The HTML is losely based on Gokul S Krishnan's [simple_alarm](https://github.com/gsk1692/simple_alarm).
+The HTML is loosely based on Gokul S Krishnan's [simple_alarm](https://github.com/gsk1692/simple_alarm).
 I used [Bootstrap Toggle](www.bootstraptoggle.com) for easily coded buttons.
 [Bootstrap](getbootstrap.com) itself was necessary to use Bootstrap Toggle.
 [jQuery](http://jquery.com/) is a dependency of Bootstrap.
 [Django Web Server](https://www.djangoproject.com/) provides the RESTful services needed to run the UI.
 
 ###[Main Alarm Logic](source/main.py)
-Although it isn't complete, I will be running a separate main program which will have a constantly updating the values from the JSON configuration files that the user updates via the Web Interface GUI. Depending on if the Sound/Vibration functionality is turned on or off, it will play the [alarm song](source/samples/alarm.wav) via the pygame library (outputting the sound to my mean soundsystem) and/or turn on the bed vibrator via GPIO signal.
+Although it isn't complete, I will be running a separate main program which will have a constantly updating the values from the JSON configuration files that the user updates via the Web Interface GUI. Depending on if the Sound/Vibration functionality is turned on or off, it will play the [alarm song](source/samples/alarm.wav) via the pygame library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal.
 
 ##Where's My WiFi?
 Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
@@ -56,4 +56,6 @@ Because my school happens to disable ssh and VNC connections for users on the gu
 Feel free to contact me at (leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
 
 ##Special Thanks
-It goes without saying that the real work was done by hberg32, and I am just making improvements to what is already a amazing project.
+hberg32 was super helpful in helping this project become what it is today. I would not even know where to start to build such an alarm clock without his guidance.
+
+Also, AFCH from [GRA & AFCH](https://github.com/afch) who produces the nixie clock kit I bought was also monumental in helping me modify his Arduino Sketch and to add serial USB communication functionality between the Pi and the Clock.
