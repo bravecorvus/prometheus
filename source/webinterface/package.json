@@ -1,0 +1,30 @@
+{
+  "name": "atomicclockui",
+  "version": "1.0.0",
+  "description": "The Web Server which allows users to remotely control This alarm clock from any browser capable machine",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gilgameshskytrooper/Atomic-Clock-UI.git"
+  },
+  "keywords": [
+    "RaspberryPi",
+    "ExpressNode",
+    "JSON"
+  ],
+  "author": "Andrew Lee (gilgameshskytrooper)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gilgameshskytrooper/Atomic-Clock-UI/issues"
+  },
+  "homepage": "https://github.com/gilgameshskytrooper/Atomic-Clock-UI#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "jsonfile": "^2.4.0"
+  }
+}
