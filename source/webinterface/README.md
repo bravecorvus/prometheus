@@ -56,6 +56,11 @@ If you are not running the server for the first time, you will need to add the `
 > sudo forever start -a server.js
 ```
 
-To test your server, use any device with a web browser and connect to [111.111.111:3000](111.111.111:3000) (where 111.111.111 is the IP of your Pi. If you don't know this value, go to your Pi and run ```sudo ifconfig```. It will be the value listed as inet addr:)
+To test your server, use any device with a web browser and connect to [111.111.111:3000](111.111.111:3000) (where 111.111.111 is the IP of your Pi. If you don't know this value, go to your Pi and run ```sudo ifconfig```. It will be the value listed as inet addr:). **Make sure you add ":3000" after the address in the browser as this specifies you will be sending the get request to port 3000 of your Pi**
 
 Congratulations, you now have a fully functional Atomic Clock User Interface.
+
+###How it all works
+When the requested the root [111.111.111:3000](111.111.111:3000), it will send [index.html](/public/index.html), it loads it from the alarm configuration files: [alarm1.json](/public/json/alarm1.json), [alarm2.json](/public/json/alarm2.json), [alarm3.json](/public/json/alarm3.json), and [alarm4.json](/public/json/alarm4.json).
+
+When the user fills out the form, it will update the configuration files and reload the page. **Note: You cannot send the form from the [index.html link](/public/index.html), you must use the [111.111.111:3000](111.111.111:3000)**

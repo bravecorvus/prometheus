@@ -1,13 +1,20 @@
+#displayoff {
+  display: none;
+}
+
 body {
+    border-color: transparent;
     font-family: -apple-system, AppleSDGothicNeo-Regular;
 }
 form {
+  border-color: transparent;
   border: 0px, 0px, 0px, 0px;
-  margin: 0px, 0px, 0px, 0px;
-  padding: 0px, 0px, 0px, 0px;
+  margin: 40px, 0px, 40px, 0px;
+  padding: 40px, 0px, 40px, 0px;
 }
 
 fieldset {
+  border-color: transparent;
   border: 0px, 0px, 0px, 0px;
   margin: 0px, 0px, 0px, 0px;
   padding: 0px, 0px, 0px, 0px;
@@ -15,6 +22,8 @@ fieldset {
 
 #main {
   column-count: 2;
+  padding: 40px, 0px, 40px, 0px;
+  margin: 40px, 0px, 40px, 0px;
 }
 
 #alarm1, #alarm2, #alarm3, #alarm4 {
