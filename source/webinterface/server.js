@@ -85,27 +85,6 @@ app.post(
       } else {
       	var vibration4 = "off";
       }
-     // if (!req.body.isValid) {
-     //   // Handle errors 
-     //   console.log(req.body.errors);
- 
-     // } else {
-       // Or, use filtered body data from the body object: 
-		console.log(mytime1);
-		console.log(sound1);
-		console.log(vibration1);
-		console.log(mytime2);
-		console.log(sound2);
-		console.log(vibration2);
-		console.log(mytime3);
-		console.log(sound3);
-		console.log(vibration3);
-		console.log(mytime4);
-		console.log(sound4);
-		console.log(vibration4);
-     // }
-
-
 	var newalarm1 = {"id":"alarm1", "time":mytime1, "sound":sound1, "vibration":vibration1};
 	var newalarm2 = {"id":"alarm2", "time":mytime2, "sound":sound2, "vibration":vibration2};
 	var newalarm3 = {"id":"alarm3", "time":mytime3, "sound":sound3, "vibration":vibration3};
