@@ -22,11 +22,18 @@ I plan to implement the project in the following way. However, the project is li
 ![Implementation Diagram](assets/implementation.jpg)
 
 ###Hardware
-hberg32 has been very helpful in setting up the hardware for this projecct. His schematic can be found at [Merciless Pi Alarm Schematic](hberg32/PiAlarm.fzz). The schematics of my project can be found at [Atomic Clock Schematic](/assets/AtomicClockSchematic.fzz).
+The hardware in this project is heavily based on hberg32's schematics, which can be found at [Merciless Pi Alarm Schematic](hberg32/PiAlarm.fzz). The schematics of my project can be found at [Atomic Clock Schematic](/assets/AtomicClockSchematic.fzz).
 
 A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power source separate from the rest of the Atomic Clock. The rest of my Project is powered by a 12V @ 2000mA DC Power source, which powers both the Nixie Clock and the Bed Shaker.
 
+As of now, the DC power goes though the breadoard, and goes to both the Nixie Clock, (via a custom barrel plug to breadboard wire I made) as well as a L293D which draws a consistant amount from the main circuit to ensure the clock receives enough V's and the Bed Shaker doesn't fry from too much.
+
+[!Custom Wire](/assets/barrelplugwire.jpeg)
+
+
 ###[Remote Control Functionality](/source/webinterface/README.md)
+
+[!Demo](/assets/AtomicAlarmUI.PNG)
 The UI portion of this project consists of a Express NodeJS web server running on the Raspberry Pi which can be accessed on any internet capable browser. The core of this webserver is a simple RESTFULful web app server.js, which handles the root get request (e.g. 130.111.111:3000 where 130.111.111 is the IP address of the Raspberry Pi) by sending a simple HTML form (/public/index.html). At document load, the client side Javascript file replaces the values of the HTML template with the values stored in 4 JSON files which hold the configuration data for the 4 alarms (/public/json/alarm1.json ~ alarm4.json). When the user submits the form, the Express server handles the request as a put request, and reads in the form data through a NPM package, body-parser, and writes the updated information back to the configuration back to the alarm configuration JSON files, and reloads the page.
 
 A working model of the web interface can be found here: [Web Interface Showcase](https://atomicalarmui.herokuapp.com/)
