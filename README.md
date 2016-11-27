@@ -22,14 +22,14 @@ I plan to implement the project in the following way. However, the project is li
 ![Implementation Diagram](assets/implementation.jpg)
 
 ###Hardware
+
+![Custom Wire](assets/barrelplugwire.jpeg)
+
 The hardware in this project is heavily based on hberg32's schematics, which can be found at [Merciless Pi Alarm Schematic](hberg32/PiAlarm.fzz). The schematics of my project can be found at [Atomic Clock Schematic](/assets/AtomicClockSchematic.fzz).
 
 A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power source separate from the rest of the Atomic Clock. The rest of my Project is powered by a 12V @ 2000mA DC Power source, which powers both the Nixie Clock and the Bed Shaker.
 
 As of now, the DC power goes though the breadoard, and goes to both the Nixie Clock, (via a custom barrel plug to breadboard wire I made) as well as a L293D which draws a consistant amount from the main circuit to ensure the clock receives enough V's and the Bed Shaker doesn't fry from too much.
-
-![Custom Wire](assets/barrelplugwire.jpeg)
-
 
 ###[Remote Control Functionality](/source/webinterface/README.md)
 
