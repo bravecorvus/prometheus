@@ -26,23 +26,16 @@ hberg32 has been very helpful in setting up the hardware for this projecct. His 
 
 A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power source separate from the rest of the Atomic Clock. The rest of my Project is powered by a 12V @ 2000mA DC Power source, which powers both the Nixie Clock and the Bed Shaker.
 
-###Remote Control Functionality
-I plan to run a light-weight Django web server on the Raspberry Pi which can be accessed through the intranet. Django will serve a simple HTML form as the Graphical User Interface, 4 JSON files which hold the data for the 4 alarms, Javascript file, and a Stylesheet file. (found under source/webinterface/) At the point the HTML document loads, the Javascript file hotswaps the values of the various headings and forms to match those stored in the JSON files. In addition, when a form is filled out and submitted, Django will update the JSON files with the new submited information.
+###[Remote Control Functionality](/source/webinterface/README.md)
+The UI portion of this project consists of a Express NodeJS web server running on the Raspberry Pi which can be accessed on any internet capable browser. The core of this webserver is a simple RESTFULful web app server.js, which handles the root get request (e.g. 130.111.111:3000 where 130.111.111 is the IP address of the Raspberry Pi) by sending a simple HTML form (/public/index.html). At document load, the client side Javascript file replaces the values of the HTML template with the values stored in 4 JSON files which hold the configuration data for the 4 alarms (/public/json/alarm1.json ~ alarm4.json). When the user submits the form, the Express server handles the request as a put request, and reads in the form data through a NPM package, body-parser, and writes the updated information back to the configuration back to the alarm configuration JSON files, and reloads the page.
 
-A mockup of the web interface can be found here: [Web Interface Mockup](http://andrewshinsuke.me/alarm)
-Although it displays the information based on the JSON files:
-[Configuration for Alarm #1](http://andrewshinsuke.me/alarm/alarm1.json)
-[Configuration for Alarm #2](http://andrewshinsuke.me/alarm/alarm2.json)
-[Configuration for Alarm #3](http://andrewshinsuke.me/alarm/alarm3.json)
-[Configuration for Alarm #4](http://andrewshinsuke.me/alarm/alarm4.json)
-This configuration is only for display, and needs to be running on the Django server to have the Configuration update functionality (edit the values of the JSON files when submitted)
+A working model of the web interface can be found here: [Web Interface Showcase](https://atomicalarmui.herokuapp.com/)
 
-I used the following technologies to make this website:
-The HTML is loosely based on Gokul S Krishnan's [simple_alarm](https://github.com/gsk1692/simple_alarm).
-I used [Bootstrap Toggle](www.bootstraptoggle.com) for easily coded buttons.
-[Bootstrap](getbootstrap.com) itself was necessary to use Bootstrap Toggle.
-[jQuery](http://jquery.com/) is a dependency of Bootstrap.
-[Django Web Server](https://www.djangoproject.com/) provides the RESTful services needed to run the UI.
+When the requested the root [https://atomicalarmui.herokuapp.com/](https://atomicalarmui.herokuapp.com/), it will send [index.html](https://atomicalarmui.herokuapp.com/index.html), it loads it from the alarm configuration files: [alarm1.json](https://atomicalarmui.herokuapp.com/json/alarm1.json), [alarm2.json](https://atomicalarmui.herokuapp.com/json/alarm2.json), [alarm3.json](https://atomicalarmui.herokuapp.com/json/alarm3.json), and [alarm4.json](https://atomicalarmui.herokuapp.com/json/alarm4.json).
+
+When the user fills out the form, it will update the configuration files and update the page. Feel free to fiddle around with the Web Interface Mockup to verify that it works (e.g. clicking on the alarm_.json links: [alarm1.json](https://atomicalarmui.herokuapp.com/json/alarm1.json), [alarm2.json](https://atomicalarmui.herokuapp.com/json/alarm2.json), [alarm3.json](https://atomicalarmui.herokuapp.com/json/alarm3.json), and [alarm4.json](https://atomicalarmui.herokuapp.com/json/alarm4.json) which will open them as raw text files in your browser, loading the [web interface](https://atomicalarmui.herokuapp.com/), changing the values and submitting the new values, then reloading the json configuration links to ensure the configuration file values were indeed changed.)**Note: You cannot send the form from the [index.html link](https://atomicalarmui.herokuapp.com/index.html), you must use the [root link](https://atomicalarmui.herokuapp.com/)**
+
+More specific implementation information is written [here](/source/webinterface/README.md).
 
 ###[Main Alarm Logic](source/main.py)
 Although it isn't complete, I will be running a separate main program which will have a constantly updating the values from the JSON configuration files that the user updates via the Web Interface GUI. Depending on if the Sound/Vibration functionality is turned on or off, it will play the [alarm song](source/samples/alarm.wav) via the pygame library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal.
