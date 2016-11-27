@@ -1,6 +1,8 @@
 PrivateCommands.txt
 pihomefuse/
 pirootfuse/
+node_modules/
+npm-debug.log
 piatomicclockprojectfuse/
 AtomicClock.sublime-project
 AtomicClock.sublime-workspace
