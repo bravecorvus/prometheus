@@ -1,15 +1,9 @@
-var fs = require('fs');
-var express = require('express'),
-    bodyParser = require('body-parser'),
-    form = require('express-form'),
-    field = form.field;
- 
+var express = require('express');
+var bodyParser = require('body-parser'); 
 var app = express();
-
+var jsonfile = require('jsonfile');
 
 app.use(express.static('public'));
-
-var jsonfile = require('jsonfile')
 
 var alarm1time = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm1.json')))["time"];
 var alarm2time = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm2.json')))["time"];
