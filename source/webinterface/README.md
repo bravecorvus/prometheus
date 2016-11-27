@@ -1,6 +1,9 @@
 #Node.js Web Server for Atomic Pi Project
 ##Andrew Lee
+
 ###[Main Project](https://github.com/gilgameshskytrooper/AtomicClock)
+
+![Atomic Alarm UI](https://github.com/gilgameshskytrooper/AtomicClock/raw/master/assets/AtomicAlarmUI.PNG)
 
 ###Credits
 I used the following technologies to make this website:
