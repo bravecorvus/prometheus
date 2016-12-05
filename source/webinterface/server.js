@@ -1,9 +1,10 @@
 var express = require('express');
+var fileUpload = require('express-fileupload');
 var bodyParser = require('body-parser'); 
 var app = express();
 var jsonfile = require('jsonfile');
-
 app.use(express.static('public'));
+
 
 var alarm1time = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm1.json')))["time"];
 var alarm2time = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm2.json')))["time"];
@@ -18,12 +19,7 @@ app.get('/', function(req, res) {
 });
 
 
-app.post(
- 
-  // Route 
-  '/',
-   // Express request-handler now receives filtered and validated data 
-   function(req, res){
+app.post('/', function(req, res){
    	if(req.body.mytime1== "") {
    		var mytime1 = alarm1time;
    	} else {
@@ -96,4 +92,32 @@ app.post(
 	res.redirect('back');
   }
 );
+app.use(fileUpload());
+// uploadpost handler
+app.post('/upload', function(req, res) {
+    var sampleFile;
+ 
+    if (!req.files) {
+        res.send('No files were uploaded.');
+        return;
+    }
+ 
+    sampleFile = req.files.sampleFile;
+    sampleFile.mv('./public/assets/alarm.m4a', function(err) {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else {
+            res.redirect('back');
+        }
+    });
+});
+
+// snooze button button handler
+app.post('/snooze', function (req, res) {
+   var snooze = {"snooze":"on"};
+   jsonfile.writeFile('./public/json/snooze.json', snooze);
+   res.redirect('back');
+});
+
 app.listen(3000);

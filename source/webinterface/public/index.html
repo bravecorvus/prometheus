@@ -3,13 +3,24 @@
     <head>
         <title>Atomic Alarm Clock Web Interface</title>
         <script src="/js/jquery-3.1.1.min.js"></script>
-        <script src="/js/script.js"></script>
+        <!-- <script src="/js/script.js"></script> --> <!-- Full Script slow load times -->
         <link rel="stylesheet" type="text/css" href="/css/styles.css">
     </head>
     <body>
         <nav id="hundred"><img src="/assets/logo.jpg"/></nav>
-        <div id="main">
-        <button id="snooze" class="snooze" >Snooze<input id="displayoff" type="submit"></button>
+        <div id="topbuttons" style="width:50%;">
+        <input id="snoozebutton" name="snooze" value="Snooze" type="submit" style='float:left;background-color: red'><script>$('#snoozebutton').click(function(){$.post('/snooze')});</script></input>
+        <form ref='uploadForm' 
+            style='float:right;'
+            id='uploadForm' 
+            action='/upload' 
+            method='post' 
+            encType="multipart/form-data">
+                <input id="button" type="file" name="sampleFile" >
+                <input id="button" type='submit' value="Submit New Alarm Sound"/>
+        </form>
+        </div>
+        <div id="main" style="width:100%;"">
             <form action="" method="post">
                 <fieldset>
                     <div id="alarm1">
@@ -79,9 +90,10 @@
                     </div>
                     <br>
                     <br>
-                    <button id="submit" class="submit" onclick="update_alarms">Submit<input id="displayoff" type="submit"></button>
+                    <button id="submit" class="submit">Submit<input id="displayoff" type="submit"></button>
                 </fieldset>
             </form>
         </div>
+        <script src="/js/scriptmin.js"></script><!-- Minified JS -->
     </body>
 </html>
