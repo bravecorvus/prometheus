@@ -4,6 +4,15 @@
 
 ![Atomic Clock Cover](assets/cover.jpg)
 
+###Project Hierarchy
+| 	Directory 	| Description 					|
+| ------------- | ----------------------------- |
+| NCS314  | Fork with modified version of GRA and AFCH's Nixie Clock Arduino Sketches  |
+| assets  | Content related the the aesthetic presentation of this project such as images  |
+| hberg32  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project  |
+| source  | Where all the original source code of project is stored  |
+| 		  |	webinterface | Node web server for the remote functionality portion of this project |
+
 The idea was to have a clock that does everything. The 3 main things I want to integrate in this project are:
 
 1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roommate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system.
@@ -35,7 +44,7 @@ As of now, the DC power goes though the breadoard, and goes to both the Nixie Cl
 
 ![Demo](assets/AtomicAlarmUI.PNG)
 
-The UI portion of this project consists of a Express NodeJS web server running on the Raspberry Pi which can be accessed on any internet capable browser. The core of this webserver is a simple RESTFULful web app server.js, which handles the root get request (e.g. 130.111.111:3000 where 130.111.111 is the IP address of the Raspberry Pi) by sending a simple HTML form (/public/index.html). At document load, the client side Javascript file replaces the values of the HTML template with the values stored in 4 JSON files which hold the configuration data for the 4 alarms (/public/json/alarm1.json ~ alarm4.json). When the user submits the form, the Express server handles the request as a put request, and reads in the form data through a NPM package, body-parser, and writes the updated information back to the configuration back to the alarm configuration JSON files, and reloads the page.
+The UI portion of this project consists of a Express NodeJS web server running on the Raspberry Pi which can be accessed on any internet capable browser. The core of this webserver is a simple RESTFULful web app server.js, which handles the root get request (e.g. 130.111.111:3000 where 130.111.111 is the IP address of the Raspberry Pi) by sending a simple HTML form (/public/index.html). At document load, the client side Javascript file replaces the values of the HTML template with the values stored in 4 JSON files which hold the configuration data for the 4 alarms (/public/json/alarm1.json ~ alarm4.json). When the user submits the form, the Express server handles the request as a put request, and reads in the form data through a NPM package, body-parser, and writes the updated information back to the alarm configuration JSON files, and reloads the page.
 
 A working model of the web interface can be found here: [Web Interface Showcase](https://atomicalarmui.herokuapp.com/)
 
