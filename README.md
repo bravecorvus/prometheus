@@ -4,6 +4,8 @@
 
 ![Atomic Clock Cover](assets/cover.jpg)
 
+
+
 ###Project Hierarchy
 | 	Directory 	| Description 					|
 | ------------- | ----------------------------- |
@@ -12,6 +14,8 @@
 | hberg32/  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project  |
 | source/  | Where all the original source code of project is stored  |
 | source/webinterface | Node web server for the remote functionality portion of this project |
+
+
 
 The idea was to have a clock that does everything. The 3 main things I want to integrate in this project are:
 
