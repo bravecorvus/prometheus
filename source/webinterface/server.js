@@ -3,6 +3,8 @@ var fileUpload = require('express-fileupload');
 var bodyParser = require('body-parser'); 
 var app = express();
 var jsonfile = require('jsonfile');
+var schedule = require('node-schedule');
+var datetime = require('node-datetime');
 app.use(express.static('public'));
 
 
@@ -81,10 +83,10 @@ app.post('/', function(req, res){
       } else {
       	var vibration4 = "off";
       }
-	var newalarm1 = {"id":"alarm1", "time":mytime1, "sound":sound1, "vibration":vibration1};
-	var newalarm2 = {"id":"alarm2", "time":mytime2, "sound":sound2, "vibration":vibration2};
-	var newalarm3 = {"id":"alarm3", "time":mytime3, "sound":sound3, "vibration":vibration3};
-	var newalarm4 = {"id":"alarm4", "time":mytime4, "sound":sound4, "vibration":vibration4};
+	var newalarm1 = {"name":"alarm1", "time":mytime1, "sound":sound1, "vibration":vibration1};
+	var newalarm2 = {"name":"alarm2", "time":mytime2, "sound":sound2, "vibration":vibration2};
+	var newalarm3 = {"name":"alarm3", "time":mytime3, "sound":sound3, "vibration":vibration3};
+	var newalarm4 = {"name":"alarm4", "time":mytime4, "sound":sound4, "vibration":vibration4};
 	jsonfile.writeFile('./public/json/alarm1.json', newalarm1); 
 	jsonfile.writeFile('./public/json/alarm2.json', newalarm2); 
 	jsonfile.writeFile('./public/json/alarm3.json', newalarm3); 
@@ -118,6 +120,12 @@ app.post('/snooze', function (req, res) {
    var snooze = {"snooze":"on"};
    jsonfile.writeFile('./public/json/snooze.json', snooze);
    res.redirect('back');
+});
+
+var updateCurrentTime = schedule.scheduleJob('0 * * * * *', function(){
+  var currentTime = datetime.create();
+  var currenttime = {"time":currentTime.format('H:M')};
+  jsonfile.writeFile('./public/json/time.json', currenttime);
 });
 
 app.listen(3000);
