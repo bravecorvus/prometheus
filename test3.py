@@ -1,1 +1,0 @@
-print(type(datetime.strptime(i, '%H:%M').time()))
