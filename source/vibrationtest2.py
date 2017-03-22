@@ -5,8 +5,8 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(29, GPIO.OUT) #GPIO 5
 GPIO.setup(31, GPIO.OUT) #GPIO 6
 
-GPIO.output(29, GPIO.HIGH)
-GPIO.output(31, GPIO.LOW)
+GPIO.output(29, GPIO.LOW)
+GPIO.output(31, GPIO.HIGH)
 
 time.sleep(2)
 
