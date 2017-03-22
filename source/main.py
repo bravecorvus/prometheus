@@ -1,3 +1,4 @@
+import RPi.GPIO as GPIO
 from collections import OrderedDict
 from datetime import datetime
 from datetime import timedelta
@@ -8,6 +9,11 @@ import pyinotify
 import os
 import signal
 import subprocess
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17, GPIO.OUT) #GPIO 17 EN 1, 2
+GPIO.setup(5, GPIO.OUT) #GPIO 5 INPUT 1
+GPIO.setup(6, GPIO.OUT) #GPIO 6 INPUT 2
 
 currentlyModifying = False
 wm = pyinotify.WatchManager()  # Watch Manager
@@ -104,6 +110,9 @@ class Alarms:
                         self.updateAlarms()
                         self.runVibration()
                         time.sleep(2)
+                    GPIO.output(17, GPIO.LOW)
+                    GPIO.output(5, GPIO.LOW)
+                    GPIO.output(6, GPIO.LOW)
                 elif i.vibration == "on" and i.sound == "on":    
                     playsound = subprocess.Popen("exec mpg123 webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True)
                     while i.currentStatus == "on" and i.vibration == "on":
@@ -112,16 +121,22 @@ class Alarms:
                         self.runVibration()
                         time.sleep(2)
                     playsound.kill()
+                    GPIO.output(17, GPIO.LOW)
+                    GPIO.output(5, GPIO.LOW)
+                    GPIO.output(6, GPIO.LOW)
                 elif i.vibration == "off" and i.sound == "on":    
                     playsound = subprocess.Popen("exec mpg123 webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True)
                     while i.currentStatus == "on" and i.vibration == "on":
                         self.updateSnooze()
                         self.updateAlarms()
-                        self.runVibration()
                         time.sleep(2)
                     playsound.kill()
     def runVibration(self):
-        print("Vibrating for 2 seconds")
+        GPIO.output(5, GPIO.HIGH)
+        GPIO.output(6, GPIO.LOW)
+        GPIO.output(17, GPIO.HIGH)
+        time.sleep(2)
+        GPIO.output(17, GPIO.LOW)
 
 
 
@@ -151,3 +166,4 @@ class EventHandler(pyinotify.ProcessEvent):
 handler = EventHandler()
 notifier = pyinotify.Notifier(wm, handler)
 notifier.loop()
+GPIO.cleanup()
