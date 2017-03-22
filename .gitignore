@@ -15,3 +15,6 @@ alarm4.json
 time.json
 snooze.json
 IP.txt
+alarm.m4a
+webinterface/public/json/*
+webinterface/public/assets/alarm.m4a
