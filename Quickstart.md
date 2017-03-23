@@ -1,8 +1,8 @@
-#I Just Want to Get This Up and Running
+# I Just Want to Get This Up and Running
 
 If this is you, then this section will describe the minimum number of steps to get this up and running (I suggest against this since my setup is pretty specific to my needs.
 
-###Software Stuff
+### Software Stuff
 
 Going into the command line, do the following
 
@@ -16,7 +16,7 @@ $sudo node install forever -g
 ```
 
 
-###Hardware Stuff
+### Hardware Stuff
 This part is specific to the hardware you will connect, but here I will share the setup assuming you are using the same setup as me. (e.g. you already own a bed vibrator that runs 12V @ 0.5A and center pin positive, you have a separate power source that is 12V @1+A, and a sound system)
 
 You will need the following Items
@@ -58,7 +58,7 @@ However, since we are not running a stepper motor, and we only want "center pin 
 
 Furthermore, after looking at many tutorials, I could not figure out why my circuit was not working, and I realized that I had to ground 12 and 13  as well as 4 and 5 since the Chip's 5V also needed to ground somewhere.
 
-###Sound
+### Sound
 To get good sound, you will need to output the sound through the USB sound interface.
 
 I don't remember the specific steps to get Pi to output sound through the USB, but I believe you just need to create a file via
@@ -79,7 +79,7 @@ ctl.!default {
 
 [CTRL-O, RETURN, CTRL-X to Save and exit]
 
-###Run The Alarm Clock
+### Run The Alarm Clock
 
 You will need 2 terminal windows open. If you are SSH'ing, I suggest you open a VNC Window as this will allow for the programs to continue running even if you close the session. (SSH will close the processes running if you exit the SSH shell)
 

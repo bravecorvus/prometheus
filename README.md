@@ -6,10 +6,10 @@
 
 
 
-###[I JUST WANT TO GET THIS UP AND RUNNING](Quickstart.md)
+### [I JUST WANT TO GET THIS UP AND RUNNING](Quickstart.md)
 
 
-Project Hierarchy
+### Project Hierarchy
 
 | 	Directory   | Description 	                                                               				|
 | ------------- | ----------------------------------------------------------------------------------------- |
@@ -29,12 +29,12 @@ The idea was to have a clock that does everything. The 3 main things I want to i
 
 3) Display time using nixie cathode tubes displays.
 
-##Implementation
+## Implementation
 
-###Inspiration
+### Inspiration
 hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. His original code as well as his original schematic is contained in the [hberg32](https://github.com/gilgameshskytrooper/AtomicClock/tree/master/hberg32) directory of this repo. His project can be found at: [Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock).
 
-###Hardware
+### Hardware
 
 ![Custom Wire](assets/barrelplugwire.jpeg)
 
@@ -46,7 +46,7 @@ As of now, the DC power goes though the breadoard, and goes to both the Nixie Cl
 
 The L293D gets the logic for Input 1, Input 2, and Enable 1, 2 from the Raspberry Pi GPIO pins, which are in turn controlled by main.py.
 
-###[Remote Control Functionality](/source/webinterface/README.md)
+### [Remote Control Functionality](/source/webinterface/README.md)
 
 ![Demo](assets/AtomicAlarmUI.PNG)
 
@@ -60,7 +60,7 @@ When the user fills out the form, it will update the configuration files and upd
 
 More specific implementation information is written [here](/source/webinterface/README.md).
 
-###[Main Alarm Logic](source/main.py)
+### [Main Alarm Logic](source/main.py)
 The main program is a event driven program which uses the pyinotifyer library to recursively see when files are written/closed by the Node server. Based on which files were modified, the program picks actions from 3 camps: 1) update alarms 2) update snooze 3) update time. 1 and 2 are explicitly controlled by the user via the web interface, but 3 is automatically updated once a minute. Hence, depending on the updated file, this program will update the Alarms class variables based on new values stored in the JSON configuration files that the user updates via the Web Interface GUI. Once a minute when "time.json" is updated by the Node server, the program checks to see if any of the alarms have matching times with the current time, and if there is a match, it will run the alarm protocol in the following way: If sound is turned on, it will play the [alarm song](source/webinterface/assets/alarm.m4a) via the mpg123 command line media player library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal. If vibration is turned on, then it will use GPIO to turn on Input 1, and Enable 1, 2 on the L293D in order to turn on the bed vibrator.
 
 The programs/packages needed to make this work is the Python library pyinotifyer and mpg123.
@@ -70,15 +70,15 @@ $sudo pip3 install pyinotifyer
 $sudo apt-get install mpg123
 ```
 
-##Where's My WiFi?
+## Where's My WiFi?
 Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
 
 [Setting Up RPi to work with Eduroam](SetUpEduroamOnPi.md)
 
-##Contact
+## Contact
 Feel free to contact me at (leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
 
-##Special Thanks
+## Special Thanks
 hberg32 was super helpful in helping this project become what it is today. I would not even know where to start to build such an alarm clock without his guidance.
 
 Also, AFCH from [GRA & AFCH](https://github.com/afch) who produces the nixie clock kit I bought was also monumental in helping me modify his Arduino Sketch and to add serial USB communication functionality between the Pi and the Clock.
