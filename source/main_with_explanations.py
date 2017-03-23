@@ -111,7 +111,7 @@ class Alarms:
                     GPIO.output(5, GPIO.LOW) #Sets In 1 to 0
                     GPIO.output(6, GPIO.LOW) #Sets In 2 to 0
                 elif i.vibration == "on" and i.sound == "on":    
-                    playsound = subprocess.Popen("exec mpg123 webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True) #basically, run this command (the exec in the front is to ensure we can kill the process later on)
+                    playsound = subprocess.Popen("exec cvlc webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True) #basically, run this command (the exec in the front is to ensure we can kill the process later on)
                     while i.currentStatus == "on" and i.vibration == "on":
                         self.updateSnooze()
                         self.updateAlarms()
@@ -122,7 +122,7 @@ class Alarms:
                     GPIO.output(5, GPIO.LOW)
                     GPIO.output(6, GPIO.LOW)
                 elif i.vibration == "off" and i.sound == "on": 
-                    playsound = subprocess.Popen("exec mpg123 webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True)
+                    playsound = subprocess.Popen("exec cvlc webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True)
                     while i.currentStatus == "on" and i.vibration == "on":
                         self.updateSnooze()
                         self.updateAlarms()
