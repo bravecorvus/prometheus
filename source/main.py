@@ -5,7 +5,7 @@ from datetime import timedelta
 import time
 import json
 import re
-import pyinotify
+import pyinotify #you are going to have to install this via Pip or from source
 import os
 import signal
 import subprocess
@@ -18,19 +18,18 @@ GPIO.setup(6, GPIO.OUT) #GPIO 6 INPUT 2
 currentlyModifying = False
 wm = pyinotify.WatchManager()  # Watch Manager
 mask = pyinotify.IN_CLOSE_WRITE | pyinotify.IN_OPEN  # watched events
-timeWatcher = wm.add_watch('webinterface/public/json/time.json', mask, rec=False)
-alarm1Watcher = wm.add_watch('webinterface/public/json/alarm1.json', mask, rec=False)
-alarm2Watcher = wm.add_watch('webinterface/public/json/alarm2.json', mask, rec=False)
-alarm3Watcher = wm.add_watch('webinterface/public/json/alarm3.json', mask, rec=False)
-alarm4Watcher = wm.add_watch('webinterface/public/json/alarm4.json', mask, rec=False)
-snoozeWatcher = wm.add_watch('webinterface/public/json/snooze.json', mask, rec=False)
+timeWatcher = wm.add_watch('webinterface/public/json/time.json', mask, rec=False) 
+alarm1Watcher = wm.add_watch('webinterface/public/json/alarm1.json', mask, rec=False) 
+alarm2Watcher = wm.add_watch('webinterface/public/json/alarm2.json', mask, rec=False) 
+alarm3Watcher = wm.add_watch('webinterface/public/json/alarm3.json', mask, rec=False) 
+alarm4Watcher = wm.add_watch('webinterface/public/json/alarm4.json', mask, rec=False) 
+snoozeWatcher = wm.add_watch('webinterface/public/json/snooze.json', mask, rec=False) 
 
 class Alarm:
     def __init__(self, arg):
         with open(arg) as data_file:
             data = json.load(data_file)
         self.name = data["name"]
-        # self.time = datetime.strptime(data[time], '%H:%M').time() #If I need to convert to time. For now, using string representation of time
         self.time = data["time"]
         self.sound = data["sound"]
         self.vibration = data["vibration"]
@@ -39,7 +38,6 @@ class Alarm:
         with open(arg) as data_file:
             data = json.load(data_file)
         self.name = data["name"]
-        # self.time = datetime.strptime(data[time], '%H:%M').time() #If I need to convert to time. For now, using string representation of time
         self.time = data["time"]
         self.sound = data["sound"]
         self.vibration = data["vibration"]
@@ -52,12 +50,11 @@ def readTime(arg):
 def readBool(arg):
     with open(arg) as data_file:
         data = json.load(data_file)
-    print(data['snooze'])
     return(data['snooze'])
 
 
 class Alarms:
-    def __init__(self): #alarm1-4, time, snooze will be strings of json filenames
+    def __init__(self):
         currentlyModifying = True
         with open('webinterface/public/json/snooze.json', 'w') as outfile:
             json.dump({"snooze":"off"}, outfile)
@@ -140,7 +137,7 @@ class Alarms:
 
 
 
-main = Alarms()#main Alarms events
+main = Alarms()
 
 class EventHandler(pyinotify.ProcessEvent):
     def process_IN_CLOSE_WRITE(self, event):
@@ -152,12 +149,8 @@ class EventHandler(pyinotify.ProcessEvent):
             counter+=1
         filename = ''.join(stringpath[0:counter][::-1])
         if currentlyModifying == False and filename == "snooze.json":
-            print("snooze update")
-            # snoozeWatcher = wm.del_watch(5)
             main.updateSnooze()
-            # snoozeWatcher = wm.add_watch('webinterface/public/json/snooze.json', mask, rec=False)
         elif re.search(r'alarm*', filename):
-            print("alarm update")
             main.updateAlarms()
         elif filename == "time.json":
             main.updateTime()
