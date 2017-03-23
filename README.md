@@ -6,6 +6,9 @@
 
 
 
+###["I JUST WANT TO GET THIS UP AND RUNNING!"](Quickstart.md)
+
+
 ###Project Hierarchy
 
 
@@ -21,20 +24,16 @@
 
 The idea was to have a clock that does everything. The 3 main things I want to integrate in this project are:
 
-1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roommate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system.
+1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roommate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system for when I really need to wake up.
 
-2) Utilize the Bluetooth capabilities of my Pi to utilize it as a Bluetooth audio receiver, which would then output to my speakers (Making my Pi run a media receiver).
+2) A way to set the alarm via my phone, iPad, or Browser through a polished and intuitive web-interface controller.
 
-3) A way to set the alarm via my phone, iPad, or Browser through a polished and intuitive web-interface.
+3) Display time using nixie cathode tubes displays.
 
 ##Implementation
 
 ###Inspiration
 hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. His original code as well as his original schematic is contained in the [hberg32](https://github.com/gilgameshskytrooper/AtomicClock/tree/master/hberg32) directory of this repo. His project can be found at: [Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock).
-
-###Implementation Plan
-I plan to implement the project in the following way. However, the project is liable to change.
-![Implementation Diagram](assets/implementation.jpg)
 
 ###Hardware
 
@@ -45,6 +44,8 @@ The hardware in this project is heavily based on hberg32's schematics, which can
 A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power source separate from the rest of the Atomic Clock. The rest of my Project is powered by a 12V @ 2000mA DC Power source, which powers both the Nixie Clock and the Bed Shaker.
 
 As of now, the DC power goes though the breadoard, and goes to both the Nixie Clock, (via a custom barrel plug to breadboard wire I made) as well as a L293D which draws a consistant amount from the main circuit to ensure the clock receives enough V's and the Bed Shaker doesn't fry from too much.
+
+The L293D gets the logic for Input 1, Input 2, and Enable 1, 2 from the Raspberry Pi GPIO pins, which are in turn controlled by main.py.
 
 ###[Remote Control Functionality](/source/webinterface/README.md)
 
@@ -61,7 +62,14 @@ When the user fills out the form, it will update the configuration files and upd
 More specific implementation information is written [here](/source/webinterface/README.md).
 
 ###[Main Alarm Logic](source/main.py)
-Although it isn't complete, I will be running a separate main program which will have a constantly updating the values from the JSON configuration files that the user updates via the Web Interface GUI. Depending on if the Sound/Vibration functionality is turned on or off, it will play the [alarm song](source/samples/alarm.wav) via the pygame library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal.
+The main program is a event driven program which uses the pyinotifyer library to recursively see when files are written/closed by the Node server. Based on which files were modified, the program picks actions from 3 camps: 1) update alarms 2) update snooze 3) update time. 1 and 2 are explicitly controlled by the user via the web interface, but 3 is automatically updated once a minute. Hence, depending on the updated file, this program will update the Alarms class variables based on new values stored in the JSON configuration files that the user updates via the Web Interface GUI. Once a minute when "time.json" is updated by the Node server, the program checks to see if any of the alarms have matching times with the current time, and if there is a match, it will run the alarm protocol in the following way: If sound is turned on, it will play the [alarm song](source/webinterface/assets/alarm.m4a) via the mpg123 command line media player library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal. If vibration is turned on, then it will use GPIO to turn on Input 1, and Enable 1, 2 on the L293D in order to turn on the bed vibrator.
+
+The programs/packages needed to make this work is the Python library pyinotifyer and mpg123.
+
+```
+$sudo pip3 install pyinotifyer
+$sudo apt-get install mpg123
+```
 
 ##Where's My WiFi?
 Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
