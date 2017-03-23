@@ -9,8 +9,7 @@
 ###["I JUST WANT TO GET THIS UP AND RUNNING!"](Quickstart.md)
 
 
-###Project Hierarchy
-
+Project Hierarchy
 
 | 	Directory   | Description 	                                                               				|
 | ------------- | ----------------------------------------------------------------------------------------- |
