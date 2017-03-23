@@ -6,7 +6,7 @@
 
 
 
-###[I JUST WANT TO GET THIS UP AND RUNNING!](Quickstart.md)
+###[I JUST WANT TO GET THIS UP AND RUNNING](Quickstart.md)
 
 
 Project Hierarchy
