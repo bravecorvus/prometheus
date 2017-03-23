@@ -7,8 +7,8 @@
 
 
 ###Project Hierarchy
-| 	Directory 	| Description 					|
-| ------------- | ----------------------------- |
+| 	Directory   | Description 	                                                               				|
+| ------------- | ----------------------------------------------------------------------------------------- |
 | NCS314/  | Fork with modified version of GRA and AFCH's Nixie Clock Arduino Sketches  |
 | assets/  | Content related the the aesthetic presentation of this project such as images  |
 | hberg32/  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project  |
