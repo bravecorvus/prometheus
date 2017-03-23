@@ -112,7 +112,7 @@ class Alarms:
                     GPIO.output(6, GPIO.LOW)
                 elif i.vibration == "on" and i.sound == "on":    
                     playsound = subprocess.Popen("exec cvlc webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True)
-                    while i.currentStatus == "on" and i.vibration == "on":
+                    while i.currentStatus == "on" and i.vibration == "on" and i.sound=="on":
                         self.updateSnooze()
                         self.updateAlarms()
                         self.runVibration()
@@ -123,7 +123,7 @@ class Alarms:
                     GPIO.output(6, GPIO.LOW)
                 elif i.vibration == "off" and i.sound == "on":    
                     playsound = subprocess.Popen("exec cvlc webinterface/public/assets/alarm.m4a", stdout=subprocess.PIPE, shell=True)
-                    while i.currentStatus == "on" and i.vibration == "on":
+                    while i.currentStatus == "on" and i.sound == "on":
                         self.updateSnooze()
                         self.updateAlarms()
                         time.sleep(2)
