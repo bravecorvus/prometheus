@@ -53,9 +53,11 @@ Where the u at the top center represents the divet in the chip to show which sid
 This chip was initially created to be able to run two stepper motors (stepper meaning bidirectional), one on the left and one on the right.
 
 In this conventional set-up, (as most tutorials online and on Youtube are doing), the left motor will connect to Output 1 (3) and Output 2 (6) while the right motor will connect to Output 3 (11) and output 4 (14). Both motors are powered by the V+ going in from (8) and the chip itself is powered by 16. The next part was hard to understand for me, so bear with me, but Let's say you want to run the left motor "forward" e.g. V+ goes out from Output 1 and the ground (-) goes from the motor to Output 2, then through Ground 1/2 Then you would set 
+
 ```
 Input 1 = True | Input 2 = False | then Enable 1, 2 = True
 ```
+
 (Without the Enable 1, 2 = True, nothing would happen). Then the positive 12V would go from 8 to 3 to the motor, then the ground would be motor to 6, to 5 then grounded. To reverse direction of the same motor, you would send
 
 ```
