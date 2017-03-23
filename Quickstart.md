@@ -57,7 +57,9 @@ In this conventional set-up, (as most tutorials online and on Youtube are doing)
 Input 1 = True | Input 2 = False | then Enable 1, 2 = True
 ```
 (Without the Enable 1, 2 = True, nothing would happen). Then the positive 12V would go from 8 to 3 to the motor, then the ground would be motor to 6, to 5 then grounded. To reverse direction of the same motor, you would send
-```Input 1 = False | Input 2 = True | then Enable 1, 2 = True.
+
+```
+Input 1 = False | Input 2 = True | then Enable 1, 2 = True.
 ```
 
 However, since we are not running a stepper motor, and we only want "center pin positive" current to be flowing, we will only use the first inputs: 
