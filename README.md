@@ -61,13 +61,13 @@ When the user fills out the form, it will update the configuration files and upd
 More specific implementation information is written [here](/source/webinterface/README.md).
 
 ### [Main Alarm Logic](source/main.py)
-The main program is a event driven program which uses the pyinotifyer library to recursively see when files are written/closed by the Node server. Based on which files were modified, the program picks actions from 3 camps: 1) update alarms 2) update snooze 3) update time. 1 and 2 are explicitly controlled by the user via the web interface, but 3 is automatically updated once a minute. Hence, depending on the updated file, this program will update the Alarms class variables based on new values stored in the JSON configuration files that the user updates via the Web Interface GUI. Once a minute when "time.json" is updated by the Node server, the program checks to see if any of the alarms have matching times with the current time, and if there is a match, it will run the alarm protocol in the following way: If sound is turned on, it will play the [alarm song](source/webinterface/assets/alarm.m4a) via the mpg123 command line media player library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal. If vibration is turned on, then it will use GPIO to turn on Input 1, and Enable 1, 2 on the L293D in order to turn on the bed vibrator.
+The main program is a event driven program which uses the pyinotifyer library to recursively see when files are written/closed by the Node server. Based on which files were modified, the program picks actions from 3 camps: 1) update alarms 2) update snooze 3) update time. 1 and 2 are explicitly controlled by the user via the web interface, but 3 is automatically updated once a minute. Hence, depending on the updated file, this program will update the Alarms class variables based on new values stored in the JSON configuration files that the user updates via the Web Interface GUI. Once a minute when "time.json" is updated by the Node server, the program checks to see if any of the alarms have matching times with the current time, and if there is a match, it will run the alarm protocol in the following way: If sound is turned on, it will play the [alarm song](source/webinterface/assets/alarm.m4a) via the cvlc command line media player library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal. If vibration is turned on, then it will use GPIO to turn on Input 1, and Enable 1, 2 on the L293D in order to turn on the bed vibrator.
 
-The programs/packages needed to make this work is the Python library pyinotifyer and mpg123.
+The programs/packages needed to make this work is the Python library pyinotifyer and cvlc.
 
 ```
 $sudo pip3 install pyinotifyer
-$sudo apt-get install mpg123
+$sudo apt-get install vlc-nox
 ```
 
 ## Where's My WiFi?

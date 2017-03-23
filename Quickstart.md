@@ -7,7 +7,7 @@ If this is you, then this section will describe the minimum number of steps to g
 Going into the command line, do the following
 
 ```
-$sudo apt-get install git python3 pip3 mpg123 node npm
+$sudo apt-get install git python3 pip3 vlc-nox node npm
 $sudo pip3 install pyinotify
 $git clone https://github.com/gilgameshskytrooper/AtomicClock.git
 $cd AtomicClock/source/webinterface
