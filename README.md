@@ -2,7 +2,7 @@
 
 ### By Andrew Lee
 
-![Atomic Clock Cover](assets/cover.jpg)
+![Atomic Clock Cover](assets/newcover.jpg)
 
 
 
