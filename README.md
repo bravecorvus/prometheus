@@ -70,15 +70,17 @@ $sudo pip3 install pyinotifyer
 $sudo apt-get install vlc-nox
 ```
 
-## Where's My WiFi?
+## [Where's My WiFi?](SetUpEduroamOnPi.md)
 Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
 
 [Setting Up RPi to work with Eduroam](SetUpEduroamOnPi.md)
 
 ## Contact
-Feel free to contact me at (leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
+Feel free to contact me at [leeas@stolaf.edu](mailto:leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
 
 ## Special Thanks
-hberg32 was super helpful in helping this project become what it is today. I would not even know where to start to build such an alarm clock without his guidance.
+[hberg32](https://hackaday.io/hberg32) was super helpful in helping this project become what it is today. I would not even know where to start to build such an alarm clock without his guidance.
 
 Also, AFCH from [GRA & AFCH](https://github.com/afch) who produces the nixie clock kit I bought was also monumental in helping me modify his Arduino Sketch and to add serial USB communication functionality between the Pi and the Clock.
+
+![Desk](assets/desk.jpg)
