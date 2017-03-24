@@ -35,14 +35,14 @@ fieldset {
 #leftside {
   border-color: black;
   float: left;
-  padding-left: 30%;
+  padding-left: 25%;
   // width: 500px;
   margin: 0 auto;
 }
 #rightside {
   border-color: black;
   float: right;
-  padding-right: 30%;
+  padding-right: 25%;
   // width: 500px;
   margin: 0 auto;
 }
