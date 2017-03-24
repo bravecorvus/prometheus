@@ -17,27 +17,30 @@ form {
   border-color: transparent;
   border: 0px, 0px, 0px, 0px;
   margin: 40px, 0px, 40px, 0px;
-  // padding: 40px, 0px, 40px, 0px;
 }
 
 fieldset {
   border-color: transparent;
   border: 0px, 0px, 0px, 0px;
   margin: 0px, 0px, 0px, 0px;
-  // padding: 0px, 0px, 0px, 0px;
 }
 
 #main {
+  border-color: black;
   width: 100%;
   margin: 0px auto;
+  outline: none;
+  border: none;
 }
 #leftside {
+  border-color: black;
   float: left;
   padding-left: 30%;
   // width: 500px;
   margin: 0 auto;
 }
 #rightside {
+  border-color: black;
   float: right;
   padding-right: 30%;
   // width: 500px;
@@ -45,6 +48,7 @@ fieldset {
 }
 
 #afterclock {
+  border-color: black;
   width: 100%;
   margin: 0px auto; 
 }
@@ -60,6 +64,7 @@ fieldset {
 }
 
 button, #button, #snoozebutton {
+  border-color: black;
     margin-left: 15px;
     padding: 7px 12px;
     font-size: 12px;
@@ -150,23 +155,17 @@ input:checked + .slider:before {
   src: url(SanFranciscoDisplay-Light.otf);
 }
 
-#submit {
-  margin-top: 30%;
-  float: right;
-}
-
-header {
+#atomicclock {
   font-family: Umbra;
   font-size: 100px;
+  text-align: center;
+  margin-bottom: 0px;
 }
 
-// #pagetitle {
-//    width: 100%;
-//    margin: 0 auto;
-// }
-#leftheader {
-  float: left;
+#pagetitle {
+   width: 100%;
+   margin: 0 auto;
 }
-#rightheader {
-  float: right;
+hr {
+  color: white;
 }

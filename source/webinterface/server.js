@@ -23,7 +23,7 @@ app.get('/', function(req, res) {
 
 app.post('/', function(req, res){
    	if(req.body.mytime1== "") {
-   		var mytime1 = alarm1time;
+   		var mytime1 = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm1.json')))["time"];
    	} else {
    		var mytime1 = req.body.mytime1;
    	}
@@ -38,7 +38,7 @@ app.post('/', function(req, res){
    		var vibration1 = "off";
    	}
    	if(req.body.mytime2== "") {
-   		var mytime2 = alarm2time;
+   		var mytime2 = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm2.json')))["time"];
    	} else {
    		var mytime2 = req.body.mytime2;
    	}
@@ -53,7 +53,7 @@ app.post('/', function(req, res){
    		var vibration2 = "off";
    	}
 	if(req.body.mytime3== "") {
-		var mytime3 = alarm3time;
+		var mytime3 = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm3.json')))["time"];
 	} else {
 		var mytime3 = req.body.mytime3;
 	}
@@ -68,7 +68,7 @@ app.post('/', function(req, res){
 		var vibration3 = "off";
 	}
       if(req.body.mytime4== "") {
-      	var mytime4 = alarm4time;
+      	var mytime4 = JSON.parse(JSON.stringify(jsonfile.readFileSync('./public/json/alarm4.json')))["time"];
       } else {
       	var mytime4 = req.body.mytime4;
       }

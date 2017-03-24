@@ -7,8 +7,10 @@
         <link rel="stylesheet" type="text/css" href="/css/styles.css">
     </head>
     <body>
-        <header id="leftheader">Atomic</header>
-        <header id="rightheader">Clock</header>
+        <div id="pagetitle">
+        <p id="atomicclock">Atomic Clock</p>
+        <hr>
+        </div>
         <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
         <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
         <div id="topbuttons" style="width:100%; margin:0 auto;">
@@ -82,10 +84,10 @@
                         </label>
                         <label>Vibration</label>
                     </div>
-                </div>
                 <br>
                 <br>
                 <button id="submit" class="submit">Submit Alarms<input id="displayoff" type="submit"></button>
+                </div>
                 </fieldset>
             </form>
         </div>
