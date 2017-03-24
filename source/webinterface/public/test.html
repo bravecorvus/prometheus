@@ -1,0 +1,23 @@
+<html>
+<head>
+<script type="text/javascript" src="nixie/nixie.js"></script>
+</head>
+<body>
+<div id="nd1" style="width:100%; margin:0 auto;"></div>
+</body>
+<script type="text/javascript">
+    var nd = new NixieClock();
+    nd.id = 'nd1';
+	nd.urlCharsetImage = 'nixie/_zm1080_l2_09bdm_346x579.jpg';
+	nd.charWidth = 346;
+	nd.charHeight = 579;
+	nd.extraGapsWidths[1] = 12;
+	nd.extraGapsWidths[3] = 12;
+	nd.charGapWidth = 10;
+	document.getElementById(nd.id).parentNode.style.background = "black";
+	document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+    nd.init();
+    nd.run();
+    nd.setText('-1.234567890');
+</script>
+</html>

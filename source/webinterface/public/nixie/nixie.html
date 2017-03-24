@@ -1,0 +1,381 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Virtual nixie tube display DHTML component library</title>
+  <script type="text/javascript" src="nixie.js?1"></script>
+  <style type="text/css">
+    html, body, td, th {
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      color: black;
+    }
+    body {
+      margin: 30px;
+    }
+    th {
+      text-align: left;
+      vertical-align: top;
+      font-weight: normal;
+      font-style: italic;
+      white-space: nowrap;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      border-bottom: 1px solid #DFDFDF;
+      color: #660000;
+      font-weight: normal;
+    }
+    h1 {
+      font-size: 24px;
+    }
+    h2 {
+      font-size: 18px;
+      margin-top: 1.5em;
+    }
+    h3 {
+      font-size: 16px;
+    }
+    h4 {
+      font-size: 12px;
+    }
+    h5 {
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .note {
+      font-size: 9px;
+    }
+    li {
+      margin: 0.2em;
+    }
+    table.references td {
+      vertical-align: top;
+    }
+    .skin-switch {
+      font-size: 9px;
+    }
+    pre {
+      font-weight: bold;
+      color: #333333;
+    }
+  </style>
+</head>
+
+<body>
+
+<div style="margin-bottom: 3em">
+<h1 style="margin-bottom: 0;">Virtual nixie tube (digitron) display - DHTML component library</h1>
+<p class="note" style="margin-top: 6px;">
+  &copy; 2007-08 Čestmír Hýbl &lt;<script type="text/javascript">eval(unescape('%76%61%72%20%73%30%3d%27%3c%61%20%68%72%65%66%3d%5c%78%32%32%6d%61%69%6c%74%6f%3a%63%65%73%74%6d%69%72%2e%68%79%62%6c%27%3b%76%61%72%20%73%31%3d%27%6e%75%73%74%65%70%2e%6e%65%74%5c%78%32%32%3e%63%65%73%74%6d%69%72%2e%68%79%62%6c%27%3b%76%61%72%20%73%32%3d%27%6e%75%73%74%65%70%2e%6e%65%74%3c%2f%61%3e%27%3b%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%73%30%2b%27%40%27%2b%73%31%2b%27%40%27%2b%73%32%29%3b'))</script>&gt;, <a target="_blank" href="http://cestmir.freeside.sk/projects/dhtml-nixie-display">http://cestmir.freeside.sk/projects/dhtml-nixie-display</a>
+</p>
+</div>
+
+<h3>Current date (NixieDisplay example)</h3>
+
+<div style="text-align: center">
+  <div style="position: absolute; right: 3em;"><a href="#" id="ndDate1SkinSwitch" class="skin-switch">skin...</a></div>
+  <table style="margin: 0 auto;"><tr><td>
+    <div style="background: black; padding: 5px 20px; border: 2px solid #AAAAAA;">
+      <div id="ndDate1" style="">
+      </div>
+    </div>
+  </td></tr></table>
+</div>
+
+<h3>Current time (NixieClock example)</h3>
+
+<div style="text-align: center">
+  <div style="position: absolute; right: 3em;"><a href="#" id="ndTime1SkinSwitch" class="skin-switch">skin...</a></div>
+  <table style="margin: 0 auto;"><tr><td>
+    <div style="background: white; padding: 5px 20px; border: 2px solid #AAAAAA; border: none;">
+      <div id="ndTime1" style="">
+      </div>
+    </div>
+  </td></tr></table>
+</div>
+
+<h3>Calculator (NixieCalculator example)</h3>
+
+<div style="text-align: center">
+  <div style="position: absolute; right: 3em;"><a href="#" id="ndCalc1SkinSwitch" class="skin-switch">skin...</a></div>
+  <table style="margin: 0 auto;"><tr><td>
+    <div style="background: black; padding: 5px 20px; border: 2px solid #AAAAAA;">
+      <div id="ndCalc1" style="">
+      </div>
+    </div>
+    <div style="font-size: 80%; line-height: 150%;">
+      (just type expressions on keyboard as on any basic electronic calculator)<br />
+      [q] sqrt &nbsp; [Q] sqr &nbsp; [^] pow &nbsp; [m] +/- &nbsp; [p] PI &nbsp; [Enter] = &nbsp; [Esc] clear
+    </div>
+  </td></tr></table>
+</div>
+
+
+<script type="text/javascript">
+
+  // *** Simple display ***
+
+  nixieDate1 = new NixieDisplay();
+  nixieDate1.id = 'ndDate1';
+  nixieDate1.charCount = 8;
+  nixieDate1.extraGapsWidths[3] = 20;
+  nixieDate1.extraGapsWidths[5] = 20;
+  nixieDate1.init();
+  var d = new Date();
+  nixieDate1.setText(d.getFullYear().toString() + (d.getMonth() + 1).toString().replace(/^(\d)$/, '0$1') + d.getDate().toString().replace(/^(\d)$/, '0$1'));
+
+  // setup skin switching
+  nixieDate1.__skinId = 0 - 1;
+  nixieDate1.__skinCount = 3;
+  nixieDate1.__skinSwitch = function() {
+    var nd = nixieDate1;
+    nd.__skinId = (nd.__skinId + 1) % nd.__skinCount;
+    switch (nd.__skinId) {
+      case 0:
+        nd.urlCharsetImage = 'zm1082_l1_09bdm_62x150_8b.png';
+        nd.charWidth = 62;
+        nd.charHeight = 150;
+        nixieDate1.extraGapsWidths[3] = 20;
+        nixieDate1.extraGapsWidths[5] = 20;
+        nd.charGapWidth = 0;
+        document.getElementById(nd.id).parentNode.style.background = "white";
+        document.getElementById(nd.id).parentNode.style.border = "none";
+        break;
+      case 1:
+        nd.urlCharsetImage = 'zm1080_l1_09bdm_62x150_8b.png';
+        nd.charWidth = 62;
+        nd.charHeight = 150;
+        nixieDate1.extraGapsWidths[3] = 20;
+        nixieDate1.extraGapsWidths[5] = 20;
+        nd.charGapWidth = 0;
+        document.getElementById(nd.id).parentNode.style.background = "white";
+        document.getElementById(nd.id).parentNode.style.border = "none";
+        break;
+      case 2:
+        nd.urlCharsetImage = 'zm1080_l2_09bdm_45x75_8b.png';
+        nd.charWidth = 45;
+        nd.charHeight = 75;
+        nixieDate1.extraGapsWidths[3] = 20;
+        nixieDate1.extraGapsWidths[5] = 20;
+        nd.charGapWidth = 10;
+        document.getElementById(nd.id).parentNode.style.background = "black";
+        document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+        break;
+    }
+    nd.init();
+
+    return false;
+  }
+  document.getElementById('ndDate1SkinSwitch').onclick = nixieDate1.__skinSwitch; // attach skinswitch event handler
+  nixieDate1.__skinSwitch();                                                      // assign primary skin
+
+
+
+  // *** Clock ***
+
+  nixieTime1 = new NixieClock();  // create component instance
+  nixieTime1.id = 'ndTime1';      // assign instance id
+  nixieTime1.init();              // initialize component (after assigning params)
+  nixieTime1.run();               // run clock
+
+  // setup skin switching
+  nixieTime1.__skinId = 3 - 1;
+  nixieTime1.__skinCount = 4;
+  nixieTime1.__skinSwitch = function() {
+    var nd = nixieTime1;
+    nd.__skinId = (nd.__skinId + 1) % nd.__skinCount;
+    switch (nd.__skinId) {
+      case 0:
+        nd.urlCharsetImage = 'zm1082_l1_09bdm_62x150_8b.png';
+        nd.charWidth = 62;
+        nd.charHeight = 150;
+        nd.extraGapsWidths[1] = 15;
+        nd.extraGapsWidths[3] = 15;
+        nd.charGapWidth = 0;
+        document.getElementById(nd.id).parentNode.style.background = "white";
+        document.getElementById(nd.id).parentNode.style.border = "none";
+        break;
+      case 1:
+        nd.urlCharsetImage = 'zm1080_l1_09bdm_62x150_8b.png';
+        nd.charWidth = 62;
+        nd.charHeight = 150;
+        nd.extraGapsWidths[1] = 15;
+        nd.extraGapsWidths[3] = 15;
+        nd.charGapWidth = 0;
+        document.getElementById(nd.id).parentNode.style.background = "white";
+        document.getElementById(nd.id).parentNode.style.border = "none";
+        break;
+      case 2:
+        nd.urlCharsetImage = 'zm1080_l2_09bdm_45x75_8b.png';
+        nd.charWidth = 90;
+        nd.charHeight = 150;
+        nd.extraGapsWidths[1] = 12;
+        nd.extraGapsWidths[3] = 12;
+        nd.charGapWidth = 10;
+        document.getElementById(nd.id).parentNode.style.background = "black";
+        document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+        break;
+      case 3:
+        nd.urlCharsetImage = 'zm1080_d1_09bdm_62x100_8b.png';
+        nd.charWidth = 62;
+        nd.charHeight = 100;
+        nd.extraGapsWidths[1] = 20;
+        nd.extraGapsWidths[3] = 20;
+        nd.charGapWidth = 10;
+        document.getElementById(nd.id).parentNode.style.background = "black";
+        document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+        break;
+    }
+    nd.init();
+
+    return false;
+  }
+  document.getElementById('ndTime1SkinSwitch').onclick = nixieTime1.__skinSwitch; // attach skinswitch event handler
+  nixieTime1.__skinSwitch();                                                      // assign primary skin
+
+
+
+  // *** Calculaor ***
+
+  nixieCalc1 = new NixieCalculator();      // create component instance
+  nixieCalc1.id = 'ndCalc1';               // assign instance id
+
+  // assign keyboard event handlers
+  document.onkeydown = function(e0) { return nixieCalc1.keyDown(e0); };
+  document.onkeypress = function(e0) { return nixieCalc1.keyPress(e0); };
+
+  nixieCalc1.init();                       // initialize component (after assigning params)
+
+  // setup skin switching
+  nixieCalc1.display.__skinId = 2 - 1;
+  nixieCalc1.display.__skinCount = 4;
+  nixieCalc1.__skinSwitch = function() {
+    var nd = nixieCalc1.display;
+    nd.__skinId = (nd.__skinId + 1) % nd.__skinCount;
+    switch (nd.__skinId) {
+      case 0:
+        nd.urlCharsetImage = 'zm1082_l1_09bdm_62x150_8b.png';
+        nd.charWidth = 62;
+        nd.charHeight = 150;
+        nd.charGapWidth = 0;
+        document.getElementById(nd.id).parentNode.style.background = "white";
+        document.getElementById(nd.id).parentNode.style.border = "none";
+        break;
+      case 1:
+        nd.urlCharsetImage = 'zm1080_l1_09bdm_62x150_8b.png';
+        nd.charWidth = 62;
+        nd.charHeight = 150;
+        nd.charGapWidth = 0;
+        document.getElementById(nd.id).parentNode.style.background = "white";
+        document.getElementById(nd.id).parentNode.style.border = "none";
+        break;
+      case 2:
+        nd.urlCharsetImage = 'zm1080_l2_09bdm_45x75_8b.png';
+        nd.charWidth = 45;
+        nd.charHeight = 75;
+        nd.charGapWidth = 10;
+        document.getElementById(nd.id).parentNode.style.background = "black";
+        document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+        break;
+      case 3:
+        nd.urlCharsetImage = 'zm1080_d1_09bdm_46x75_8b.png';
+        nd.charWidth = 46;
+        nd.charHeight = 75;
+        nd.charGapWidth = 10;
+        document.getElementById(nd.id).parentNode.style.background = "black";
+        document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+        break;
+    }
+    nd.init();
+
+    return false;
+  }
+  document.getElementById('ndCalc1SkinSwitch').onclick = nixieCalc1.__skinSwitch; // attach skinswitch event handler
+  nixieCalc1.__skinSwitch();                                                      // assign primary skin
+
+</script>
+
+<h2>About</h2>
+
+This DHTML component collection was developed for fun and is meant as tribute to nixie tube display era.
+
+<p>
+Features:
+</p>
+<ul>
+  <li>object-oriented JavaScript, DHTML, CSS</li>
+  <li>simple, well-designed API</li>
+  <li>fully customizable (custom glyph matrix images, between-digit gaps, custom character support using configurable map from char to glyph index)</li>
+  <li>decimal separator support via separate glyph matrix row</li>
+  <li>should be compatible with any modern browser (tested in IE 6.0, FF 2.0, Opera 8.5)</li>
+</ul>
+
+<p>
+Notices:
+</p>
+<ul>
+  <li>included nixie glyphs were taken using real nixie tubes (Philips ZM1080, Tesla ZM1082, RFT Z573M). Decimal point and minus signs were added artificially for devices not containing them.</li>
+  <li>components are not limited to emulate nixie-looking displays, glyphs containing any sign types can be used</li>
+</ul>
+
+<h2>Usage</h2>
+
+<p>
+  (suppose you have package archive extracted in ./nixie directory)
+</p>
+
+<em>1. include library in head section of the page:</em>
+
+<pre>
+    &lt;script type="text/javascript" src="nixie/nixie.js"&gt;&lt;/script&gt;
+</pre>
+
+<em>2. drop some box element to serve as display container:</em>
+
+<pre>
+    &lt;div id="nd1"&gt;&lt;/div&gt;
+</pre>
+
+<em>3. instantiate and use component:</em>
+
+<pre>
+    &lt;script type="text/javascript"&gt;
+      var nd = new NixieDisplay();
+      nd.id = 'nd1';
+      nd.charCount = 12;
+      nd.urlCharsetImage = 'nixie/zm1082_l1_09bdm_62x150_8b.png';
+      nd.charWidth = 62;
+      nd.charHeight = 150;
+      nd.charGapWidth = 5;
+      nd.align = 'right';
+      nd.init();
+
+      nd.setText('-1.234567890');
+    &lt;/script&gt;
+</pre>
+
+<p>
+  Explore library and this demo page sources for more info.
+</p>
+
+<h2>License</h2>
+
+<p>Free for non-commercial use only. Copyright and project URL has to be preserved.</p>
+<p>(this holds for both the code and the images)</p>
+
+<h2>References</h2>
+
+<div style="float: right; margin-bottom: 1em;">
+  <img style="border: 1px solid #AAAAAA;" src="zm1080_r_anim_86x150_100ms_5s.gif" alt="" />
+</div>
+
+<table class="references">
+<tr><td>[1]</td><td>
+  Wikipedia: Nixie tube<br/>
+  <a target="_blank" href="http://en.wikipedia.org/wiki/Nixie_tube">http://en.wikipedia.org/wiki/Nixie_tube</a>
+</td></tr>
+</table>
+
+</body>
+
+</html>

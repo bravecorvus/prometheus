@@ -3,26 +3,19 @@
     <head>
         <title>Atomic Alarm Clock Web Interface</title>
         <script src="/js/jquery-3.1.1.min.js"></script>
-        <!-- <script src="/js/script.js"></script> --> <!-- Full Script slow load times -->
+         <script type="text/javascript" src="nixie/nixie.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/styles.css">
     </head>
     <body>
-        <nav id="hundred"><img src="/assets/logo.jpg"/></nav>
-        <div id="topbuttons" style="width:50%;">
-        <form action="/snooze" method="post"><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
-        <form ref='uploadForm' 
-            style='float:right;'
-            id='uploadForm' 
-            action='/upload' 
-            method='post' 
-            encType="multipart/form-data">
-                <input id="button" type="file" name="sampleFile" >
-                <input id="button" type='submit' value="Submit New Alarm Sound"/>
-        </form>
-        </div>
-        <div id="main" style="width:100%;"">
+        <header id="leftheader">Atomic</header>
+        <header id="rightheader">Clock</header>
+        <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
+        <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
+        <div id="topbuttons" style="width:100%; margin:0 auto;">
+        <div id="main">
             <form action="" method="post">
                 <fieldset>
+                <div id="leftside">
                     <div id="alarm1">
                         <h1 id="tit1">ALARM 1</h1>
                         <br>
@@ -55,7 +48,8 @@
                         </label>
                         <label>Vibration</label>
                     </div>
-                    <br>
+                    </div>
+                <div id="rightside">
                     <div id="alarm3">
                         <h1 id="tit3">ALARM 3</h1>
                         <br>
@@ -88,12 +82,40 @@
                         </label>
                         <label>Vibration</label>
                     </div>
-                    <br>
-                    <br>
-                    <button id="submit" class="submit">Submit<input id="displayoff" type="submit"></button>
+                </div>
+                <br>
+                <br>
+                <button id="submit" class="submit">Submit Alarms<input id="displayoff" type="submit"></button>
                 </fieldset>
             </form>
         </div>
+        <div id="afterclock">
+        <div id="afterclockleft">
+            <form ref='uploadForm' 
+                id='uploadForm' 
+                action='/upload' 
+                method='post' 
+                encType="multipart/form-data">
+                    <input id="button" type="file" name="sampleFile" >
+                    <input id="button" type='submit' value="Submit New Alarm Sound"/>
+            </form>    
+        </div>
+        </div>
         <script src="/js/scriptmin.js"></script><!-- Minified JS -->
+        <script type="text/javascript">
+            var nd = new NixieClock();
+            nd.id = 'nd1';
+            nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
+            nd.charWidth = 90;
+            nd.charHeight = 150;
+            nd.extraGapsWidths[1] = 12;
+            nd.extraGapsWidths[3] = 12;
+            nd.charGapWidth = 10;
+            document.getElementById(nd.id).parentNode.style.background = "black";
+            document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+            nd.init();
+            nd.run();
+            nd.setText('-1.234567890');
+        </script>
     </body>
 </html>

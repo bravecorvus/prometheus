@@ -1,5 +1,6 @@
-#hundred {
+#nd1 {
   width: 100%;
+  margin:0 auto;
 }
 
 #displayoff {
@@ -8,32 +9,49 @@
 
 body {
     border-color: transparent;
-    font-family: -apple-system, AppleSDGothicNeo-Regular;
+    font-family: SanFrancisco;
+    color: white;
 }
+
 form {
   border-color: transparent;
   border: 0px, 0px, 0px, 0px;
   margin: 40px, 0px, 40px, 0px;
-  padding: 40px, 0px, 40px, 0px;
+  // padding: 40px, 0px, 40px, 0px;
 }
 
 fieldset {
   border-color: transparent;
   border: 0px, 0px, 0px, 0px;
   margin: 0px, 0px, 0px, 0px;
-  padding: 0px, 0px, 0px, 0px;
+  // padding: 0px, 0px, 0px, 0px;
 }
 
 #main {
-  column-count: 2;
-  padding: 40px, 0px, 40px, 0px;
-  margin: 40px, 0px, 40px, 0px;
+  width: 100%;
+  margin: 0px auto;
+}
+#leftside {
+  float: left;
+  padding-left: 30%;
+  // width: 500px;
+  margin: 0 auto;
+}
+#rightside {
+  float: right;
+  padding-right: 30%;
+  // width: 500px;
+  margin: 0 auto;
 }
 
-#alarm1, #alarm2, #alarm3, #alarm4 {
-  margin:  0px 0px 0px 0px;
-  padding:  0px 0px 0px 0px;
-  
+#afterclock {
+  width: 100%;
+  margin: 0px auto; 
+}
+
+#afterclockleft {
+  float: left;
+  padding-left: 20%;
 }
 
 .time {
@@ -119,14 +137,36 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-#snooze {
-    font-family: -apple-system, AppleSDGothicNeo-Regular;
-    padding:15px 15px; 
-    margin-top:100px;
-    background:#4cda64; 
-    color:white;
-    border:0 none;
-    cursor:pointer;
-    -webkit-border-radius: 5px;
-    border-radius: 5px; 
+#snooze, #snoozeform {
+    display: none;
+}
+
+@font-face {
+    font-family: Umbra;
+    src: url(UmbraStd.otf);
+}
+@font-face {
+  font-family: "SanFrancisco";
+  src: url(SanFranciscoDisplay-Light.otf);
+}
+
+#submit {
+  margin-top: 30%;
+  float: right;
+}
+
+header {
+  font-family: Umbra;
+  font-size: 100px;
+}
+
+// #pagetitle {
+//    width: 100%;
+//    margin: 0 auto;
+// }
+#leftheader {
+  float: left;
+}
+#rightheader {
+  float: right;
 }
