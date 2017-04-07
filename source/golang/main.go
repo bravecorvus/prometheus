@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/robfig/cron"
 	"github.com/stianeikeland/go-rpio"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
