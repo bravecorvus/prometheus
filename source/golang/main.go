@@ -157,7 +157,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	snoozed := make(chan bool)
 	// soundoff := make(chan bool)
 	// viboff := make(chan bool)
-	go Runsnooze(&snoozed)
+	go Runsnooze(snoozed)
 	// go Runsoundoff(soundoff, *alarm)
 	// go Runviboff(viboff, *alarm)
 	for {
