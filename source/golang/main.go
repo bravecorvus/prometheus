@@ -190,6 +190,11 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 			}
 			alarm.Alarmtime = addTime(alarm.Alarmtime, "h", 1)
+			var writeback wg = sync.WaitGroup
+			writeback.Add(1)
+			writeBackJson(alarm, "./public/json/"+alarm.Name, &writeback)
+			writeback.Wait()
+			http.Redirect(w, r, "/", 301)
 			return
 		default:
 			switch {
@@ -198,25 +203,25 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 				return
 			case ((alarm.Sound == false) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
-				vibcounter++
 				if vibcounter == 0 {
 					VibOn()
-				} else if vibcounter == 20 {
+				} else if vibcounter == 200 {
 					VibOff()
-				} else if vibcounter == 40 {
+				} else if vibcounter == 400 {
 					vibcounter = 0
 				}
-			case ((alarm.Sound == true) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == true)):
-				time.Sleep(5 * time.Nanosecond)
+				vibcounter++
+			// case ((alarm.Sound == true) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == true)):
+			// 	time.Sleep(5 * time.Nanosecond)
 			case ((alarm.Sound == true) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
-				vibcounter++
 				if vibcounter == 0 {
 					VibOn()
-				} else if vibcounter == 20 {
+				} else if vibcounter == 200 {
 					VibOff()
-				} else if vibcounter == 40 {
+				} else if vibcounter == 400 {
 					vibcounter = 0
 				}
+				vibcounter++
 			}
 		}
 	}
@@ -230,7 +235,7 @@ func convertBooltoString(arg bool) string {
 	}
 }
 
-func writeBackJson(alarm Alarm, filepath string, w http.ResponseWriter, r *http.Request, wg *sync.WaitGroup) {
+func writeBackJson(alarm Alarm, filepath string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	// fmt.Println("[{\"name\":" + alarm.Name + ",\"time\":\"" + alarm.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm.Vibration) + "\"}]")
 	content := []byte("[{\"name\":\"" + alarm.Name + "\",\"time\":\"" + alarm.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm.Vibration) + "\"}]")
@@ -239,7 +244,6 @@ func writeBackJson(alarm Alarm, filepath string, w http.ResponseWriter, r *http.
 		fmt.Println("Error writing back JSON alarm file for " + filepath)
 		os.Exit(1)
 	}
-	time.Sleep(1 * time.Second)
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -329,7 +333,7 @@ func main() {
 		alarm1.Alarmtime = r.FormValue("mytime1")
 		var time1 sync.WaitGroup
 		time1.Add(1)
-		go writeBackJson(alarm1, "./public/json/alarm1.json", w, r, &time1)
+		go writeBackJson(alarm1, "./public/json/alarm1.json", &time1)
 		time1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -349,7 +353,7 @@ func main() {
 		}
 		var sound1 sync.WaitGroup
 		sound1.Add(1)
-		go writeBackJson(alarm1, "./public/json/alarm1.json", w, r, &sound1)
+		go writeBackJson(alarm1, "./public/json/alarm1.json", &sound1)
 		sound1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -368,7 +372,7 @@ func main() {
 		}
 		var vibration1 sync.WaitGroup
 		vibration1.Add(1)
-		go writeBackJson(alarm1, "./public/json/alarm1.json", w, r, &vibration1)
+		go writeBackJson(alarm1, "./public/json/alarm1.json", &vibration1)
 		vibration1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -378,7 +382,7 @@ func main() {
 		// fmt.Println(stringedinput)
 		var time2 sync.WaitGroup
 		time2.Add(1)
-		go writeBackJson(alarm2, "./public/json/alarm2.json", w, r, &time2)
+		go writeBackJson(alarm2, "./public/json/alarm2.json", &time2)
 		time2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -397,7 +401,7 @@ func main() {
 		}
 		var sound2 sync.WaitGroup
 		sound2.Add(1)
-		go writeBackJson(alarm2, "./public/json/alarm2.json", w, r, &sound2)
+		go writeBackJson(alarm2, "./public/json/alarm2.json", &sound2)
 		sound2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -416,7 +420,7 @@ func main() {
 		}
 		var vibration2 sync.WaitGroup
 		vibration2.Add(1)
-		go writeBackJson(alarm2, "./public/json/alarm2.json", w, r, &vibration2)
+		go writeBackJson(alarm2, "./public/json/alarm2.json", &vibration2)
 		vibration2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -425,7 +429,7 @@ func main() {
 		alarm3.Alarmtime = r.FormValue("mytime3")
 		var time3 sync.WaitGroup
 		time3.Add(1)
-		go writeBackJson(alarm3, "./public/json/alarm3.json", w, r, &time3)
+		go writeBackJson(alarm3, "./public/json/alarm3.json", &time3)
 		time3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -444,7 +448,7 @@ func main() {
 		}
 		var sound3 sync.WaitGroup
 		sound3.Add(1)
-		go writeBackJson(alarm3, "./public/json/alarm3.json", w, r, &sound3)
+		go writeBackJson(alarm3, "./public/json/alarm3.json", &sound3)
 		sound3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -463,7 +467,7 @@ func main() {
 		}
 		var vibration3 sync.WaitGroup
 		vibration3.Add(1)
-		go writeBackJson(alarm3, "./public/json/alarm3.json", w, r, &vibration3)
+		go writeBackJson(alarm3, "./public/json/alarm3.json", &vibration3)
 		vibration3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -472,7 +476,7 @@ func main() {
 		alarm4.Alarmtime = r.FormValue("mytime4")
 		var time4 sync.WaitGroup
 		time4.Add(1)
-		go writeBackJson(alarm4, "./public/json/alarm4.json", w, r, &time4)
+		go writeBackJson(alarm4, "./public/json/alarm4.json", &time4)
 		time4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -491,7 +495,7 @@ func main() {
 		}
 		var sound4 sync.WaitGroup
 		sound4.Add(1)
-		go writeBackJson(alarm4, "./public/json/alarm4.json", w, r, &sound4)
+		go writeBackJson(alarm4, "./public/json/alarm4.json", &sound4)
 		sound4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -510,7 +514,7 @@ func main() {
 		}
 		var vibration4 sync.WaitGroup
 		vibration4.Add(1)
-		go writeBackJson(alarm4, "./public/json/alarm4.json", w, r, &vibration4)
+		go writeBackJson(alarm4, "./public/json/alarm4.json", &vibration4)
 		vibration4.Wait()
 		http.Redirect(w, r, "/", 401)
 	})
