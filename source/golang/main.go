@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/robfig/cron"
+	"github.com/stianeikeland/go-rpio"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,10 +17,6 @@ import (
 	"sync"
 	"time"
 )
-
-// type jsonobject struct {
-// 	Object
-// }
 
 type JsonAlarm struct {
 	Name      string `json:"name"`
@@ -152,14 +149,10 @@ func (alarm *Alarm) runAlarm(currenttime string, wg *sync.WaitGroup) {
 
 	var itsbeentenminutes bool //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
 
-	musicoriginallyon := false
-	cmd := exec.Command("afplay", "public/assets/alarm.m4a")
+	startedWithMusic := false //Basically, in the event that the music was turned off through a separate process, this will ensure it won't mess anything up
+	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
 	if alarm.Sound == true {
-		musicoriginallyon = true
-		// killsound := make(chan bool)
-		//    var wg sync.WaitGroup
-		//    wg.Add(1)
-		// go playSound(killsound)
+		startedWithMusic = true
 		cmd.Start()
 	}
 	snoozed := make(chan bool)
@@ -172,14 +165,14 @@ func (alarm *Alarm) runAlarm(currenttime string, wg *sync.WaitGroup) {
 		itsbeentenminutes = overTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		switch { //Special cases using gochannels to listen to special activities
 		case <-snoozed: //Just got snoozed
-			if musicoriginallyon {
+			if startedWithMusic {
 				cmd.Process.Kill()
 			}
 			alarm.CurrentlyRunning = false
 			alarm.Alarmtime = addTime(alarm.Alarmtime, "m", 10)
 			return
 		case <-soundoff:
-			if musicoriginallyon {
+			if startedWithMusic {
 				cmd.Process.Kill()
 			}
 			if !alarm.Vibration {
@@ -193,14 +186,14 @@ func (alarm *Alarm) runAlarm(currenttime string, wg *sync.WaitGroup) {
 			}
 		case itsbeentenminutes == true:
 			alarm.CurrentlyRunning = false
-			if musicoriginallyon == true {
+			if startedWithMusic == true {
 				cmd.Process.Kill()
 			}
 			alarm.Alarmtime = addTime(alarm.Alarmtime, "h", 1)
 			return
 		default:
 			switch {
-			case ((alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == true) && (musicoriginallyon)):
+			case ((alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == true) && (startedWithMusic)):
 				alarm.CurrentlyRunning = false
 				cmd.Process.Kill()
 				return
@@ -485,4 +478,17 @@ func main() {
 	})
 	log.Println("Listening...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
+
+	err := rpio.Open()
+	if err != nil {
+		fmt.Println("RPIO OPEN FAILURE")
+	}
+	Enable := rpio.Pin(17)
+	Enable.Output()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input1.Low()
 }
