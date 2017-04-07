@@ -130,7 +130,7 @@ func Runviboff(channel chan bool, alarm Alarm) {
 	})
 }
 
-func (alarm *Alarm) RunAlarm(currenttime string, Enable *rpio.Pin, wg *sync.WaitGroup) {
+func (alarm *Alarm) RunAlarm(currenttime string, Enable rpio.Pin, wg *sync.WaitGroup) {
 	defer wg.Done()
 	if (alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == false) {
 		return
@@ -192,9 +192,9 @@ func (alarm *Alarm) RunAlarm(currenttime string, Enable *rpio.Pin, wg *sync.Wait
 			case ((alarm.Sound == false) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					VibOn(&Enable)
+					VibOn(Enable)
 				} else if vibcounter == 20 {
-					VibOff(&Enable)
+					VibOff(Enable)
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
@@ -203,9 +203,9 @@ func (alarm *Alarm) RunAlarm(currenttime string, Enable *rpio.Pin, wg *sync.Wait
 			case ((alarm.Sound == true) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					VibOn(&Enable)
+					VibOn(Enable)
 				} else if vibcounter == 20 {
-					VibOff(&Enable)
+					VibOff(Enable)
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
@@ -288,7 +288,7 @@ func main() {
 			if alarm.Alarmtime == currenttime {
 				var runningalarm sync.WaitGroup
 				runningalarm.Add(1)
-				alarm.RunAlarm(currenttime, &Enable, &runningalarm)
+				alarm.RunAlarm(currenttime, Enable, &runningalarm)
 				runningalarm.Wait()
 				// now := time.Now()
 				// now.Add(10 * time.Minute)
@@ -509,10 +509,10 @@ func main() {
 	}
 }
 
-func VibOn(Enable *rpio.Pin) {
+func VibOn(Enable rpio.Pin) {
 	Enable.High()
 }
 
-func VibOff(Enable *rpio.Pin) {
+func VibOff(Enable rpio.Pin) {
 	Enable.Low()
 }
