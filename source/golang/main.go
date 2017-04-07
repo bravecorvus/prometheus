@@ -249,7 +249,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer file.Close()
-	out, err := os.Create("./public/assets/alarm.mp4")
+	out, err := os.Create("./public/assets/alarm.m4a")
 	if err != nil {
 		fmt.Fprintf(w, "Unable to upload the file")
 	}
