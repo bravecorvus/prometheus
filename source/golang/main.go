@@ -122,20 +122,6 @@ func Runsnooze(channel chan bool) {
 	})
 }
 
-// func Runsoundoff(channel chan bool, alarm Alarm) {
-// 	http.HandleFunc("/"+alarm.Name+"sound", func(w http.ResponseWriter, r *http.Request) {
-// 		channel <- true
-// 		http.Redirect(w, r, "/", 301)
-// 	})
-// }
-
-// func Runviboff(channel chan bool, alarm Alarm) {
-// 	http.HandleFunc("/"+alarm.Name+"vibration", func(w http.ResponseWriter, r *http.Request) {
-// 		channel <- true
-// 		http.Redirect(w, r, "/", 301)
-// 	})
-// }
-
 func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	fmt.Println("RunAlarm")
 	defer wg.Done()
@@ -155,11 +141,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		cmd.Start()
 	}
 	snoozed := make(chan bool)
-	// soundoff := make(chan bool)
-	// viboff := make(chan bool)
 	go Runsnooze(snoozed)
-	// go Runsoundoff(soundoff, *alarm)
-	// go Runviboff(viboff, *alarm)
 	for {
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		switch { //Special cases using gochannels to listen to special activities
@@ -170,19 +152,6 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			alarm.CurrentlyRunning = false
 			alarm.Alarmtime = addTime(alarm.Alarmtime, "m", 10)
 			return
-		// case <-soundoff:
-		// 	if startedWithMusic {
-		// 		cmd.Process.Kill()
-		// 	}
-		// 	if !alarm.Vibration {
-		// 		alarm.CurrentlyRunning = false
-		// 		return
-		// 	}
-		// case <-viboff:
-		// 	if !alarm.Sound {
-		// 		alarm.CurrentlyRunning = false
-		// 		return
-		// 	}
 		case itsbeentenminutes == true:
 			fmt.Println("itsbeentenminutes")
 			alarm.CurrentlyRunning = false
@@ -267,21 +236,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 301)
 }
 
-func init() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Enable = rpio.Pin(17)
-	Enable.Output()
-	Input1 = rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 = rpio.Pin(6)
-	Input2.Output()
-	Input1.Low()
-}
+// func init() {
+// }
 
 func main() {
 	// Initialize all 4 instances of alarm clocks
@@ -526,9 +482,35 @@ func main() {
 }
 
 func VibOn() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 = rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 = rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable = rpio.Pin(17)
+	Enable.Output()
 	Enable.High()
 }
 
 func VibOff() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 = rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 = rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable = rpio.Pin(17)
+	Enable.Output()
 	Enable.Low()
 }
