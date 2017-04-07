@@ -130,7 +130,7 @@ func Runviboff(channel chan bool, alarm Alarm) {
 	})
 }
 
-func (alarm *Alarm) RunAlarm(currenttime string, Enable *rpio, wg *sync.WaitGroup) {
+func (alarm *Alarm) RunAlarm(currenttime string, Enable *rpio.Pin, wg *sync.WaitGroup) {
 	defer wg.Done()
 	if (alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == false) {
 		return
@@ -509,10 +509,10 @@ func main() {
 	}
 }
 
-func VibOn(Enable *rpio) {
+func VibOn(Enable *rpio.Pin) {
 	Enable.High()
 }
 
-func VibOff(Enable *rpio) {
+func VibOff(Enable *rpio.Pin) {
 	Enable.Low()
 }
