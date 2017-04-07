@@ -192,9 +192,9 @@ func (alarm *Alarm) RunAlarm(currenttime string, Enable *rpio.Pin, wg *sync.Wait
 			case ((alarm.Sound == false) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					VibOn(Enable)
+					VibOn(&Enable)
 				} else if vibcounter == 20 {
-					VibOff(Enable)
+					VibOff(&Enable)
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
@@ -203,9 +203,9 @@ func (alarm *Alarm) RunAlarm(currenttime string, Enable *rpio.Pin, wg *sync.Wait
 			case ((alarm.Sound == true) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					VibOn(Enable)
+					VibOn(&Enable)
 				} else if vibcounter == 20 {
-					VibOff(Enable)
+					VibOff(&Enable)
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
