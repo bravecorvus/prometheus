@@ -61,40 +61,39 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string) {
 
 }
 
-func vibOn() {
+func VibOn() {
 	fmt.Println("Vibrating")
 }
 
-func vibOff() {
+func VibOff() {
 	fmt.Println("Vibration Stop")
 }
 
-func errhandler(err error) {
+func Errhandler(err error) {
 	if err != nil {
 		fmt.Println("You fucked up somewhere")
 	}
 }
-
-func stringTimeToReadTime(arg string) time.Time {
+func StringTimeToReadTime(arg string) time.Time {
 	//To prevent getting wierd time discrepancies with the time (since I am only saving the time itself, I need to intialize using the current Date as well, or else it will be 00/00 TI:ME '00 )
 	currentyear, currentmonth, currentday := time.Now().Date()
 	thestring := arg
 	split := strings.Split(thestring, "")
 	fmt.Println(string(split[1]))
 	hourldigit, err1 := strconv.Atoi(string(split[0]))
-	errhandler(err1)
+	Errhandler(err1)
 	hourrdigit, err2 := strconv.Atoi(string(split[1]))
-	errhandler(err2)
+	Errhandler(err2)
 	minuteldigit, err3 := strconv.Atoi(string(split[3]))
-	errhandler(err3)
+	Errhandler(err3)
 	minuterdigit, err4 := strconv.Atoi(string(split[4]))
-	errhandler(err4)
+	Errhandler(err4)
 	return time.Date(currentyear, currentmonth, currentday, hourldigit+hourrdigit, minuteldigit+minuterdigit, 0, 0, time.UTC)
 }
 
 func addTime(originaltime string, hms string, byhowmuch int) string { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
 	thetime, err := time.Parse("15:04", originaltime)
-	errhandler(err)
+	Errhandler(err)
 	switch {
 	case hms == "h":
 		thetime.Add(time.Duration(byhowmuch) * time.Hour)
@@ -106,8 +105,8 @@ func addTime(originaltime string, hms string, byhowmuch int) string { //takes or
 	return thetime.Format("15:04")
 }
 
-func overTenMinutes(alarm string, current string) bool {
-	timealarm := stringTimeToReadTime(alarm)
+func OverTenMinutes(alarm string, current string) bool {
+	timealarm := StringTimeToReadTime(alarm)
 	timecurrent := time.Now()
 	diff := timecurrent.Sub(timealarm)
 	if diff.Minutes() > 10 {
@@ -117,28 +116,28 @@ func overTenMinutes(alarm string, current string) bool {
 	}
 }
 
-func runsnooze(channel chan bool) {
+func Runsnooze(channel chan bool) {
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		http.Redirect(w, r, "/", 301)
 	})
 }
 
-func runsoundoff(channel chan bool, alarm Alarm) {
+func Runsoundoff(channel chan bool, alarm Alarm) {
 	http.HandleFunc("/"+alarm.Name+"sound", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		http.Redirect(w, r, "/", 301)
 	})
 }
 
-func runviboff(channel chan bool, alarm Alarm) {
+func Runviboff(channel chan bool, alarm Alarm) {
 	http.HandleFunc("/"+alarm.Name+"vibration", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		http.Redirect(w, r, "/", 301)
 	})
 }
 
-func (alarm *Alarm) runAlarm(currenttime string, wg *sync.WaitGroup) {
+func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	if (alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == false) {
 		return
@@ -158,11 +157,11 @@ func (alarm *Alarm) runAlarm(currenttime string, wg *sync.WaitGroup) {
 	snoozed := make(chan bool)
 	soundoff := make(chan bool)
 	viboff := make(chan bool)
-	go runsnooze(snoozed)
-	go runsoundoff(soundoff, *alarm)
-	go runviboff(viboff, *alarm)
+	go Runsnooze(snoozed)
+	go Runsoundoff(soundoff, *alarm)
+	go Runviboff(viboff, *alarm)
 	for {
-		itsbeentenminutes = overTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
+		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		switch { //Special cases using gochannels to listen to special activities
 		case <-snoozed: //Just got snoozed
 			if startedWithMusic {
@@ -200,9 +199,9 @@ func (alarm *Alarm) runAlarm(currenttime string, wg *sync.WaitGroup) {
 			case ((alarm.Sound == false) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					vibOn()
+					VibOn()
 				} else if vibcounter == 20 {
-					vibOff()
+					VibOff()
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
@@ -211,9 +210,9 @@ func (alarm *Alarm) runAlarm(currenttime string, wg *sync.WaitGroup) {
 			case ((alarm.Sound == true) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					vibOn()
+					VibOn()
 				} else if vibcounter == 20 {
-					vibOff()
+					VibOff()
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
@@ -242,6 +241,26 @@ func writeBackJson(alarm Alarm, filepath string, w http.ResponseWriter, r *http.
 	time.Sleep(1 * time.Second)
 }
 
+func uploadHandler(w http.ResponseWriter, r *http.Request) {
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		fmt.Fprintln(w, err)
+		return
+	}
+	defer file.Close()
+	out, err := os.Create("./public/assets/alarm.mp4")
+	if err != nil {
+		fmt.Fprintf(w, "Unable to upload the file")
+	}
+	defer out.Close()
+	_, err = io.Copy(out, file)
+	if err != nil {
+		fmt.Fprintln(w, err)
+	}
+	fmt.Fprintf(w, "File uploaded successfully :")
+	fmt.Fprintf(w, header.Filename)
+}
+
 func main() {
 	// Initialize all 4 instances of alarm clocks
 	alarm1 := Alarm{}
@@ -267,7 +286,7 @@ func main() {
 			if alarm.Alarmtime == currenttime {
 				var runningalarm sync.WaitGroup
 				runningalarm.Add(1)
-				alarm.runAlarm(currenttime, &runningalarm)
+				alarm.RunAlarm(currenttime, &runningalarm)
 				runningalarm.Wait()
 				// now := time.Now()
 				// now.Add(10 * time.Minute)
@@ -476,6 +495,9 @@ func main() {
 		vibration4.Wait()
 		http.Redirect(w, r, "/", 401)
 	})
+
+	http.HandleFunc("/upload", uploadHandler)
+
 	log.Println("Listening...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 
