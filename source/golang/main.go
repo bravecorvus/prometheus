@@ -19,6 +19,10 @@ import (
 	"time"
 )
 
+var Enable rpio.Pin
+var Input1 rpio.Pin
+var Input2 rpio.Pin
+
 type JsonAlarm struct {
 	Name      string `json:"name"`
 	Alarm     string `json:"time"`
@@ -256,14 +260,11 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	var Enable rpio.Pin
 	Enable = rpio.Pin(17)
 	Enable.Output()
-	var Input1 rpio.Pin
 	Input1 = rpio.Pin(5)
 	Input1.Output()
 	Input1.High()
-	var Input2 rpio.Pin
 	Input2 = rpio.Pin(6)
 	Input2.Output()
 	Input1.Low()
