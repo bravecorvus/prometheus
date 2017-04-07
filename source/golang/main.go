@@ -306,6 +306,7 @@ func main() {
 				runningalarm.Add(1)
 				alarm.RunAlarm(currenttime, &runningalarm)
 				runningalarm.Wait()
+				break
 				// now := time.Now()
 				// now.Add(10 * time.Minute)
 				// nowstring := now.Format("15:04")
