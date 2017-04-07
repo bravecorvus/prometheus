@@ -2,9 +2,9 @@ package main
 
 import (
     // "fmt"
-    // "strconv"
-    // "strings"
+    "fmt"
     "github.com/stianeikeland/go-rpio"
+    "os"
     "time"
 )
 
