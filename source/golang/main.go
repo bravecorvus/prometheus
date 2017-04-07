@@ -295,7 +295,7 @@ func main() {
 			if alarm.Alarmtime == currenttime {
 				var runningalarm sync.WaitGroup
 				runningalarm.Add(1)
-				alarm.RunAlarm(currenttime, Enable, &runningalarm)
+				alarm.RunAlarm(currenttime, &runningalarm)
 				runningalarm.Wait()
 				// now := time.Now()
 				// now.Add(10 * time.Minute)
