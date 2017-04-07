@@ -315,9 +315,9 @@ func main() {
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/", fs)
 
-	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/", 301)
-	})
+	// http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
+	// 	http.Redirect(w, r, "/", 301)
+	// })
 
 	http.HandleFunc("/alarm1time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
