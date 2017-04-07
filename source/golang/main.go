@@ -103,6 +103,7 @@ func addTime(originaltime string, hms string, byhowmuch int) string { //takes or
 }
 
 func OverTenMinutes(alarm string, current string) bool {
+	fmt.Println("OverTenMinutes")
 	timealarm := StringTimeToReadTime(alarm)
 	timecurrent := time.Now()
 	diff := timecurrent.Sub(timealarm)
@@ -113,7 +114,8 @@ func OverTenMinutes(alarm string, current string) bool {
 	}
 }
 
-func Runsnooze(channel chan bool) {
+func Runsnooze(channel *chan bool) {
+	fmt.Println("Runsnooze")
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		http.Redirect(w, r, "/", 301)
@@ -135,6 +137,7 @@ func Runsnooze(channel chan bool) {
 // }
 
 func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
+	fmt.Println("RunAlarm")
 	defer wg.Done()
 	if (alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == false) {
 		return
@@ -154,7 +157,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	snoozed := make(chan bool)
 	// soundoff := make(chan bool)
 	// viboff := make(chan bool)
-	go Runsnooze(snoozed)
+	go Runsnooze(&snoozed)
 	// go Runsoundoff(soundoff, *alarm)
 	// go Runviboff(viboff, *alarm)
 	for {
@@ -181,6 +184,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		// 		return
 		// 	}
 		case itsbeentenminutes == true:
+			fmt.Println("itsbeentenminutes")
 			alarm.CurrentlyRunning = false
 			if startedWithMusic == true {
 				cmd.Process.Kill()
