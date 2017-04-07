@@ -130,7 +130,7 @@ func Runviboff(channel chan bool, alarm Alarm) {
 	})
 }
 
-func (alarm *Alarm) RunAlarm(currenttime string, Enable rpio.Pin, wg *sync.WaitGroup) {
+func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	if (alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == false) {
 		return
@@ -192,9 +192,9 @@ func (alarm *Alarm) RunAlarm(currenttime string, Enable rpio.Pin, wg *sync.WaitG
 			case ((alarm.Sound == false) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					VibOn(Enable)
+					VibOn()
 				} else if vibcounter == 20 {
-					VibOff(Enable)
+					VibOff()
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
@@ -203,9 +203,9 @@ func (alarm *Alarm) RunAlarm(currenttime string, Enable rpio.Pin, wg *sync.WaitG
 			case ((alarm.Sound == true) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
 				vibcounter++
 				if vibcounter == 0 {
-					VibOn(Enable)
+					VibOn()
 				} else if vibcounter == 20 {
-					VibOff(Enable)
+					VibOff()
 				} else if vibcounter == 40 {
 					vibcounter = 0
 				}
@@ -255,7 +255,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 301)
 }
 
-func main() {
+func init() {
 	var Enable rpio.Pin
 	Enable = rpio.Pin(17)
 	Enable.Output()
@@ -267,6 +267,9 @@ func main() {
 	Input2 = rpio.Pin(6)
 	Input2.Output()
 	Input1.Low()
+}
+
+func main() {
 	// Initialize all 4 instances of alarm clocks
 	alarm1 := Alarm{}
 	alarm2 := Alarm{}
@@ -512,10 +515,10 @@ func main() {
 	}
 }
 
-func VibOn(Enable rpio.Pin) {
+func VibOn() {
 	Enable.High()
 }
 
-func VibOff(Enable rpio.Pin) {
+func VibOff() {
 	Enable.Low()
 }
