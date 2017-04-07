@@ -256,12 +256,15 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	Enable := rpio.Pin(17)
+	var Enable rpio.Pin
+	Enable = rpio.Pin(17)
 	Enable.Output()
-	Input1 := rpio.Pin(5)
+	var Input1 rpio.Pin
+	Input1 = rpio.Pin(5)
 	Input1.Output()
 	Input1.High()
-	Input2 := rpio.Pin(6)
+	var Input2 rpio.Pin
+	Input2 = rpio.Pin(6)
 	Input2.Output()
 	Input1.Low()
 	// Initialize all 4 instances of alarm clocks
