@@ -63,11 +63,11 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string) {
 }
 
 func VibOn() {
-	fmt.Println("Vibrating")
+	Enable.High()
 }
 
 func VibOff() {
-	fmt.Println("Vibration Stop")
+	Enable.Low()
 }
 
 func Errhandler(err error) {
