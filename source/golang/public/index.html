@@ -1,0 +1,132 @@
+<!--Andrew Lee 2016-->
+<html>
+<head>
+        <script src="/js/jquery-3.1.1.min.js"></script>
+         <script type="text/javascript" src="nixie/nixie.js"></script>
+         <!-- <script src="/js/scriptbuttons.js"></script> -->
+        <link rel="stylesheet" type="text/css" href="/css/styles.css">
+        <script src="/js/script.js"></script>
+</head>
+<body>
+
+<div id="pagetitle">
+<p id="atomicclock">Atomic Clock</p>
+<form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
+<div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
+</div>
+
+<div id="main">
+<div id="leftside">
+<div id="alarm1">
+    <h1 id="tit1">ALARM 1</h1>
+    <br>
+    <label>Enter Time: </label>
+    <form action="/alarm1time" method="post"><input class="time" type="time" id="mytime1" name="mytime1"></input><button>Submit Time</button></form>
+    <br>
+    <form name="alarm1sound" id ="alarm1sound" action="/alarm1sound" method="post">
+    <label class="switch">
+        <div id="alarmsound1"></div>
+    </label>
+    </form>
+    <label>Sound</label>
+    <br>
+    <form name="alarm1vibration" id ="alarm1vibration" action="/alarm1vibration" method="post">
+    <label class="switch">
+        <div id="alarmvibration1"></div>
+    </label>
+    </form>
+    <label>Vibration</label>
+</div> <!-- alarm1 -->
+<div id="alarm2">
+    <h1 id="tit2">ALARM 2</h1>
+    <br>
+    <label>Enter Time: </label>
+    <form action="/alarm2time" method="post"><input class="time" type="time" id="mytime2" name="mytime2"></input><button>Submit Time</button></form>
+    <br>
+    <form name="alarm2sound" id ="alarm2sound" action="/alarm2sound" method="post">
+    <label class="switch">
+        <div id="alarmsound2"></div>
+    </label>
+    </form>
+    <label>Sound</label>
+    <br>
+    <form name="alarm2vibration" id ="alarm2vibration" action="/alarm2vibration" method="post">
+    <label class="switch">
+        <div id="alarmvibration2"></div>
+    </label>
+    </form>
+    <label>Vibration</label>
+</div> <!-- alarm2 -->
+</div> <!-- leftside -->
+<div id="rightside">
+<div id="alarm3">
+    <h1 id="tit3">ALARM 3</h1>
+    <br>
+    <label>Enter Time: </label>
+    <form action="/alarm3time" method="post"><input class="time" type="time" id="mytime3" name="mytime3"></input><button>Submit Time</button></form>
+    <br>
+    <form name="alarm3sound" id ="alarm3sound" action="/alarm3sound" method="post">
+    <label class="switch">
+        <div id="alarmsound3"></div>
+    </label>
+    </form>
+    <label>Sound</label>
+    <br>
+    <form name="alarm3vibration" id ="alarm3vibration" action="/alarm3vibration" method="post">
+    <label class="switch">
+        <div id="alarmvibration3"></div>
+    </label>
+    </form>
+    <label>Vibration</label>
+</div> <!-- alarm3 -->
+<div id="alarm4">
+    <h1 id="tit4">ALARM 4</h1>
+    <br>
+    <label>Enter Time: </label>
+    <form action="/alarm4time" method="post"><input class="time" type="time" id="mytime4" name="mytime4"></input><button>Submit Time</button></form>
+    <br>
+    <form name="alarm4sound" id ="alarm4sound" action="/alarm4sound" method="post">
+    <label class="switch">
+        <div id="alarmsound4"></div>
+    </label>
+    </form>
+    <label>Sound</label>
+    <br>
+    <form name="alarm4vibration" id ="alarm4vibration" action="/alarm4vibration" method="post">
+    <label class="switch">
+        <div id="alarmvibration4"></div>
+    </label>
+    </form>
+    <label>Vibration</label>
+</div> <!-- alarm4 -->
+</div> <!-- rightside -->
+</div> <!-- main -->
+<div id="afterclock">
+<div id="afterclockleft">
+    <form ref='uploadForm' 
+        id='uploadForm' 
+        action='/upload' 
+        method='post' 
+        encType="multipart/form-data">
+            <input id="button" type="file" name="sampleFile" >
+            <input id="button" type='submit' value="Submit New Alarm Sound"/>
+    </form>    
+</div>
+</div>
+        <script type="text/javascript">
+            var nd = new NixieClock();
+            nd.id = 'nd1';
+            nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
+            nd.charWidth = 90;
+            nd.charHeight = 150;
+            nd.extraGapsWidths[1] = 12;
+            nd.extraGapsWidths[3] = 12;
+            nd.charGapWidth = 10;
+            document.getElementById(nd.id).parentNode.style.background = "black";
+            document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+            nd.init();
+            nd.run();
+            nd.setText('-1.234567890');
+        </script>
+</body>
+</html>
