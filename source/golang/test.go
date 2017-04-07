@@ -19,7 +19,7 @@ func main() {
     Input1.High()
     Input2 = rpio.Pin(6)
     Input2.Output()
-    Input1.Low()
+    Input2.Low()
     Enable.High()
     time.Sleep(5 * time.Second)
     Enable.High()
