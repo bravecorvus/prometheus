@@ -192,11 +192,9 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			alarm.Alarmtime = addTime(alarm.Alarmtime, "h", 1)
 			var writeback wg = sync.WaitGroup
 			writeback.Add(1)
-			writeBackJson(alarm, "./public/json/"+alarm.Name, &writeback)
+			path := "./public/json/" + alarm.Name
+			writeBackJson(alarm, path, &writeback)
 			writeback.Wait()
-			var w = http.ResponseWriter
-			var r = http.Request
-			http.Redirect(w, &r, "/", 301)
 			return
 		default:
 			switch {
