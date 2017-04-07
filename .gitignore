@@ -19,3 +19,4 @@ alarm.m4a
 source/webinterface/public/json/*
 source/webinterface/public/assets/alarm.m4a
 source/webinterface/public/json/time.json
+source/golang/public/json/\._time\.txt
