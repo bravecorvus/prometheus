@@ -9,6 +9,11 @@ import (
 )
 
 func main() {
+    if err := rpio.Open(); err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+    defer rpio.Close()
     var Enable rpio.Pin
     var Input1 rpio.Pin
     var Input2 rpio.Pin
