@@ -190,7 +190,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 			}
 			alarm.Alarmtime = addTime(alarm.Alarmtime, "h", 1)
-			var writeback wg = sync.WaitGroup
+			var writeback = sync.WaitGroup
 			writeback.Add(1)
 			path := "./public/json/" + alarm.Name
 			writeBackJson(*alarm, path, &writeback)
