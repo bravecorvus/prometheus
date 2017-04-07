@@ -260,6 +260,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "File uploaded successfully :")
 	fmt.Fprintf(w, header.Filename)
+	http.Redirect(w, r, "/", 301)
 }
 
 func main() {
