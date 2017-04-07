@@ -256,6 +256,14 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	Enable := rpio.Pin(17)
+	Enable.Output()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input1.Low()
 	// Initialize all 4 instances of alarm clocks
 	alarm1 := Alarm{}
 	alarm2 := Alarm{}
@@ -499,14 +507,6 @@ func main() {
 	if err != nil {
 		fmt.Println("RPIO OPEN FAILURE")
 	}
-	Enable := rpio.Pin(17)
-	Enable.Output()
-	Input1 := rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 := rpio.Pin(6)
-	Input2.Output()
-	Input1.Low()
 }
 
 func VibOn(Enable *rpio) {
