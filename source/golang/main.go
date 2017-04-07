@@ -62,14 +62,6 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string) {
 
 }
 
-func VibOn() {
-	Enable.High()
-}
-
-func VibOff() {
-	Enable.Low()
-}
-
 func Errhandler(err error) {
 	if err != nil {
 		fmt.Println("You fucked up somewhere")
@@ -515,4 +507,12 @@ func main() {
 	Input2 := rpio.Pin(6)
 	Input2.Output()
 	Input1.Low()
+}
+
+func VibOn() {
+	Enable.High()
+}
+
+func VibOff() {
+	Enable.Low()
 }
