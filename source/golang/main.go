@@ -260,6 +260,11 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
 	Enable = rpio.Pin(17)
 	Enable.Output()
 	Input1 = rpio.Pin(5)
@@ -509,11 +514,6 @@ func main() {
 
 	log.Println("Listening...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
-
-	err := rpio.Open()
-	if err != nil {
-		fmt.Println("RPIO OPEN FAILURE")
-	}
 }
 
 func VibOn() {
