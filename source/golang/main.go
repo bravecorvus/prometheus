@@ -117,7 +117,7 @@ func OverTenMinutes(alarm string, current string) bool {
 func Runsnooze(channel <-chan bool) {
 	fmt.Println("Runsnooze")
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
-		channel <- true
+		channel = true
 		http.Redirect(w, r, "/", 301)
 	})
 }
