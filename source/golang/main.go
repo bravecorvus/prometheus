@@ -120,19 +120,19 @@ func Runsnooze(channel chan bool) {
 	})
 }
 
-func Runsoundoff(channel chan bool, alarm Alarm) {
-	http.HandleFunc("/"+alarm.Name+"sound", func(w http.ResponseWriter, r *http.Request) {
-		channel <- true
-		http.Redirect(w, r, "/", 301)
-	})
-}
+// func Runsoundoff(channel chan bool, alarm Alarm) {
+// 	http.HandleFunc("/"+alarm.Name+"sound", func(w http.ResponseWriter, r *http.Request) {
+// 		channel <- true
+// 		http.Redirect(w, r, "/", 301)
+// 	})
+// }
 
-func Runviboff(channel chan bool, alarm Alarm) {
-	http.HandleFunc("/"+alarm.Name+"vibration", func(w http.ResponseWriter, r *http.Request) {
-		channel <- true
-		http.Redirect(w, r, "/", 301)
-	})
-}
+// func Runviboff(channel chan bool, alarm Alarm) {
+// 	http.HandleFunc("/"+alarm.Name+"vibration", func(w http.ResponseWriter, r *http.Request) {
+// 		channel <- true
+// 		http.Redirect(w, r, "/", 301)
+// 	})
+// }
 
 func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	defer wg.Done()
@@ -152,11 +152,11 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		cmd.Start()
 	}
 	snoozed := make(chan bool)
-	soundoff := make(chan bool)
-	viboff := make(chan bool)
+	// soundoff := make(chan bool)
+	// viboff := make(chan bool)
 	go Runsnooze(snoozed)
-	go Runsoundoff(soundoff, *alarm)
-	go Runviboff(viboff, *alarm)
+	// go Runsoundoff(soundoff, *alarm)
+	// go Runviboff(viboff, *alarm)
 	for {
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		switch { //Special cases using gochannels to listen to special activities
@@ -167,19 +167,19 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			alarm.CurrentlyRunning = false
 			alarm.Alarmtime = addTime(alarm.Alarmtime, "m", 10)
 			return
-		case <-soundoff:
-			if startedWithMusic {
-				cmd.Process.Kill()
-			}
-			if !alarm.Vibration {
-				alarm.CurrentlyRunning = false
-				return
-			}
-		case <-viboff:
-			if !alarm.Sound {
-				alarm.CurrentlyRunning = false
-				return
-			}
+		// case <-soundoff:
+		// 	if startedWithMusic {
+		// 		cmd.Process.Kill()
+		// 	}
+		// 	if !alarm.Vibration {
+		// 		alarm.CurrentlyRunning = false
+		// 		return
+		// 	}
+		// case <-viboff:
+		// 	if !alarm.Sound {
+		// 		alarm.CurrentlyRunning = false
+		// 		return
+		// 	}
 		case itsbeentenminutes == true:
 			alarm.CurrentlyRunning = false
 			if startedWithMusic == true {
