@@ -21,6 +21,6 @@ func main() {
     Input2.Output()
     Input1.Low()
     Enable.High()
-    time.Sleep(5 * time.Second())
+    time.Sleep(5 * time.Second)
     Enable.High()
 }
