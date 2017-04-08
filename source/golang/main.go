@@ -43,7 +43,7 @@ var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 
-func (argumentalarm *Alarm) initializeAlarms(filepath string, index int) {
+func getRawJson(filepath string) []JsonAlarm {
 	raw, err1 := ioutil.ReadFile(filepath)
 	if err1 != nil {
 		fmt.Println("ERROR")
@@ -51,14 +51,18 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string, index int) {
 	}
 	var alarm []JsonAlarm
 	json.Unmarshal(raw, &alarm)
-	argumentalarm.Name = string(alarm[index].Name)
-	argumentalarm.Alarmtime = string(alarm[index].Alarm)
-	if string(alarm[index].Sound) == "on" {
+	return alarm
+}
+
+func (argumentalarm *Alarm) initializeAlarms(jsondata []JsonAlarm, index int) {
+	argumentalarm.Name = string(jsondata[index].Name)
+	argumentalarm.Alarmtime = string(jsondata[index].Alarm)
+	if string(jsondata[index].Sound) == "on" {
 		argumentalarm.Sound = true
 	} else {
 		argumentalarm.Sound = false
 	}
-	if string(alarm[index].Vibration) == "on" {
+	if string(jsondata[index].Vibration) == "on" {
 		argumentalarm.Vibration = true
 	} else {
 		argumentalarm.Vibration = false
@@ -288,10 +292,11 @@ func init() {
 	Enable = rpio.Pin(17)
 	Enable.Output()
 	Enable.Low()
-	Alarm1.initializeAlarms("./public/json/alarms.json", 0)
-	Alarm2.initializeAlarms("./public/json/alarms.json", 1)
-	Alarm3.initializeAlarms("./public/json/alarms.json", 2)
-	Alarm4.initializeAlarms("./public/json/alarms.json", 3)
+	jsondata := getRawJson("./public/json/alarms.json")
+	Alarm1.initializeAlarms(jsondata, 0)
+	Alarm2.initializeAlarms(jsondata, 1)
+	Alarm3.initializeAlarms(jsondata, 2)
+	Alarm4.initializeAlarms(jsondata, 3)
 }
 
 func main() {
