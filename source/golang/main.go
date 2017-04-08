@@ -45,7 +45,7 @@ var Alarm4 = Alarm{}
 
 func JsonParser(p interface{}) string {
 	bytes, err := json.Marshal(p)
-	if err != "nil" {
+	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
