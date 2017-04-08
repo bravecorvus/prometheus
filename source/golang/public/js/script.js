@@ -1,36 +1,3 @@
-function submitalarm1sound() {
-    document.getElementById('alarm1sound').submit();
-}
-
-function submitalarm1vibration() {
-    document.getElementById('alarm1vibration').submit();
-}
-
-function submitalarm2sound() {
-    document.getElementById('alarm2sound').submit();
-}
-
-function submitalarm2vibration() {
-    document.getElementById('alarm2vibration').submit();
-}
-
-function submitalarm3sound() {
-    document.getElementById('alarm3sound').submit();
-}
-
-function submitalarm3vibration() {
-    document.getElementById('alarm3vibration').submit();
-}
-
-function submitalarm4sound() {
-    document.getElementById('alarm4sound').submit();
-}
-
-function submitalarm4vibration() {
-    document.getElementById('alarm4vibration').submit();
-}
-
-
 $.getJSON("/json/alarms.json", function( data ) {
     var time;
     var sound;
@@ -62,6 +29,37 @@ $.getJSON("/json/alarms.json", function( data ) {
 });
 
 $(document).ready(function() {
+    function submitalarm1sound() {
+        document.getElementById('alarm1sound').submit();
+    }
+
+    function submitalarm1vibration() {
+        document.getElementById('alarm1vibration').submit();
+    }
+
+    function submitalarm2sound() {
+        document.getElementById('alarm2sound').submit();
+    }
+
+    function submitalarm2vibration() {
+        document.getElementById('alarm2vibration').submit();
+    }
+
+    function submitalarm3sound() {
+        document.getElementById('alarm3sound').submit();
+    }
+
+    function submitalarm3vibration() {
+        document.getElementById('alarm3vibration').submit();
+    }
+
+    function submitalarm4sound() {
+        document.getElementById('alarm4sound').submit();
+    }
+
+    function submitalarm4vibration() {
+        document.getElementById('alarm4vibration').submit();
+    }
     document.getElementById("sound1").setAttribute("onClick", "submitalarm1sound()");
     document.getElementById("vibration1").setAttribute("onClick", "submitalarm1vibration()");
     document.getElementById("sound2").setAttribute("onClick", "submitalarm2sound()");
