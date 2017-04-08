@@ -90,6 +90,8 @@ func StringTimeToReadTime(arg string) time.Time {
 
 func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
 	thetime, err := time.Parse("15:04", originaltime)
+	fmt.Println("addTime")
+	fmt.Println("Original Time is " + originaltime)
 	Errhandler(err)
 	switch {
 	case hms == "h":
@@ -99,6 +101,7 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 	case hms == "s":
 		thetime.Add(time.Duration(byhowmuch) * time.Second)
 	}
+	fmt.Print("New time after adding is " + thetime.Format("15:04"))
 	arg.Alarmtime = thetime.Format("15:04")
 }
 
