@@ -91,21 +91,16 @@ func StringTimeToReadTime(arg string) time.Time {
 func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
 	thetime, err := time.Parse("15:04", originaltime)
 	fmt.Println("addTime")
-	fmt.Println("Original Time is " + originaltime)
 	Errhandler(err)
 	var updatedtime = time.Now()
 	switch {
 	case hms == "h":
-		fmt.Println("h")
 		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Hour)
 	case hms == "m":
-		fmt.Println("m")
 		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Minute)
 	case hms == "s":
-		fmt.Println("s")
 		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Second)
 	}
-	fmt.Print("New time after adding is " + updatedtime.Format("15:04"))
 	arg.Alarmtime = updatedtime.Format("15:04")
 }
 
@@ -161,9 +156,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 			}
 			alarm.CurrentlyRunning = false
-			fmt.Println("Before snoozing, alarm time is ", alarm.Alarmtime)
 			alarm.addTime(alarm.Alarmtime, "m", 10)
-			fmt.Println("After snoozing, alarm time is ", alarm.Alarmtime)
 			var writeback sync.WaitGroup
 			writeback.Add(1)
 			path := "./public/json/" + alarm.Name
