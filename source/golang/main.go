@@ -222,10 +222,10 @@ func convertBooltoString(arg bool) string {
 	}
 }
 
-func writeBackJson(alarm Alarm, filepath string, wg *sync.WaitGroup) {
+func writeBackJson(alarm1 Alarm, alarm2 Alarm, alarm3 Alarm, alarm4 Alarm, filepath string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	// fmt.Println("[{\"name\":" + alarm.Name + ",\"time\":\"" + alarm.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm.Vibration) + "\"}]")
-	content := []byte("[{\"name\":\"" + alarm.Name + "\",\"time\":\"" + alarm.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm.Vibration) + "\"}]")
+	// fmt.Println("[{\"name\":\"" + alarm1.Name + "\",\"time\":\"" + alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm1.Vibration) + "\"}\n{\"name\":\"" + alarm2.Name + "\",\"time\":\"" + alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm2.Vibration) + "\"}\n{\"name\":\"" + alarm3.Name + "\",\"time\":\"" + alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm3.Vibration) + "\"}\n{\"name\":\"" + alarm4.Name + "\",\"time\":\"" + alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm4.Vibration) + "\"}]")
+	content := []byte("[{\"name\":\"" + alarm1.Name + "\",\"time\":\"" + alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm1.Vibration) + "\"}\n{\"name\":\"" + alarm2.Name + "\",\"time\":\"" + alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm2.Vibration) + "\"}\n{\"name\":\"" + alarm3.Name + "\",\"time\":\"" + alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm3.Vibration) + "\"}\n{\"name\":\"" + alarm4.Name + "\",\"time\":\"" + alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(alarm4.Vibration) + "\"}]")
 	err := ioutil.WriteFile(filepath, content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back JSON alarm file for " + filepath)
@@ -317,7 +317,7 @@ func main() {
 		alarm1.Alarmtime = r.FormValue("mytime1")
 		var time1 sync.WaitGroup
 		time1.Add(1)
-		go writeBackJson(alarm1, "./public/json/alarm1.json", &time1)
+		writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm1.json", &time1)
 		time1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -337,7 +337,7 @@ func main() {
 		}
 		var sound1 sync.WaitGroup
 		sound1.Add(1)
-		go writeBackJson(alarm1, "./public/json/alarm1.json", &sound1)
+		writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm1.json", &sound1)
 		sound1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -356,7 +356,7 @@ func main() {
 		}
 		var vibration1 sync.WaitGroup
 		vibration1.Add(1)
-		go writeBackJson(alarm1, "./public/json/alarm1.json", &vibration1)
+		writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm1.json", &vibration1)
 		vibration1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -366,7 +366,7 @@ func main() {
 		// fmt.Println(stringedinput)
 		var time2 sync.WaitGroup
 		time2.Add(1)
-		go writeBackJson(alarm2, "./public/json/alarm2.json", &time2)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm2.json", &time2)
 		time2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -385,7 +385,7 @@ func main() {
 		}
 		var sound2 sync.WaitGroup
 		sound2.Add(1)
-		go writeBackJson(alarm2, "./public/json/alarm2.json", &sound2)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm2.json", &sound2)
 		sound2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -404,7 +404,7 @@ func main() {
 		}
 		var vibration2 sync.WaitGroup
 		vibration2.Add(1)
-		go writeBackJson(alarm2, "./public/json/alarm2.json", &vibration2)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm2.json", &vibration2)
 		vibration2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -413,7 +413,7 @@ func main() {
 		alarm3.Alarmtime = r.FormValue("mytime3")
 		var time3 sync.WaitGroup
 		time3.Add(1)
-		go writeBackJson(alarm3, "./public/json/alarm3.json", &time3)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm3.json", &time3)
 		time3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -432,7 +432,7 @@ func main() {
 		}
 		var sound3 sync.WaitGroup
 		sound3.Add(1)
-		go writeBackJson(alarm3, "./public/json/alarm3.json", &sound3)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm3.json", &sound3)
 		sound3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -451,7 +451,7 @@ func main() {
 		}
 		var vibration3 sync.WaitGroup
 		vibration3.Add(1)
-		go writeBackJson(alarm3, "./public/json/alarm3.json", &vibration3)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm3.json", &vibration3)
 		vibration3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -460,7 +460,7 @@ func main() {
 		alarm4.Alarmtime = r.FormValue("mytime4")
 		var time4 sync.WaitGroup
 		time4.Add(1)
-		go writeBackJson(alarm4, "./public/json/alarm4.json", &time4)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm4.json", &time4)
 		time4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -479,7 +479,7 @@ func main() {
 		}
 		var sound4 sync.WaitGroup
 		sound4.Add(1)
-		go writeBackJson(alarm4, "./public/json/alarm4.json", &sound4)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm4.json", &sound4)
 		sound4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -498,7 +498,7 @@ func main() {
 		}
 		var vibration4 sync.WaitGroup
 		vibration4.Add(1)
-		go writeBackJson(alarm4, "./public/json/alarm4.json", &vibration4)
+		go writeBackJson(alarm1, alarm2, alarm3, alarm4, "./public/json/alarm4.json", &vibration4)
 		vibration4.Wait()
 		http.Redirect(w, r, "/", 401)
 	})
