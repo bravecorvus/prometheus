@@ -149,14 +149,18 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		switch { //Special cases using gochannels to listen to special activities
 		case <-snoozed: //Just got snoozed
+			fmt.Println("snooze just got pressed")
 			if startedWithMusic {
 				cmd.Process.Kill()
 			}
 			alarm.CurrentlyRunning = false
+			fmt.Println("Before snoozing, alarm time is ", alarm.Alarmtime)
 			alarm.addTime(alarm.Alarmtime, "m", 10)
+			fmt.Println("After snoozing, alarm time is ", alarm.Alarmtime)
 			var writeback sync.WaitGroup
 			writeback.Add(1)
 			path := "./public/json/" + alarm.Name
+			fmt.Println("path is " + path)
 			writeBackJson(*alarm, path, &writeback)
 			writeback.Wait()
 			readyforreload <- true
@@ -177,10 +181,12 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		default:
 			switch {
 			case ((alarm.Sound == false) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == true) && (startedWithMusic)):
+				fmt.Println("sound false | vibration false | currentlyrunning true")
 				alarm.CurrentlyRunning = false
 				cmd.Process.Kill()
 				return
 			case ((alarm.Sound == false) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
+				fmt.Println("sound false | vibration true | currentlyrunning true")
 				fmt.Println("vib1")
 				if vibcounter == 0 {
 					VibOn()
@@ -193,6 +199,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			// case ((alarm.Sound == true) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == true)):
 			// 	time.Sleep(5 * time.Nanosecond)
 			case ((alarm.Sound == true) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
+				fmt.Println("sound true | vibration true | currentlyrunning true")
 				fmt.Println("vib2")
 				if vibcounter == 0 {
 					VibOn()
