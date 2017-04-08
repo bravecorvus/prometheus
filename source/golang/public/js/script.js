@@ -15,7 +15,7 @@ $.getJSON("/json/alarms.json", function( data ) {
         vibration = data[i].vibration;
         document.getElementById("tit".concat(currentint)).innerHTML = "<h1>"+time+"</h1>";
         if(sound == "on") {
-            $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'" type="checkbox" value="on" checked><div class="slider round" onClick = "document.getElementById("alarm'+currentint+'sound").submit();"></div>')
+            $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'" type="checkbox" value="on" checked><div class="slider round" onClick = "document.getElementById("'.concat('alarm'.concat(currentint.concat('sound").submit();"></div>'))))
         } else {
             $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'" type="checkbox" value="off" onClick = "document.getElementById("alarm'+currentint+'sound").submit();"><div class="slider round"></div>')
         }
