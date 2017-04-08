@@ -27,14 +27,3 @@ $.getJSON("/json/alarms.json", function( data ) {
         }
     }
 });
-
-$(window).on("load", function() {
-    document.getElementById("sound1").setAttribute("onClick", "document.getElementById('alarm1sound').submit();");
-    document.getElementById("vibration1").setAttribute("onClick", "document.getElementById('alarm1vibration').submit();");
-    document.getElementById("sound2").setAttribute("onClick", "document.getElementById('alarm2sound').submit();");
-    document.getElementById("vibration2").setAttribute("onClick", "document.getElementById('alarm2vibration').submit();");
-    document.getElementById("sound3").setAttribute("onClick", "document.getElementById('alarm3sound').submit();");
-    document.getElementById("vibration3").setAttribute("onClick", "document.getElementById('alarm3vibration').submit();");
-    document.getElementById("sound4").setAttribute("onClick", "document.getElementById('alarm4sound').submit();");
-    document.getElementById("vibration4").setAttribute("onClick", "document.getElementById('alarm4vibration').submit();");
-});
