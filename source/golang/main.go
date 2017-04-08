@@ -43,49 +43,28 @@ var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 
-func JsonParser(p interface{}) string {
-	bytes, err := json.Marshal(p)
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	return string(bytes)
-}
-
-func (alarm *Alarm) initializeAlarms(index int, jsonobject []JsonAlarm) {
-	alarm.Name = "A"
-	alarm.Alarmtime = "10:00"
-	alarm.Sound = true
-	alarm.Vibration = true
-	fmt.Println(JsonParser(jsonobject[index]))
-}
-
-func getAlarms(filepath string) []JsonAlarm {
+func (argumentalarm *Alarm) initializeAlarms(filepath string, index int) {
 	raw, err1 := ioutil.ReadFile(filepath)
 	if err1 != nil {
 		fmt.Println("ERROR")
 		os.Exit(1)
 	}
-	var c []JsonAlarm
-	json.Unmarshal(raw, &c)
-	// if err2 != nil {
-	// 	fmt.Println("ERROR JSON")
-	// 	os.Exit(1)
-	// }
-	// argumentalarm.Name = alarm[index].Name
-	// argumentalarm.Alarmtime = alarm[index].Alarm
-	// if alarm[index].Sound == "on" {
-	// 	argumentalarm.Sound = true
-	// } else {
-	// 	argumentalarm.Sound = false
-	// }
-	// if alarm[index].Vibration == "on" {
-	// 	argumentalarm.Vibration = true
-	// } else {
-	// 	argumentalarm.Vibration = false
-	// }
-	// argumentalarm.CurrentlyRunning = false
-	return c
+	var alarm []JsonAlarm
+	json.Unmarshal(raw, &alarm)
+	argumentalarm.Name = string(alarm[index].Name)
+	argumentalarm.Alarmtime = string(alarm[index].Alarm)
+	if string(alarm[index].Sound) == "on" {
+		argumentalarm.Sound = true
+	} else {
+		argumentalarm.Sound = false
+	}
+	if string(alarm[index].Vibration) == "on" {
+		argumentalarm.Vibration = true
+	} else {
+		argumentalarm.Vibration = false
+	}
+	argumentalarm.CurrentlyRunning = false
+
 }
 
 func Errhandler(err error) {
@@ -309,11 +288,10 @@ func init() {
 	Enable = rpio.Pin(17)
 	Enable.Output()
 	Enable.Low()
-	Jsonobject := getAlarms("./public/json/alarms.json")
-	Alarm1.initializeAlarms(0, Jsonobject)
-	Alarm2.initializeAlarms(1, Jsonobject)
-	Alarm3.initializeAlarms(2, Jsonobject)
-	Alarm4.initializeAlarms(3, Jsonobject)
+	Alarm1.initializeAlarms("./public/json/alarms.json", 0)
+	Alarm2.initializeAlarms("./public/json/alarms.json", 1)
+	Alarm3.initializeAlarms("./public/json/alarms.json", 2)
+	Alarm4.initializeAlarms("./public/json/alarms.json", 3)
 }
 
 func main() {

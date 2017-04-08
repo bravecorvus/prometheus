@@ -30,11 +30,10 @@ func toJson(p interface{}) string {
 func main() {
 
     pages := getPages()
-    for _, p := range pages {
-        fmt.Println(p.toString())
-    }
-
-    fmt.Println(toJson(pages))
+    // for _, p := range pages {
+    //     fmt.Println(p.toString())
+    // }
+    fmt.Println(string(pages[2].Title))
 }
 
 func getPages() []Page {
