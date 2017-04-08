@@ -144,7 +144,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	}
 	snoozed := make(chan bool)
 	readyforreload := make(chan bool)
-	go Runsnooze(snoozed)
+	go Runsnooze(snoozed, readyforreload)
 	for {
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		switch { //Special cases using gochannels to listen to special activities
@@ -159,6 +159,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			path := "./public/json/" + alarm.Name
 			writeBackJson(*alarm, path, &writeback)
 			writeback.Wait()
+			readyforreload <- true
 			return
 		case itsbeentenminutes == true:
 			fmt.Println("itsbeentenminutes")
