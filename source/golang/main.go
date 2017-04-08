@@ -88,7 +88,7 @@ func StringTimeToReadTime(arg string) time.Time {
 	return time.Date(currentyear, currentmonth, currentday, hourldigit+hourrdigit, minuteldigit+minuterdigit, 0, 0, time.UTC)
 }
 
-func addTime(originaltime string, hms string, byhowmuch int) string { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
+func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
 	thetime, err := time.Parse("15:04", originaltime)
 	Errhandler(err)
 	switch {
@@ -99,7 +99,7 @@ func addTime(originaltime string, hms string, byhowmuch int) string { //takes or
 	case hms == "s":
 		thetime.Add(time.Duration(byhowmuch) * time.Second)
 	}
-	return thetime.Format("15:04")
+	arg.Alarmtime = thetime.Format("15:04")
 }
 
 func OverTenMinutes(alarm string, current string) bool {
@@ -107,6 +107,7 @@ func OverTenMinutes(alarm string, current string) bool {
 	timealarm := StringTimeToReadTime(alarm)
 	timecurrent := time.Now()
 	diff := timecurrent.Sub(timealarm)
+	fmt.Println(diff.format("15:04"))
 	if diff.Minutes() > 10 {
 		return false
 	} else {
@@ -114,10 +115,11 @@ func OverTenMinutes(alarm string, current string) bool {
 	}
 }
 
-func Runsnooze(channel chan bool) {
+func Runsnooze(channel chan bool, readyforreload chan bool) {
 	fmt.Println("Runsnooze")
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
+		<-readyforreload
 		http.Redirect(w, r, "/", 301)
 	})
 }
@@ -141,6 +143,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		cmd.Start()
 	}
 	snoozed := make(chan bool)
+	readyforreload := make(chan bool)
 	go Runsnooze(snoozed)
 	for {
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
@@ -150,7 +153,12 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 			}
 			alarm.CurrentlyRunning = false
-			alarm.Alarmtime = addTime(alarm.Alarmtime, "m", 10)
+			alarm.addTime(alarm.Alarmtime, "m", 10)
+			var writeback sync.WaitGroup
+			writeback.Add(1)
+			path := "./public/json/" + alarm.Name
+			writeBackJson(*alarm, path, &writeback)
+			writeback.Wait()
 			return
 		case itsbeentenminutes == true:
 			fmt.Println("itsbeentenminutes")
@@ -158,7 +166,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			if startedWithMusic == true {
 				cmd.Process.Kill()
 			}
-			alarm.Alarmtime = addTime(alarm.Alarmtime, "h", 1)
+			alarm.addTime(alarm.Alarmtime, "h", 1)
 			var writeback sync.WaitGroup
 			writeback.Add(1)
 			path := "./public/json/" + alarm.Name
@@ -172,6 +180,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 				return
 			case ((alarm.Sound == false) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
+				fmt.Println("vib1")
 				if vibcounter == 0 {
 					VibOn()
 				} else if vibcounter == 200 {
@@ -183,6 +192,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			// case ((alarm.Sound == true) && (alarm.Vibration == false) && (alarm.CurrentlyRunning == true)):
 			// 	time.Sleep(5 * time.Nanosecond)
 			case ((alarm.Sound == true) && (alarm.Vibration == true) && (alarm.CurrentlyRunning == true)):
+				fmt.Println("vib2")
 				if vibcounter == 0 {
 					VibOn()
 				} else if vibcounter == 200 {
@@ -236,8 +246,22 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", 301)
 }
 
-// func init() {
-// }
+func init() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 = rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 = rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable = rpio.Pin(17)
+	Enable.Output()
+	Enable.Low()
+}
 
 func main() {
 	// Initialize all 4 instances of alarm clocks
@@ -279,10 +303,6 @@ func main() {
 	// Server index.html under //public/index.html
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/", fs)
-
-	// http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
-	// 	http.Redirect(w, r, "/", 301)
-	// })
 
 	http.HandleFunc("/alarm1time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
@@ -482,35 +502,9 @@ func main() {
 }
 
 func VibOn() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Input1 = rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 = rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable = rpio.Pin(17)
-	Enable.Output()
 	Enable.High()
 }
 
 func VibOff() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Input1 = rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 = rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable = rpio.Pin(17)
-	Enable.Output()
 	Enable.Low()
 }
