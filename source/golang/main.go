@@ -81,7 +81,7 @@ func StringTimeToReadTime(arg string) time.Time {
 	currentyear, currentmonth, currentday := time.Now().Date()
 	thestring := arg
 	split := strings.Split(thestring, "")
-	fmt.Println(string(split[1]))
+	// fmt.Println(string(split[1]))
 	hourldigit, err1 := strconv.Atoi(string(split[0]))
 	Errhandler(err1)
 	hourrdigit, err2 := strconv.Atoi(string(split[1]))
