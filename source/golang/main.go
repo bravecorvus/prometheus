@@ -78,6 +78,7 @@ func Errhandler(err error) {
 }
 func StringTimeToReadTime(arg string) time.Time {
 	//To prevent getting wierd time discrepancies with the time (since I am only saving the time itself, I need to intialize using the current Date as well, or else it will be 00/00 TI:ME '00 )
+	fmt.Println("StringTimeToReadTime")
 	currentyear, currentmonth, currentday := time.Now().Date()
 	thestring := arg
 	split := strings.Split(thestring, "")
@@ -114,7 +115,7 @@ func OverTenMinutes(alarm string, current string) bool {
 	timealarm := StringTimeToReadTime(alarm)
 	timecurrent := time.Now()
 	diff := timecurrent.Sub(timealarm)
-	fmt.Println(diff.Minutes())
+	fmt.Println("difference in minutes " + diff.Minutes())
 	if diff.Minutes() > 10 {
 		return false
 	} else {
