@@ -93,16 +93,17 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 	fmt.Println("addTime")
 	fmt.Println("Original Time is " + originaltime)
 	Errhandler(err)
+	var updatedtime = time.Now()
 	switch {
 	case hms == "h":
 		fmt.Println("h")
-		updatedtime := thetime.Add(time.Duration(byhowmuch) * time.Hour)
+		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Hour)
 	case hms == "m":
 		fmt.Println("m")
-		updatedtime := thetime.Add(time.Duration(byhowmuch) * time.Minute)
+		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Minute)
 	case hms == "s":
 		fmt.Println("s")
-		updatedtime := thetime.Add(time.Duration(byhowmuch) * time.Second)
+		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Second)
 	}
 	fmt.Print("New time after adding is " + updatedtime.Format("15:04"))
 	arg.Alarmtime = updatedtime.Format("15:04")
