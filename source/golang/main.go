@@ -68,10 +68,10 @@ func getAlarms(filepath string) []JsonAlarm {
 	}
 	var c []JsonAlarm
 	json.Unmarshal(raw, &c)
-	if err2 != nil {
-		fmt.Println("ERROR JSON")
-		os.Exit(1)
-	}
+	// if err2 != nil {
+	// 	fmt.Println("ERROR JSON")
+	// 	os.Exit(1)
+	// }
 	// argumentalarm.Name = alarm[index].Name
 	// argumentalarm.Alarmtime = alarm[index].Alarm
 	// if alarm[index].Sound == "on" {
