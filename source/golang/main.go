@@ -95,14 +95,17 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 	Errhandler(err)
 	switch {
 	case hms == "h":
-		thetime.Add(time.Duration(byhowmuch) * time.Hour)
+		fmt.Println("h")
+		updatedtime := thetime.Add(time.Duration(byhowmuch) * time.Hour)
 	case hms == "m":
-		thetime.Add(time.Duration(byhowmuch) * time.Minute)
+		fmt.Println("m")
+		updatedtime := thetime.Add(time.Duration(byhowmuch) * time.Minute)
 	case hms == "s":
-		thetime.Add(time.Duration(byhowmuch) * time.Second)
+		fmt.Println("s")
+		updatedtime := thetime.Add(time.Duration(byhowmuch) * time.Second)
 	}
-	fmt.Print("New time after adding is " + thetime.Format("15:04"))
-	arg.Alarmtime = thetime.Format("15:04")
+	fmt.Print("New time after adding is " + updatedtime.Format("15:04"))
+	arg.Alarmtime = updatedtime.Format("15:04")
 }
 
 func OverTenMinutes(alarm string, current string) bool {
