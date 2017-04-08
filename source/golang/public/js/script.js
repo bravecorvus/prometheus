@@ -48,15 +48,15 @@ $.getJSON("/json/alarms.json", function( data ) {
         vibration = data[i].vibration;
         document.getElementById("tit1").innerHTML = "<h1>"+time+"</h1>";
         if(sound == "on") {
-            $(soundid+currentint).append('<input id="sound'+currentint+'" name="sound'+currentint+'" type="checkbox" value="on" checked><div class="slider round"></div>')
+            $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'" type="checkbox" value="on" checked><div class="slider round"></div>')
         } else {
-            $(soundid+currentint).append('<input id="sound'+currentint+'" name="sound'+currentint'+" type="checkbox" value="off"><div class="slider round"></div>')
+            $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'+" type="checkbox" value="off"><div class="slider round"></div>')
         }
         if(vibration == "on") {
-            $(vibid+currentint).append('<input id="vibration'+currentint+'" name="vibration'+currentint+'" type="checkbox" value="on" checked><div class="slider round"></div>')
+            $(vibid.concat(currentint)).append('<input id="vibration'+currentint+'" name="vibration'+currentint+'" type="checkbox" value="on" checked><div class="slider round"></div>')
 
         } else {
-            $(vibid+currentint).append('<input id="vibration'+currentint+'" name="vibration'+currentint+'" type="checkbox" value="off"><div class="slider round"></div>')
+            $(vibid.concat(currentint)).append('<input id="vibration'+currentint+'" name="vibration'+currentint+'" type="checkbox" value="off"><div class="slider round"></div>')
         }
     }
 });
