@@ -330,7 +330,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/", fs)
 
-	http.HandleFunc("/Alarm1time", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm1time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		Alarm1.Alarmtime = r.FormValue("mytime1")
 		var time1 sync.WaitGroup
@@ -339,7 +339,7 @@ func main() {
 		time1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm1sound", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm1sound", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("sound1")
 		// fmt.Println(stringedinput)
@@ -359,7 +359,7 @@ func main() {
 		sound1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm1vibration", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm1vibration", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("vibration1")
 		if len(stringedinput) == 0 {
@@ -378,7 +378,7 @@ func main() {
 		vibration1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm2time", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm2time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		Alarm2.Alarmtime = r.FormValue("mytime2")
 		// fmt.Println(stringedinput)
@@ -388,7 +388,7 @@ func main() {
 		time2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm2sound", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm2sound", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("sound2")
 		if len(stringedinput) == 0 {
@@ -407,7 +407,7 @@ func main() {
 		sound2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm2vibration", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm2vibration", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("vibration2")
 		if len(stringedinput) == 0 {
@@ -426,7 +426,7 @@ func main() {
 		vibration2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm3time", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm3time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		Alarm3.Alarmtime = r.FormValue("mytime3")
 		var time3 sync.WaitGroup
@@ -435,7 +435,7 @@ func main() {
 		time3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm3sound", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm3sound", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("sound3")
 		if len(stringedinput) == 0 {
@@ -454,7 +454,7 @@ func main() {
 		sound3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm3vibration", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm3vibration", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("vibration3")
 		if len(stringedinput) == 0 {
@@ -473,7 +473,7 @@ func main() {
 		vibration3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm4time", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm4time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		Alarm4.Alarmtime = r.FormValue("mytime4")
 		var time4 sync.WaitGroup
@@ -482,7 +482,7 @@ func main() {
 		time4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm4sound", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm4sound", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("sound4")
 		if len(stringedinput) == 0 {
@@ -501,7 +501,7 @@ func main() {
 		sound4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
-	http.HandleFunc("/Alarm4vibration", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/alarm4vibration", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("vibration4")
 		if len(stringedinput) == 0 {
