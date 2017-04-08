@@ -38,10 +38,10 @@ type Alarm struct {
 	CurrentlyRunning bool
 }
 
-var Alarm1 = Alarm
-var Alarm2 = Alarm
-var Alarm3 = Alarm
-var Alarm4 = Alarm
+var Alarm1 = Alarm{}
+var Alarm2 = Alarm{}
+var Alarm3 = Alarm{}
+var Alarm4 = Alarm{}
 
 func (argumentalarm *Alarm) initializeAlarms(filepath string) {
 	jsonalarm, err1 := ioutil.ReadFile(filepath)
