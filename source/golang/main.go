@@ -115,7 +115,7 @@ func OverTenMinutes(alarm string, current string) bool {
 	timealarm := StringTimeToReadTime(alarm)
 	timecurrent := time.Now()
 	diff := timecurrent.Sub(timealarm)
-	fmt.Println("difference in minutes " + diff.Minutes())
+	fmt.Println("difference in minutes " + string(diff.Minutes()))
 	if diff.Minutes() > 10 {
 		return false
 	} else {
