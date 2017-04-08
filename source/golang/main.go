@@ -306,7 +306,7 @@ func main() {
 	currenttime := t.Format("15:04")
 	// fmt.Println(currenttime)
 	c := cron.New()
-	c.AddFunc("@every 1m", func() {
+	c.AddFunc("0 * * * * *", func() {
 		t = time.Now()
 		currenttime = t.Format("15:04")
 		bundledAlarms := [4]Alarm{Alarm1, Alarm2, Alarm3, Alarm4}
