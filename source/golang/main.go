@@ -50,11 +50,12 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string, index int) {
 		os.Exit(1)
 	}
 	var alarm []JsonAlarm
-	err2 := json.Unmarshal(JsonAlarm, &alarm)
-	if err2 != nil {
-		fmt.Println("ERROR JSON")
-		os.Exit(1)
-	}
+	// err2 := json.Unmarshal(jsonalarm, &alarm)
+	json.Unmarshal(jsonalarm, &alarm)
+	// if err2 != nil {
+	// 	fmt.Println("ERROR JSON")
+	// 	os.Exit(1)
+	// }
 	argumentalarm.Name = alarm[index].Name
 	argumentalarm.Alarmtime = alarm[index].Alarm
 	if alarm[index].Sound == "on" {
