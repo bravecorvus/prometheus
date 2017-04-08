@@ -310,10 +310,10 @@ func init() {
 	Enable.Output()
 	Enable.Low()
 	Jsonobject := getAlarms("./public/json/alarms.json")
-	Alarm1.initializeAlarms(0, jsonobject)
-	Alarm2.initializeAlarms(1, jsonobject)
-	Alarm3.initializeAlarms(2, jsonobject)
-	Alarm4.initializeAlarms(3, jsonobject)
+	Alarm1.initializeAlarms(0, Jsonobject)
+	Alarm2.initializeAlarms(1, Jsonobject)
+	Alarm3.initializeAlarms(2, Jsonobject)
+	Alarm4.initializeAlarms(3, Jsonobject)
 }
 
 func main() {
