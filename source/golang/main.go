@@ -52,7 +52,7 @@ func JsonParser(p interface{}) string {
 	return string(bytes)
 }
 
-func (alarm *Alarm) initializeAlarms(index int, jsonobject JsonAlarm) {
+func (alarm *Alarm) initializeAlarms(index int, jsonobject []JsonAlarm) {
 	alarm.Name = "A"
 	alarm.Alarmtime = "10:00"
 	alarm.Sound = true
