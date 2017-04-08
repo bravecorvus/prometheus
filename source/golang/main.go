@@ -49,7 +49,7 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string, index int) {
 		fmt.Println("ERROR")
 		os.Exit(1)
 	}
-	var alarm []JsonAlarm
+	var alarm [4]JsonAlarm
 	err2 := json.Unmarshal(jsonalarm, &alarm)
 	if err2 != nil {
 		fmt.Println("ERROR JSON")
