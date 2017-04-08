@@ -43,7 +43,7 @@ var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 
-func (argumentalarm *Alarm) initializeAlarms(filepath string) {
+func (argumentalarm *Alarm) initializeAlarms(filepath string, index int) {
 	jsonalarm, err1 := ioutil.ReadFile(filepath)
 	if err1 != nil {
 		fmt.Println("ERROR")
@@ -55,14 +55,14 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string) {
 		fmt.Println("ERROR JSON")
 		os.Exit(1)
 	}
-	argumentalarm.Name = alarm[0].Name
-	argumentalarm.Alarmtime = alarm[0].Alarm
-	if alarm[0].Sound == "on" {
+	argumentalarm.Name = alarm[index].Name
+	argumentalarm.Alarmtime = alarm[index].Alarm
+	if alarm[index].Sound == "on" {
 		argumentalarm.Sound = true
 	} else {
 		argumentalarm.Sound = false
 	}
-	if alarm[0].Vibration == "on" {
+	if alarm[index].Vibration == "on" {
 		argumentalarm.Vibration = true
 	} else {
 		argumentalarm.Vibration = false
@@ -292,15 +292,14 @@ func init() {
 	Enable = rpio.Pin(17)
 	Enable.Output()
 	Enable.Low()
+	Alarm1.initializeAlarms("./public/json/alarms.json", 0)
+	Alarm2.initializeAlarms("./public/json/alarms.json", 1)
+	Alarm3.initializeAlarms("./public/json/alarms.json", 2)
+	Alarm4.initializeAlarms("./public/json/alarms.json", 3)
 }
 
 func main() {
 	// Initialize all 4 instances of alarm clocks
-	Alarm1.initializeAlarms("./public/json/Alarm1.json")
-	Alarm2.initializeAlarms("./public/json/Alarm2.json")
-	Alarm3.initializeAlarms("./public/json/Alarm3.json")
-	Alarm4.initializeAlarms("./public/json/Alarm4.json")
-
 	// Create function that updates clock once a minute (used to see if any times match up)
 	t := time.Now()
 	currenttime := t.Format("15:04")
@@ -336,7 +335,7 @@ func main() {
 		Alarm1.Alarmtime = r.FormValue("mytime1")
 		var time1 sync.WaitGroup
 		time1.Add(1)
-		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm1.json", &time1)
+		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time1)
 		time1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -356,7 +355,7 @@ func main() {
 		}
 		var sound1 sync.WaitGroup
 		sound1.Add(1)
-		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm1.json", &sound1)
+		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound1)
 		sound1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -375,7 +374,7 @@ func main() {
 		}
 		var vibration1 sync.WaitGroup
 		vibration1.Add(1)
-		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm1.json", &vibration1)
+		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration1)
 		vibration1.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -385,7 +384,7 @@ func main() {
 		// fmt.Println(stringedinput)
 		var time2 sync.WaitGroup
 		time2.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm2.json", &time2)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time2)
 		time2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -404,7 +403,7 @@ func main() {
 		}
 		var sound2 sync.WaitGroup
 		sound2.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm2.json", &sound2)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound2)
 		sound2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -423,7 +422,7 @@ func main() {
 		}
 		var vibration2 sync.WaitGroup
 		vibration2.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm2.json", &vibration2)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration2)
 		vibration2.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -432,7 +431,7 @@ func main() {
 		Alarm3.Alarmtime = r.FormValue("mytime3")
 		var time3 sync.WaitGroup
 		time3.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm3.json", &time3)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time3)
 		time3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -451,7 +450,7 @@ func main() {
 		}
 		var sound3 sync.WaitGroup
 		sound3.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm3.json", &sound3)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound3)
 		sound3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -470,7 +469,7 @@ func main() {
 		}
 		var vibration3 sync.WaitGroup
 		vibration3.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm3.json", &vibration3)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration3)
 		vibration3.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -479,7 +478,7 @@ func main() {
 		Alarm4.Alarmtime = r.FormValue("mytime4")
 		var time4 sync.WaitGroup
 		time4.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm4.json", &time4)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time4)
 		time4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -498,7 +497,7 @@ func main() {
 		}
 		var sound4 sync.WaitGroup
 		sound4.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm4.json", &sound4)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound4)
 		sound4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
@@ -517,7 +516,7 @@ func main() {
 		}
 		var vibration4 sync.WaitGroup
 		vibration4.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/Alarm4.json", &vibration4)
+		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration4)
 		vibration4.Wait()
 		http.Redirect(w, r, "/", 401)
 	})
