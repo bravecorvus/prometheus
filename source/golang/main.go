@@ -50,7 +50,7 @@ func (argumentalarm *Alarm) initializeAlarms(filepath string, index int) {
 		os.Exit(1)
 	}
 	var alarm []JsonAlarm
-	json.Marshal(raw, &alarm)
+	json.Unmarshal(raw, &alarm)
 	argumentalarm.Name = string(alarm[index].Name)
 	argumentalarm.Alarmtime = string(alarm[index].Alarm)
 	if string(alarm[index].Sound) == "on" {
