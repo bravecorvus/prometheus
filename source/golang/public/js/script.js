@@ -28,7 +28,7 @@ $.getJSON("/json/alarms.json", function( data ) {
     }
 });
 
-$(window).on(function() {
+$(window).on("load", function() {
     document.getElementById("sound1").setAttribute("onClick", "document.getElementById('alarm1sound').submit();");
     document.getElementById("vibration1").setAttribute("onClick", "document.getElementById('alarm1vibration').submit();");
     document.getElementById("sound2").setAttribute("onClick", "document.getElementById('alarm2sound').submit();");
