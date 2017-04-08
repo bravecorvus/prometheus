@@ -17,7 +17,7 @@ $.getJSON("/json/alarms.json", function( data ) {
         if(sound == "on") {
             $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'" type="checkbox" value="on" checked><div class="slider round" onClick = "document.getElementById("alarm'+currentint+'sound").submit();"></div>')
         } else {
-            $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'+" type="checkbox" value="off" onClick = "document.getElementById("alarm'+currentint+'sound").submit();"><div class="slider round"></div>')
+            $(soundid.concat(currentint)).append('<input id="sound'+currentint+'" name="sound'+currentint+'" type="checkbox" value="off" onClick = "document.getElementById("alarm'+currentint+'sound").submit();"><div class="slider round"></div>')
         }
         if(vibration == "on") {
             $(vibid.concat(currentint)).append('<input id="vibration'+currentint+'" name="vibration'+currentint+'" type="checkbox" value="on" checked><div class="slider round" onClick = "document.getElementById("alarm'+currentint+'vibration").submit();"></div>')
