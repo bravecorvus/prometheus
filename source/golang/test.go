@@ -1,31 +1,50 @@
 package main
 
 import (
-    // "fmt"
+    "encoding/json"
     "fmt"
-    "github.com/stianeikeland/go-rpio"
+    "io/ioutil"
     "os"
-    "time"
 )
 
-func main() {
-    if err := rpio.Open(); err != nil {
-        fmt.Println(err)
+type Page struct {
+    ID    int    `json:"id"`
+    Title string `json:"title"`
+    Url   string `json:"url"`
+}
+
+func (p Page) toString() string {
+    return toJson(p)
+}
+
+func toJson(p interface{}) string {
+    bytes, err := json.Marshal(p)
+    if err != nil {
+        fmt.Println(err.Error())
         os.Exit(1)
     }
-    defer rpio.Close()
-    var Enable rpio.Pin
-    var Input1 rpio.Pin
-    var Input2 rpio.Pin
-    Enable = rpio.Pin(17)
-    Enable.Output()
-    Input1 = rpio.Pin(5)
-    Input1.Output()
-    Input1.High()
-    Input2 = rpio.Pin(6)
-    Input2.Output()
-    Input2.Low()
-    Enable.High()
-    time.Sleep(5 * time.Second)
-    Enable.Low()
+
+    return string(bytes)
+}
+
+func main() {
+
+    pages := getPages()
+    for _, p := range pages {
+        fmt.Println(p.toString())
+    }
+
+    fmt.Println(toJson(pages))
+}
+
+func getPages() []Page {
+    raw, err := ioutil.ReadFile("./public/json/examplepages.json")
+    if err != nil {
+        fmt.Println(err.Error())
+        os.Exit(1)
+    }
+
+    var c []Page
+    json.Unmarshal(raw, &c)
+    return c
 }
