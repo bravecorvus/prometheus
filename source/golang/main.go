@@ -164,8 +164,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			alarm.addTime(alarm.Alarmtime, "m", 10)
 			var writeback sync.WaitGroup
 			writeback.Add(1)
-			path := "./public/json/" + alarm.Name
-			fmt.Println("path is " + path)
+			path := "./public/json/alarms.json"
 			switch {
 			case alarm.Name == "alarm1":
 				writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
