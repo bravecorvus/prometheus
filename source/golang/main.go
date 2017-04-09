@@ -146,10 +146,12 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		case <-snoozed:
 			if alarm.Sound == true {
 				cmd.Process.Kill()
+				return
 			}
 		default:
 			if itsbeentenminutes {
 				alarm.addTime(alarm.Name, "h", 1)
+				return
 			} else {
 				continue
 			}
