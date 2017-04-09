@@ -36,9 +36,6 @@ var Alarm1 = Alarm{}
 var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
-var Enable rpio.Pin
-var Input1 rpio.Pin
-var Input2 rpio.Pin
 
 func getRawJson(filepath string) []JsonAlarm {
 	raw, err1 := ioutil.ReadFile(filepath)
@@ -211,19 +208,6 @@ func init() {
 	Alarm2.initializeAlarms(jsondata, 1)
 	Alarm3.initializeAlarms(jsondata, 2)
 	Alarm4.initializeAlarms(jsondata, 3)
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Input1 := rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 := rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable := rpio.Pin(17)
-	Enable.Output()
 }
 
 func main() {
@@ -455,9 +439,35 @@ func main() {
 }
 
 func VibOn() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable := rpio.Pin(17)
+	Enable.Output()
 	Enable.High()
 }
 
 func VibOff() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable := rpio.Pin(17)
+	Enable.Output()
 	Enable.Low()
 }
