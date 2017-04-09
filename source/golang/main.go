@@ -105,7 +105,7 @@ func OverTenMinutes(alarmtime string) bool {
 	}
 }
 
-func (alarm *Alarm) Runsnooze(channel chan bool) {
+func Runsnooze(channel chan bool, alarm Alarm) {
 	fmt.Println("Runsnooze")
 	go http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
@@ -139,7 +139,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
 	snoozed := make(chan bool)
-	go alarm.Runsnooze(snoozed)
+	go Runsnooze(alarm, snoozed)
 	switch {
 	case (alarm.Sound == true) && (alarm.Vibration == false):
 		cmd.Start()
