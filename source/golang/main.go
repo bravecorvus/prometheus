@@ -67,13 +67,12 @@ func (argumentalarm *Alarm) initializeAlarms(jsondata []JsonAlarm, index int) {
 
 func Errhandler(err error) {
 	if err != nil {
-		fmt.Println("You fucked up somewhere")
+		fmt.Println("ERROR")
 	}
 }
 
 func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
 	currenttime, err := time.Parse("15:04", originaltime)
-	fmt.Println("addTime")
 	Errhandler(err)
 	var updatedtime = time.Now()
 	switch {
@@ -88,12 +87,11 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 }
 
 func OverTenMinutes(alarmtime string) bool {
-	fmt.Println("OverTenMinutes")
+	// fmt.Println("OverTenMinutes")
 	timealarm, err := time.Parse("15:04", alarmtime)
 	Errhandler(err)
 	timecurrent := time.Now()
 	difference := timealarm.Minute() - timecurrent.Minute()
-	fmt.Println("difference in minutes " + string(difference))
 	if difference >= 10 {
 		return false
 	} else {
@@ -102,7 +100,6 @@ func OverTenMinutes(alarmtime string) bool {
 }
 
 func Runsnooze(alarm *Alarm, channel chan bool) {
-	fmt.Println("Runsnooze")
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		if alarm.Vibration == true {
@@ -129,11 +126,9 @@ func Runsnooze(alarm *Alarm, channel chan bool) {
 
 func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	fmt.Println("RunAlarm")
 	if (alarm.Sound == false) && (alarm.Vibration == false) {
 		return
 	}
-	// counter := 0                  //used to count 0-20 during which vibrations are on and 21-40 which means vibrations are off
 	alarm.CurrentlyRunning = true //Set the state of the alarm to true
 	var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
@@ -172,7 +167,7 @@ func convertBooltoString(arg bool) string {
 
 func writeBackJson(Alarm1 Alarm, Alarm2 Alarm, Alarm3 Alarm, Alarm4 Alarm, filepath string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	// fmt.Println("[{\"name\":\"" + Alarm1.Name + "\",\"time\":\"" + Alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm1.Vibration) + "\"}\n{\"name\":\"" + Alarm2.Name + "\",\"time\":\"" + Alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm2.Vibration) + "\"}\n{\"name\":\"" + Alarm3.Name + "\",\"time\":\"" + Alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm3.Vibration) + "\"}\n{\"name\":\"" + Alarm4.Name + "\",\"time\":\"" + Alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm4.Vibration) + "\"}]")
+	fmt.Println("[{\"name\":\"" + Alarm1.Name + "\",\"time\":\"" + Alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm1.Vibration) + "\"}\n{\"name\":\"" + Alarm2.Name + "\",\"time\":\"" + Alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm2.Vibration) + "\"}\n{\"name\":\"" + Alarm3.Name + "\",\"time\":\"" + Alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm3.Vibration) + "\"}\n{\"name\":\"" + Alarm4.Name + "\",\"time\":\"" + Alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm4.Vibration) + "\"}]")
 	content := []byte("[{\"name\":\"" + Alarm1.Name + "\",\"time\":\"" + Alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm1.Vibration) + "\"},\n{\"name\":\"" + Alarm2.Name + "\",\"time\":\"" + Alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm2.Vibration) + "\"},\n{\"name\":\"" + Alarm3.Name + "\",\"time\":\"" + Alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm3.Vibration) + "\"},\n{\"name\":\"" + Alarm4.Name + "\",\"time\":\"" + Alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm4.Vibration) + "\"}]")
 	err := ioutil.WriteFile(filepath, content, 0644)
 	if err != nil {
@@ -215,7 +210,7 @@ func main() {
 	// Create function that updates clock once a minute (used to see if any times match up)
 	t := time.Now()
 	currenttime := t.Format("15:04")
-	// fmt.Println(currenttime)
+	fmt.Println(currenttime)
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
 		t = time.Now()
@@ -229,10 +224,6 @@ func main() {
 				alarm.RunAlarm(currenttime, &runningalarm)
 				runningalarm.Wait()
 				break
-				// now := time.Now()
-				// now.Add(10 * time.Minute)
-				// nowstring := now.Format("15:04")
-				// alarm.Alarmtime = nowstring
 			}
 		}
 	})
@@ -254,7 +245,7 @@ func main() {
 	http.HandleFunc("/alarm1sound", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("sound1")
-		// fmt.Println(stringedinput)
+		fmt.Println(stringedinput)
 		if len(stringedinput) == 0 {
 			if Alarm1.CurrentlyRunning == true {
 				Alarm1.CurrentlyRunning = false
@@ -293,7 +284,7 @@ func main() {
 	http.HandleFunc("/alarm2time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		Alarm2.Alarmtime = r.FormValue("mytime2")
-		// fmt.Println(stringedinput)
+		fmt.Println(stringedinput)
 		var time2 sync.WaitGroup
 		time2.Add(1)
 		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time2)
