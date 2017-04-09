@@ -125,7 +125,7 @@ func OverTenMinutes(alarm string, current string) bool {
 
 func Runsnooze(channel chan bool, readyforreload chan bool) {
 	fmt.Println("Runsnooze")
-	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
+	go http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		for {
 			switch {
@@ -149,12 +149,12 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	alarm.CurrentlyRunning = true //Set the state of the alarm to true
 	var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
+	snoozed := make(chan bool)
+	readyforreload := make(chan bool)
+	go Runsnooze(snoozed, readyforreload)
 	switch {
 	case (alarm.Sound == true) && (alarm.Vibration == false):
 		cmd.Start()
-		snoozed := make(chan bool)
-		readyforreload := make(chan bool)
-		go Runsnooze(snoozed, readyforreload)
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		for {
 			switch {
@@ -201,9 +201,6 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			}
 		}
 	case (alarm.Sound == false) && (alarm.Vibration == true):
-		snoozed := make(chan bool)
-		readyforreload := make(chan bool)
-		go Runsnooze(snoozed, readyforreload)
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		for {
 			switch {
@@ -262,9 +259,6 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			}
 		}
 	case (alarm.Sound == true) && (alarm.Vibration == true):
-		snoozed := make(chan bool)
-		readyforreload := make(chan bool)
-		go Runsnooze(snoozed, readyforreload)
 		cmd.Start()
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
 		for {
