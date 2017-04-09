@@ -115,13 +115,13 @@ func Runsnooze(alarm *Alarm, channel chan bool) {
 		path := "./public/json/alarms.json"
 		switch {
 		case alarm.Name == "alarm1":
-			writeBackJson(alarm, Alarm2, Alarm3, Alarm4, path, &wg)
+			writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &wg)
 		case alarm.Name == "alarm2":
-			writeBackJson(Alarm1, alarm, Alarm3, Alarm4, path, &wg)
+			writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &wg)
 		case alarm.Name == "alarm3":
-			writeBackJson(Alarm1, Alarm2, alarm, Alarm4, path, &wg)
+			writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &wg)
 		case alarm.Name == "alarm4":
-			writeBackJson(Alarm1, Alarm2, Alarm3, alarm, path, &wg)
+			writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &wg)
 		}
 		wg.Wait()
 		http.Redirect(w, r, "/", 301)
