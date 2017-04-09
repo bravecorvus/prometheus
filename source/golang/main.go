@@ -105,19 +105,26 @@ func OverTenMinutes(alarmtime string) bool {
 	}
 }
 
-func Runsnooze(channel chan bool, readyforreload chan bool) {
+func (alarm *Alarm) Runsnooze(channel chan bool) {
 	fmt.Println("Runsnooze")
 	go http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
-		for {
-			switch {
-			case <-readyforreload:
-				http.Redirect(w, r, "/", 301)
-				break
-			default:
-				continue
-			}
+		alarm.addTime(alarm.Alarmtime, "m", 10)
+		var wg sync.WaitGroup
+		wg.Add(1)
+		path := "./public/json/alarms.json"
+		switch {
+		case alarm.Name == "alarm1":
+			writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
+		case alarm.Name == "alarm2":
+			writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
+		case alarm.Name == "alarm3":
+			writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
+		case alarm.Name == "alarm4":
+			writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
 		}
+		wg.Wait()
+		http.Redirect(w, r, "/", 301)
 	})
 }
 
@@ -132,8 +139,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
 	snoozed := make(chan bool)
-	readyforreload := make(chan bool)
-	go Runsnooze(snoozed, readyforreload)
+	go Runsnooze(&snoozed, &alarm)
 	switch {
 	case (alarm.Sound == true) && (alarm.Vibration == false):
 		cmd.Start()
@@ -142,28 +148,10 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			switch {
 			case <-snoozed: //Just got snoozed
 				cmd.Process.Kill()
-				alarm.addTime(alarm.Alarmtime, "m", 10)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
-				path := "./public/json/alarms.json"
-				switch {
-				case alarm.Name == "alarm1":
-					writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm2":
-					writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm3":
-					writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-				case alarm.Name == "alarm4":
-					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-				}
-				writeback.Wait()
-				readyforreload <- true
 				return
 			case itsbeentenminutes:
 				cmd.Process.Kill()
 				alarm.addTime(alarm.Alarmtime, "h", 1)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
 				path := "./public/json/alarms.json"
 				switch {
 				case alarm.Name == "alarm1":
@@ -175,8 +163,6 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				case alarm.Name == "alarm4":
 					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
 				}
-				writeback.Wait()
-				readyforreload <- true
 				return
 			default:
 				continue
@@ -188,28 +174,12 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			switch {
 			case <-snoozed: //Just got snoozed
 				VibOff()
-				alarm.addTime(alarm.Alarmtime, "m", 10)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
-				path := "./public/json/alarms.json"
-				switch {
-				case alarm.Name == "alarm1":
-					writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm2":
-					writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm3":
-					writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-				case alarm.Name == "alarm4":
-					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-				}
-				writeback.Wait()
-				readyforreload <- true
 				return
 			case itsbeentenminutes:
 				VibOff()
 				alarm.addTime(alarm.Alarmtime, "h", 1)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
+				// var writeback sync.WaitGroup
+				// writeback.Add(1)
 				path := "./public/json/alarms.json"
 				switch {
 				case alarm.Name == "alarm1":
@@ -221,8 +191,8 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				case alarm.Name == "alarm4":
 					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
 				}
-				writeback.Wait()
-				readyforreload <- true
+				// writeback.Wait()
+				// readyforreload <- true
 				return
 
 			default:
@@ -248,29 +218,13 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			case <-snoozed: //Just got snoozed
 				cmd.Process.Kill()
 				VibOff()
-				alarm.addTime(alarm.Alarmtime, "m", 10)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
-				path := "./public/json/alarms.json"
-				switch {
-				case alarm.Name == "alarm1":
-					writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm2":
-					writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm3":
-					writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-				case alarm.Name == "alarm4":
-					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-				}
-				writeback.Wait()
-				readyforreload <- true
 				return
 			case itsbeentenminutes:
 				cmd.Process.Kill()
 				VibOff()
 				alarm.addTime(alarm.Alarmtime, "h", 1)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
+				// var writeback sync.WaitGroup
+				// writeback.Add(1)
 				path := "./public/json/alarms.json"
 				switch {
 				case alarm.Name == "alarm1":
@@ -283,7 +237,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
 				}
 				writeback.Wait()
-				readyforreload <- true
+				// readyforreload <- true
 				return
 			default:
 				if counter == 0 {
@@ -343,20 +297,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func init() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Input1 = rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 = rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable = rpio.Pin(17)
-	Enable.Output()
-	Enable.Low()
 	jsondata := getRawJson("./public/json/alarms.json")
 	Alarm1.initializeAlarms(jsondata, 0)
 	Alarm2.initializeAlarms(jsondata, 1)
@@ -593,9 +533,35 @@ func main() {
 }
 
 func VibOn() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 = rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 = rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable = rpio.Pin(17)
+	Enable.Output()
 	Enable.High()
 }
 
 func VibOff() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 = rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 = rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable = rpio.Pin(17)
+	Enable.Output()
 	Enable.Low()
 }
