@@ -94,6 +94,7 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 func OverTenMinutes(alarmtime string) bool {
 	fmt.Println("OverTenMinutes")
 	timealarm, err := time.Parse("15:04", alarmtime)
+	Errhandler(err)
 	timecurrent := time.Now()
 	difference := timealarm.Minute() - timecurrent.Minute()
 	fmt.Println("difference in minutes " + string(difference))
