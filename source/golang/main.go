@@ -145,6 +145,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		cmd.Start()
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
 		for {
+			fmt.Println("Sound true Vibration false")
 			switch {
 			case <-snoozed: //Just got snoozed
 				cmd.Process.Kill()
@@ -173,6 +174,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	case (alarm.Sound == false) && (alarm.Vibration == true):
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
 		for {
+			fmt.Println("Sound false Vibration true")
 			switch {
 			case <-snoozed: //Just got snoozed
 				VibOff()
@@ -216,6 +218,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		cmd.Start()
 		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
 		for {
+			fmt.Println("Sound true Vibration true")
 			switch {
 			case <-snoozed: //Just got snoozed
 				cmd.Process.Kill()
