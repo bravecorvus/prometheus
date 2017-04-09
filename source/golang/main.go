@@ -138,7 +138,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	}
 	// counter := 0                  //used to count 0-20 during which vibrations are on and 21-40 which means vibrations are off
 	alarm.CurrentlyRunning = true //Set the state of the alarm to true
-	// var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
+	var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
 	snoozed := make(chan bool)
 	go Runsnooze(alarm, snoozed)
