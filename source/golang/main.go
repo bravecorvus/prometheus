@@ -115,13 +115,13 @@ func (alarm *Alarm) Runsnooze(channel chan bool) {
 		path := "./public/json/alarms.json"
 		switch {
 		case alarm.Name == "alarm1":
-			writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
+			writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &wg)
 		case alarm.Name == "alarm2":
-			writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
+			writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &wg)
 		case alarm.Name == "alarm3":
-			writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
+			writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &wg)
 		case alarm.Name == "alarm4":
-			writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
+			writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &wg)
 		}
 		wg.Wait()
 		http.Redirect(w, r, "/", 301)
@@ -139,7 +139,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
 	snoozed := make(chan bool)
-	go Runsnooze(&snoozed, &alarm)
+	go alarm.Runsnooze(&snoozed)
 	switch {
 	case (alarm.Sound == true) && (alarm.Vibration == false):
 		cmd.Start()
@@ -153,6 +153,8 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 				alarm.addTime(alarm.Alarmtime, "h", 1)
 				path := "./public/json/alarms.json"
+				var writeback sync.WaitGroup
+				writeback.Add(1)
 				switch {
 				case alarm.Name == "alarm1":
 					writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
@@ -178,8 +180,8 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			case itsbeentenminutes:
 				VibOff()
 				alarm.addTime(alarm.Alarmtime, "h", 1)
-				// var writeback sync.WaitGroup
-				// writeback.Add(1)
+				var writeback sync.WaitGroup
+				writeback.Add(1)
 				path := "./public/json/alarms.json"
 				switch {
 				case alarm.Name == "alarm1":
@@ -191,7 +193,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				case alarm.Name == "alarm4":
 					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
 				}
-				// writeback.Wait()
+				writeback.Wait()
 				// readyforreload <- true
 				return
 
@@ -223,8 +225,8 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				cmd.Process.Kill()
 				VibOff()
 				alarm.addTime(alarm.Alarmtime, "h", 1)
-				// var writeback sync.WaitGroup
-				// writeback.Add(1)
+				var writeback sync.WaitGroup
+				writeback.Add(1)
 				path := "./public/json/alarms.json"
 				switch {
 				case alarm.Name == "alarm1":
