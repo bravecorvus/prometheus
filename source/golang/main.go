@@ -13,8 +13,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 )
@@ -84,11 +82,11 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 	var updatedtime = time.Now()
 	switch {
 	case hms == "h":
-		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Hour)
+		updatedtime = currenttime.Add(time.Duration(byhowmuch) * time.Hour)
 	case hms == "m":
-		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Minute)
+		updatedtime = currenttime.Add(time.Duration(byhowmuch) * time.Minute)
 	case hms == "s":
-		updatedtime = thetime.Add(time.Duration(byhowmuch) * time.Second)
+		updatedtime = currenttime.Add(time.Duration(byhowmuch) * time.Second)
 	}
 	arg.Alarmtime = updatedtime.Format("15:04")
 }
@@ -184,7 +182,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 			}
 		}
 	case (alarm.Sound == false) && (alarm.Vibration == true):
-		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
+		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
 		for {
 			switch {
 			case <-snoozed: //Just got snoozed
@@ -243,7 +241,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		}
 	case (alarm.Sound == true) && (alarm.Vibration == true):
 		cmd.Start()
-		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
+		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
 		for {
 			switch {
 			case <-snoozed: //Just got snoozed
