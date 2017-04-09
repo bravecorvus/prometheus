@@ -103,7 +103,7 @@ func OverTenMinutes(alarmtime string) bool {
 
 func Runsnooze(alarm *Alarm, channel chan bool) {
 	fmt.Println("Runsnooze")
-	go http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		alarm.addTime(alarm.Alarmtime, "m", 10)
 		var wg sync.WaitGroup
