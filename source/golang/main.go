@@ -216,16 +216,33 @@ func main() {
 	c.AddFunc("0 * * * * *", func() {
 		t = time.Now()
 		currenttime = t.Format("15:04")
-		bundledAlarms := [4]Alarm{Alarm1, Alarm2, Alarm3, Alarm4}
-		for _, alarm := range bundledAlarms {
-			// alarm.Alarmtime = currenttime
-			if alarm.Alarmtime == currenttime {
-				var runningalarm sync.WaitGroup
-				runningalarm.Add(1)
-				alarm.RunAlarm(currenttime, &runningalarm)
-				runningalarm.Wait()
-				break
-			}
+		// bundledAlarms := [4]Alarm{Alarm1, Alarm2, Alarm3, Alarm4}
+		// for _, alarm := range bundledAlarms {
+		// alarm.Alarmtime = currenttime
+		if Alarm1.Alarmtime == currenttime {
+			var runningalarm sync.WaitGroup
+			runningalarm.Add(1)
+			Alarm1.RunAlarm(currenttime, &runningalarm)
+			runningalarm.Wait()
+			break
+		} else if Alarm2.Alarmtime == currenttime {
+			var runningalarm sync.WaitGroup
+			runningalarm.Add(1)
+			Alarm2.RunAlarm(currenttime, &runningalarm)
+			runningalarm.Wait()
+			break
+		} else if Alarm3.Alarmtime == currenttime {
+			var runningalarm sync.WaitGroup
+			runningalarm.Add(1)
+			Alarm3.RunAlarm(currenttime, &runningalarm)
+			runningalarm.Wait()
+			break
+		} else if Alarm4.Alarmtime == currenttime {
+			var runningalarm sync.WaitGroup
+			runningalarm.Add(1)
+			Alarm4.RunAlarm(currenttime, &runningalarm)
+			runningalarm.Wait()
+			break
 		}
 	})
 	c.Start()
