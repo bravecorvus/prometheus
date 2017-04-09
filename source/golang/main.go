@@ -178,7 +178,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 				readyforreload <- true
 				return
 			case itsbeentenminutes:
-				cmd.Process.Kil()
+				cmd.Process.Kill()
 				alarm.addTime(alarm.Alarmtime, "h", 1)
 				var writeback sync.WaitGroup
 				writeback.Add(1)
