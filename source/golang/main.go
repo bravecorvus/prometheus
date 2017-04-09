@@ -139,16 +139,16 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
 	snoozed := make(chan bool)
 	go Runsnooze(alarm, snoozed)
-	if alarm.Vibration() == true {
+	if alarm.Vibration == true {
 		VibOn()
 	}
-	if alarm.Sound() == true {
+	if alarm.Sound == true {
 		cmd.Start()
 	}
 	for {
 		switch {
 		case <-snoozed:
-			if Alarm.Sound == true {
+			if alarm.Sound == true {
 				cmd.Process.Kill()
 			}
 		default:
