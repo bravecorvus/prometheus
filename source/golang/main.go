@@ -36,6 +36,9 @@ var Alarm1 = Alarm{}
 var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
+var Enable rpio.Pin
+var Input1 rpio.Pin
+var Input2 rpio.Pin
 
 func getRawJson(filepath string) []JsonAlarm {
 	raw, err1 := ioutil.ReadFile(filepath)
@@ -146,133 +149,20 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 		cmd.Start()
 	}
 	for {
+		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
 		switch {
 		case <-snoozed:
 			if alarm.Sound == true {
 				cmd.Process.Kill()
 			}
 		default:
+			if itsbeentenminutes {
+				alarm.addTime(alarm.Name, "h", 1)
+			} else {
+				continue
+			}
 		}
 	}
-	// switch {
-	// case (alarm.Sound == true) && (alarm.Vibration == false):
-	// 	cmd.Start()
-	// 	itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
-	// 	for {
-	// 		fmt.Println("Sound true Vibration false")
-	// 		switch {
-	// 		case <-snoozed: //Just got snoozed
-	// 			cmd.Process.Kill()
-	// 			return
-	// 		case itsbeentenminutes:
-	// 			cmd.Process.Kill()
-	// 			alarm.addTime(alarm.Alarmtime, "h", 1)
-	// 			path := "./public/json/alarms.json"
-	// 			var writeback sync.WaitGroup
-	// 			writeback.Add(1)
-	// 			switch {
-	// 			case alarm.Name == "alarm1":
-	// 				writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm2":
-	// 				writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm3":
-	// 				writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm4":
-	// 				writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-	// 			}
-	// 			return
-	// 		default:
-	// 			continue
-	// 		}
-	// 	}
-	// case (alarm.Sound == false) && (alarm.Vibration == true):
-	// 	itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
-	// 	for {
-	// 		fmt.Println("Sound false Vibration true")
-	// 		switch {
-	// 		case <-snoozed: //Just got snoozed
-	// 			VibOff()
-	// 			return
-	// 		case itsbeentenminutes:
-	// 			VibOff()
-	// 			alarm.addTime(alarm.Alarmtime, "h", 1)
-	// 			var writeback sync.WaitGroup
-	// 			writeback.Add(1)
-	// 			path := "./public/json/alarms.json"
-	// 			switch {
-	// 			case alarm.Name == "alarm1":
-	// 				writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm2":
-	// 				writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm3":
-	// 				writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm4":
-	// 				writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-	// 			}
-	// 			writeback.Wait()
-	// 			// readyforreload <- true
-	// 			return
-
-	// 		default:
-	// 			if counter == 0 {
-	// 				VibOn()
-	// 				counter++
-	// 			} else if counter == 20 {
-	// 				VibOff()
-	// 				counter++
-	// 			} else if counter == 40 {
-	// 				counter = 0
-	// 			} else {
-	// 				counter++
-	// 			}
-
-	// 		}
-	// 	}
-	// case (alarm.Sound == true) && (alarm.Vibration == true):
-	// 	cmd.Start()
-	// 	itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
-	// 	for {
-	// 		fmt.Println("Sound true Vibration true")
-	// 		switch {
-	// 		case <-snoozed: //Just got snoozed
-	// 			cmd.Process.Kill()
-	// 			VibOff()
-	// 			return
-	// 		case itsbeentenminutes:
-	// 			cmd.Process.Kill()
-	// 			VibOff()
-	// 			alarm.addTime(alarm.Alarmtime, "h", 1)
-	// 			var writeback sync.WaitGroup
-	// 			writeback.Add(1)
-	// 			path := "./public/json/alarms.json"
-	// 			switch {
-	// 			case alarm.Name == "alarm1":
-	// 				writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm2":
-	// 				writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm3":
-	// 				writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-	// 			case alarm.Name == "alarm4":
-	// 				writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-	// 			}
-	// 			writeback.Wait()
-	// 			// readyforreload <- true
-	// 			return
-	// 		default:
-	// 			if counter == 0 {
-	// 				counter++
-	// 				VibOn()
-	// 			} else if counter == 20 {
-	// 				counter++
-	// 				VibOff()
-	// 			} else if counter == 40 {
-	// 				counter = 0
-	// 			} else {
-	// 				counter++
-	// 			}
-	// 		}
-	// 	}
-	// }
 }
 
 func convertBooltoString(arg bool) string {
@@ -321,6 +211,19 @@ func init() {
 	Alarm2.initializeAlarms(jsondata, 1)
 	Alarm3.initializeAlarms(jsondata, 2)
 	Alarm4.initializeAlarms(jsondata, 3)
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable := rpio.Pin(17)
+	Enable.Output()
 }
 
 func main() {
@@ -552,38 +455,9 @@ func main() {
 }
 
 func VibOn() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	// var Enable rpio.Pin
-	// var Input1 rpio.Pin
-	// var Input2 rpio.Pin
-	Input1 := rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 := rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable := rpio.Pin(17)
-	Enable.Output()
 	Enable.High()
 }
 
 func VibOff() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Input1 := rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 := rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable := rpio.Pin(17)
-	Enable.Output()
 	Enable.Low()
 }
