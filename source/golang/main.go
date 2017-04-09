@@ -17,10 +17,6 @@ import (
 	"time"
 )
 
-var Enable rpio.Pin
-var Input1 rpio.Pin
-var Input2 rpio.Pin
-
 type JsonAlarm struct {
 	Name      string `json:"name"`
 	Alarm     string `json:"time"`
@@ -543,13 +539,16 @@ func VibOn() {
 		os.Exit(1)
 	}
 	defer rpio.Close()
-	Input1 = rpio.Pin(5)
+	// var Enable rpio.Pin
+	// var Input1 rpio.Pin
+	// var Input2 rpio.Pin
+	Input1 := rpio.Pin(5)
 	Input1.Output()
 	Input1.High()
-	Input2 = rpio.Pin(6)
+	Input2 := rpio.Pin(6)
 	Input2.Output()
 	Input2.Low()
-	Enable = rpio.Pin(17)
+	Enable := rpio.Pin(17)
 	Enable.Output()
 	Enable.High()
 }
@@ -560,13 +559,13 @@ func VibOff() {
 		os.Exit(1)
 	}
 	defer rpio.Close()
-	Input1 = rpio.Pin(5)
+	Input1 := rpio.Pin(5)
 	Input1.Output()
 	Input1.High()
-	Input2 = rpio.Pin(6)
+	Input2 := rpio.Pin(6)
 	Input2.Output()
 	Input2.Low()
-	Enable = rpio.Pin(17)
+	Enable := rpio.Pin(17)
 	Enable.Output()
 	Enable.Low()
 }
