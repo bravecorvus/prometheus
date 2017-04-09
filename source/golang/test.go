@@ -1,50 +1,15 @@
 package main
 
 import (
-    "encoding/json"
     "fmt"
-    "io/ioutil"
-    "os"
+    "time"
 )
 
-type Page struct {
-    ID    int    `json:"id"`
-    Title string `json:"title"`
-    Url   string `json:"url"`
-}
-
-func (p Page) toString() string {
-    return toJson(p)
-}
-
-func toJson(p interface{}) string {
-    bytes, err := json.Marshal(p)
-    if err != nil {
-        fmt.Println(err.Error())
-        os.Exit(1)
-    }
-
-    return string(bytes)
-}
-
 func main() {
-
-    pages := getPages()
-    for _, p := range pages {
-        fmt.Println(string(p.Title))
-    }
-
-    fmt.Println(toJson(pages))
-}
-
-func getPages() []Page {
-    raw, err := ioutil.ReadFile("./public/json/examplepages.json")
+    rn := time.Now()
+    alarm, err := time.Parse("15:04", "11:11")
     if err != nil {
-        fmt.Println(err.Error())
-        os.Exit(1)
+        fmt.Println("ERROR")
     }
-
-    var c []Page
-    json.Unmarshal(raw, &c)
-    return c
+    fmt.Println(alarm.Minute() - rn.Minute())
 }

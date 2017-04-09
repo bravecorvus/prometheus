@@ -76,26 +76,9 @@ func Errhandler(err error) {
 		fmt.Println("You fucked up somewhere")
 	}
 }
-func StringTimeToReadTime(arg string) time.Time {
-	//To prevent getting wierd time discrepancies with the time (since I am only saving the time itself, I need to intialize using the current Date as well, or else it will be 00/00 TI:ME '00 )
-	fmt.Println("StringTimeToReadTime")
-	currentyear, currentmonth, currentday := time.Now().Date()
-	thestring := arg
-	split := strings.Split(thestring, "")
-	// fmt.Println(string(split[1]))
-	hourldigit, err1 := strconv.Atoi(string(split[0]))
-	Errhandler(err1)
-	hourrdigit, err2 := strconv.Atoi(string(split[1]))
-	Errhandler(err2)
-	minuteldigit, err3 := strconv.Atoi(string(split[3]))
-	Errhandler(err3)
-	minuterdigit, err4 := strconv.Atoi(string(split[4]))
-	Errhandler(err4)
-	return time.Date(currentyear, currentmonth, currentday, hourldigit+hourrdigit, minuteldigit+minuterdigit, 0, 0, time.UTC)
-}
 
 func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
-	thetime, err := time.Parse("15:04", originaltime)
+	currenttime, err := time.Parse("15:04", originaltime)
 	fmt.Println("addTime")
 	Errhandler(err)
 	var updatedtime = time.Now()
@@ -110,13 +93,13 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 	arg.Alarmtime = updatedtime.Format("15:04")
 }
 
-func OverTenMinutes(alarm string, current string) bool {
+func OverTenMinutes(alarmtime string) bool {
 	fmt.Println("OverTenMinutes")
-	timealarm := StringTimeToReadTime(alarm)
+	timealarm, err := time.Parse("15:04", alarmtime)
 	timecurrent := time.Now()
-	diff := timecurrent.Sub(timealarm)
-	fmt.Println("difference in minutes " + strconv.FormatFloat(diff.Minutes(), 'f', 6, 64))
-	if diff.Minutes() > 10 {
+	difference := timealarm.Minute() - timecurrent.Minute()
+	fmt.Println("difference in minutes " + strconv.FormatFloat(difference, 'f', 6, 64))
+	if difference >= 10 {
 		return false
 	} else {
 		return true
@@ -155,7 +138,7 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	switch {
 	case (alarm.Sound == true) && (alarm.Vibration == false):
 		cmd.Start()
-		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime, time.Now().Format("15:04"))
+		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
 		for {
 			switch {
 			case <-snoozed: //Just got snoozed
