@@ -224,25 +224,21 @@ func main() {
 			runningalarm.Add(1)
 			Alarm1.RunAlarm(currenttime, &runningalarm)
 			runningalarm.Wait()
-			break
 		} else if Alarm2.Alarmtime == currenttime {
 			var runningalarm sync.WaitGroup
 			runningalarm.Add(1)
 			Alarm2.RunAlarm(currenttime, &runningalarm)
 			runningalarm.Wait()
-			break
 		} else if Alarm3.Alarmtime == currenttime {
 			var runningalarm sync.WaitGroup
 			runningalarm.Add(1)
 			Alarm3.RunAlarm(currenttime, &runningalarm)
 			runningalarm.Wait()
-			break
 		} else if Alarm4.Alarmtime == currenttime {
 			var runningalarm sync.WaitGroup
 			runningalarm.Add(1)
 			Alarm4.RunAlarm(currenttime, &runningalarm)
 			runningalarm.Wait()
-			break
 		}
 	})
 	c.Start()
