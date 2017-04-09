@@ -105,6 +105,9 @@ func Runsnooze(alarm *Alarm, channel chan bool) {
 	fmt.Println("Runsnooze")
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
+		if alarm.Vibration == true {
+			VibOff()
+		}
 		alarm.addTime(alarm.Alarmtime, "m", 10)
 		var wg sync.WaitGroup
 		wg.Add(1)
@@ -136,125 +139,140 @@ func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
 	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
 	snoozed := make(chan bool)
 	go Runsnooze(alarm, snoozed)
-	switch {
-	case (alarm.Sound == true) && (alarm.Vibration == false):
+	if alarm.Vibration() == true {
+		VibOn()
+	}
+	if alarm.Sound() == true {
 		cmd.Start()
-		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
-		for {
-			fmt.Println("Sound true Vibration false")
-			switch {
-			case <-snoozed: //Just got snoozed
+	}
+	for {
+		switch {
+		case <-snoozed:
+			if Alarm.Sound == true {
 				cmd.Process.Kill()
-				return
-			case itsbeentenminutes:
-				cmd.Process.Kill()
-				alarm.addTime(alarm.Alarmtime, "h", 1)
-				path := "./public/json/alarms.json"
-				var writeback sync.WaitGroup
-				writeback.Add(1)
-				switch {
-				case alarm.Name == "alarm1":
-					writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm2":
-					writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm3":
-					writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-				case alarm.Name == "alarm4":
-					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-				}
-				return
-			default:
-				continue
 			}
-		}
-	case (alarm.Sound == false) && (alarm.Vibration == true):
-		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
-		for {
-			fmt.Println("Sound false Vibration true")
-			switch {
-			case <-snoozed: //Just got snoozed
-				VibOff()
-				return
-			case itsbeentenminutes:
-				VibOff()
-				alarm.addTime(alarm.Alarmtime, "h", 1)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
-				path := "./public/json/alarms.json"
-				switch {
-				case alarm.Name == "alarm1":
-					writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm2":
-					writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm3":
-					writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-				case alarm.Name == "alarm4":
-					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-				}
-				writeback.Wait()
-				// readyforreload <- true
-				return
-
-			default:
-				if counter == 0 {
-					VibOn()
-					counter++
-				} else if counter == 20 {
-					VibOff()
-					counter++
-				} else if counter == 40 {
-					counter = 0
-				} else {
-					counter++
-				}
-
-			}
-		}
-	case (alarm.Sound == true) && (alarm.Vibration == true):
-		cmd.Start()
-		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
-		for {
-			fmt.Println("Sound true Vibration true")
-			switch {
-			case <-snoozed: //Just got snoozed
-				cmd.Process.Kill()
-				VibOff()
-				return
-			case itsbeentenminutes:
-				cmd.Process.Kill()
-				VibOff()
-				alarm.addTime(alarm.Alarmtime, "h", 1)
-				var writeback sync.WaitGroup
-				writeback.Add(1)
-				path := "./public/json/alarms.json"
-				switch {
-				case alarm.Name == "alarm1":
-					writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm2":
-					writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
-				case alarm.Name == "alarm3":
-					writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
-				case alarm.Name == "alarm4":
-					writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
-				}
-				writeback.Wait()
-				// readyforreload <- true
-				return
-			default:
-				if counter == 0 {
-					counter++
-					VibOn()
-				} else if counter == 20 {
-					counter++
-					VibOff()
-				} else if counter == 40 {
-					counter = 0
-				} else {
-					counter++
-				}
-			}
+		default:
 		}
 	}
+	// switch {
+	// case (alarm.Sound == true) && (alarm.Vibration == false):
+	// 	cmd.Start()
+	// 	itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
+	// 	for {
+	// 		fmt.Println("Sound true Vibration false")
+	// 		switch {
+	// 		case <-snoozed: //Just got snoozed
+	// 			cmd.Process.Kill()
+	// 			return
+	// 		case itsbeentenminutes:
+	// 			cmd.Process.Kill()
+	// 			alarm.addTime(alarm.Alarmtime, "h", 1)
+	// 			path := "./public/json/alarms.json"
+	// 			var writeback sync.WaitGroup
+	// 			writeback.Add(1)
+	// 			switch {
+	// 			case alarm.Name == "alarm1":
+	// 				writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm2":
+	// 				writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm3":
+	// 				writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm4":
+	// 				writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
+	// 			}
+	// 			return
+	// 		default:
+	// 			continue
+	// 		}
+	// 	}
+	// case (alarm.Sound == false) && (alarm.Vibration == true):
+	// 	itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
+	// 	for {
+	// 		fmt.Println("Sound false Vibration true")
+	// 		switch {
+	// 		case <-snoozed: //Just got snoozed
+	// 			VibOff()
+	// 			return
+	// 		case itsbeentenminutes:
+	// 			VibOff()
+	// 			alarm.addTime(alarm.Alarmtime, "h", 1)
+	// 			var writeback sync.WaitGroup
+	// 			writeback.Add(1)
+	// 			path := "./public/json/alarms.json"
+	// 			switch {
+	// 			case alarm.Name == "alarm1":
+	// 				writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm2":
+	// 				writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm3":
+	// 				writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm4":
+	// 				writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
+	// 			}
+	// 			writeback.Wait()
+	// 			// readyforreload <- true
+	// 			return
+
+	// 		default:
+	// 			if counter == 0 {
+	// 				VibOn()
+	// 				counter++
+	// 			} else if counter == 20 {
+	// 				VibOff()
+	// 				counter++
+	// 			} else if counter == 40 {
+	// 				counter = 0
+	// 			} else {
+	// 				counter++
+	// 			}
+
+	// 		}
+	// 	}
+	// case (alarm.Sound == true) && (alarm.Vibration == true):
+	// 	cmd.Start()
+	// 	itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
+	// 	for {
+	// 		fmt.Println("Sound true Vibration true")
+	// 		switch {
+	// 		case <-snoozed: //Just got snoozed
+	// 			cmd.Process.Kill()
+	// 			VibOff()
+	// 			return
+	// 		case itsbeentenminutes:
+	// 			cmd.Process.Kill()
+	// 			VibOff()
+	// 			alarm.addTime(alarm.Alarmtime, "h", 1)
+	// 			var writeback sync.WaitGroup
+	// 			writeback.Add(1)
+	// 			path := "./public/json/alarms.json"
+	// 			switch {
+	// 			case alarm.Name == "alarm1":
+	// 				writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm2":
+	// 				writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm3":
+	// 				writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &writeback)
+	// 			case alarm.Name == "alarm4":
+	// 				writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &writeback)
+	// 			}
+	// 			writeback.Wait()
+	// 			// readyforreload <- true
+	// 			return
+	// 		default:
+	// 			if counter == 0 {
+	// 				counter++
+	// 				VibOn()
+	// 			} else if counter == 20 {
+	// 				counter++
+	// 				VibOff()
+	// 			} else if counter == 40 {
+	// 				counter = 0
+	// 			} else {
+	// 				counter++
+	// 			}
+	// 		}
+	// 	}
+	// }
 }
 
 func convertBooltoString(arg bool) string {
