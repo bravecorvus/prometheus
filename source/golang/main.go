@@ -210,7 +210,6 @@ func main() {
 	// Create function that updates clock once a minute (used to see if any times match up)
 	t := time.Now()
 	currenttime := t.Format("15:04")
-	fmt.Println(currenttime)
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
 		t = time.Now()
@@ -245,7 +244,6 @@ func main() {
 	http.HandleFunc("/alarm1sound", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		stringedinput := r.FormValue("sound1")
-		fmt.Println(stringedinput)
 		if len(stringedinput) == 0 {
 			if Alarm1.CurrentlyRunning == true {
 				Alarm1.CurrentlyRunning = false
@@ -284,7 +282,6 @@ func main() {
 	http.HandleFunc("/alarm2time", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		Alarm2.Alarmtime = r.FormValue("mytime2")
-		fmt.Println(stringedinput)
 		var time2 sync.WaitGroup
 		time2.Add(1)
 		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time2)
