@@ -105,7 +105,7 @@ func OverTenMinutes(alarmtime string) bool {
 	}
 }
 
-func Runsnooze(channel chan bool, alarm Alarm) {
+func Runsnooze(alarm Alarm, channel chan bool) {
 	fmt.Println("Runsnooze")
 	go http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
