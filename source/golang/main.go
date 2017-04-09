@@ -125,7 +125,7 @@ func OverTenMinutes(alarm string, current string) bool {
 
 func Runsnooze(channel chan bool, readyforreload chan bool) {
 	fmt.Println("Runsnooze")
-	go http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
 		channel <- true
 		for {
 			switch {
@@ -608,11 +608,10 @@ func main() {
 		vibration4.Add(1)
 		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration4)
 		vibration4.Wait()
-		http.Redirect(w, r, "/", 401)
+		http.Redirect(w, r, "/", 301)
 	})
 
 	http.HandleFunc("/upload", uploadHandler)
-
 	log.Println("Listening...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
