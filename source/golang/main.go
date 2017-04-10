@@ -17,7 +17,7 @@ import (
 	"time"
 )
 
-type JsonAlarm struct {
+type jsonAlarms struct {
 	Name      string `json:"name"`
 	Alarm     string `json:"time"`
 	Sound     string `json:"sound"`
@@ -37,18 +37,18 @@ var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 
-func getRawJson(filepath string) []JsonAlarm {
+func getRawJson(filepath string) []jsonAlarms {
 	raw, err1 := ioutil.ReadFile(filepath)
 	if err1 != nil {
 		fmt.Println("ERROR")
 		os.Exit(1)
 	}
-	var alarm []JsonAlarm
+	var alarm []jsonAlarms
 	json.Unmarshal(raw, &alarm)
 	return alarm
 }
 
-func (argumentalarm *Alarm) initializeAlarms(jsondata []JsonAlarm, index int) {
+func (argumentalarm *Alarm) initializeAlarms(jsondata []jsonAlarms, index int) {
 	argumentalarm.Name = string(jsondata[index].Name)
 	argumentalarm.Alarmtime = string(jsondata[index].Alarm)
 	if string(jsondata[index].Sound) == "on" {
