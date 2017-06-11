@@ -66,8 +66,12 @@ fieldset {
 }
 
 .time {
-  width: 100px;
-  height: 30px;
+  font-family: Quicksand;
+  color: white;
+  background-color: black;
+  font-size: 18px;
+  width: 150;
+  height: 60;
 }
 
 button, #button, #snoozebutton {

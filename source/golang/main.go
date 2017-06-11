@@ -1,4 +1,5 @@
 //main.go
+//TODO: Add ajax function handlers for time, sound, and vibration
 
 package main
 
@@ -13,15 +14,14 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"sync"
 	"time"
 )
 
 type jsonAlarms struct {
-	Name      string `json:"name"`
-	Alarm     string `json:"time"`
-	Sound     string `json:"sound"`
-	Vibration string `json:"vibration"`
+	JsonName      string `json:"name"`
+	JsonTime      string `json:"time"`
+	JsonSound     string `json:"sound"`
+	JsonVibration string `json:"vibration"`
 }
 
 type Alarm struct {
@@ -36,6 +36,42 @@ var Alarm1 = Alarm{}
 var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
+var Soundname string
+var Playsound = exec.Command("cvlc", "\"./public/assets/"+Soundname+"\"")
+
+func VibOn() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable := rpio.Pin(17)
+	Enable.Output()
+	Enable.High()
+}
+
+func VibOff() {
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable := rpio.Pin(17)
+	Enable.Output()
+	Enable.Low()
+}
 
 func getRawJson(filepath string) []jsonAlarms {
 	raw, err1 := ioutil.ReadFile(filepath)
@@ -44,19 +80,23 @@ func getRawJson(filepath string) []jsonAlarms {
 		os.Exit(1)
 	}
 	var alarm []jsonAlarms
-	json.Unmarshal(raw, &alarm)
+	err2 := json.Unmarshal(raw, &alarm)
+	if err2 != nil {
+		fmt.Println("ERROR")
+		os.Exit(1)
+	}
 	return alarm
 }
 
 func (argumentalarm *Alarm) initializeAlarms(jsondata []jsonAlarms, index int) {
-	argumentalarm.Name = string(jsondata[index].Name)
-	argumentalarm.Alarmtime = string(jsondata[index].Alarm)
-	if string(jsondata[index].Sound) == "on" {
+	argumentalarm.Name = string(jsondata[index].JsonName)
+	argumentalarm.Alarmtime = string(jsondata[index].JsonTime)
+	if string(jsondata[index].JsonSound) == "on" {
 		argumentalarm.Sound = true
 	} else {
 		argumentalarm.Sound = false
 	}
-	if string(jsondata[index].Vibration) == "on" {
+	if string(jsondata[index].JsonVibration) == "on" {
 		argumentalarm.Vibration = true
 	} else {
 		argumentalarm.Vibration = false
@@ -99,76 +139,15 @@ func OverTenMinutes(alarmtime string) bool {
 	}
 }
 
-func Runsnooze(alarm *Alarm, channel chan bool) {
-	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
-		channel <- true
-		if alarm.Vibration == true {
-			VibOff()
-		}
-		alarm.addTime(alarm.Alarmtime, "m", 10)
-		var wg sync.WaitGroup
-		wg.Add(1)
-		path := "./public/json/alarms.json"
-		switch {
-		case alarm.Name == "alarm1":
-			writeBackJson(*alarm, Alarm2, Alarm3, Alarm4, path, &wg)
-		case alarm.Name == "alarm2":
-			writeBackJson(Alarm1, *alarm, Alarm3, Alarm4, path, &wg)
-		case alarm.Name == "alarm3":
-			writeBackJson(Alarm1, Alarm2, *alarm, Alarm4, path, &wg)
-		case alarm.Name == "alarm4":
-			writeBackJson(Alarm1, Alarm2, Alarm3, *alarm, path, &wg)
-		}
-		wg.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-}
-
-func (alarm *Alarm) RunAlarm(currenttime string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	if (alarm.Sound == false) && (alarm.Vibration == false) {
-		return
-	}
-	alarm.CurrentlyRunning = true //Set the state of the alarm to true
-	var itsbeentenminutes bool    //Used to see if an alarm has been running for ten minutes. If So, turn off the alarm, and add 1 hour to the clock
-	cmd := exec.Command("cvlc", "./public/assets/alarm.m4a")
-	snoozed := make(chan bool)
-	go Runsnooze(alarm, snoozed)
-	if alarm.Vibration == true {
-		VibOn()
-	}
-	if alarm.Sound == true {
-		cmd.Start()
-	}
-	for {
-		itsbeentenminutes = OverTenMinutes(alarm.Alarmtime)
-		switch {
-		case <-snoozed:
-			if alarm.Sound == true {
-				cmd.Process.Kill()
-				return
-			}
-		default:
-			if itsbeentenminutes {
-				alarm.addTime(alarm.Name, "h", 1)
-				return
-			} else {
-				continue
-			}
-		}
-	}
-}
-
 func convertBooltoString(arg bool) string {
-	if arg == true {
+	if arg {
 		return "on"
 	} else {
 		return "off"
 	}
 }
 
-func writeBackJson(Alarm1 Alarm, Alarm2 Alarm, Alarm3 Alarm, Alarm4 Alarm, filepath string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func writeBackJson(Alarm1 Alarm, Alarm2 Alarm, Alarm3 Alarm, Alarm4 Alarm, filepath string) {
 	// fmt.Println("[{\"name\":\"" + Alarm1.Name + "\",\"time\":\"" + Alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm1.Vibration) + "\"}\n{\"name\":\"" + Alarm2.Name + "\",\"time\":\"" + Alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm2.Vibration) + "\"}\n{\"name\":\"" + Alarm3.Name + "\",\"time\":\"" + Alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm3.Vibration) + "\"}\n{\"name\":\"" + Alarm4.Name + "\",\"time\":\"" + Alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm4.Vibration) + "\"}]")
 	content := []byte("[{\"name\":\"" + Alarm1.Name + "\",\"time\":\"" + Alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm1.Vibration) + "\"},\n{\"name\":\"" + Alarm2.Name + "\",\"time\":\"" + Alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm2.Vibration) + "\"},\n{\"name\":\"" + Alarm3.Name + "\",\"time\":\"" + Alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm3.Vibration) + "\"},\n{\"name\":\"" + Alarm4.Name + "\",\"time\":\"" + Alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm4.Vibration) + "\"}]")
 	err := ioutil.WriteFile(filepath, content, 0644)
@@ -179,24 +158,37 @@ func writeBackJson(Alarm1 Alarm, Alarm2 Alarm, Alarm3 Alarm, Alarm4 Alarm, filep
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
-	file, header, err := r.FormFile("file")
+	file, header, err := r.FormFile("audio")
+	//_, filename, err := r.FormFile("filename")
+	fmt.Println(header.Filename)
+	//fmt.Println(header)
+
 	if err != nil {
 		fmt.Fprintln(w, err)
 		return
 	}
 	defer file.Close()
-	out, err := os.Create("./public/assets/alarm.m4a")
-	if err != nil {
+	var removefile []string
+	removefile = append(removefile, "./public/assets"+Soundname)
+	rm := exec.Command("rm", removefile...)
+	errr := rm.Start()
+	if errr != nil {
+		fmt.Println("ERROR")
+		os.Exit(1)
+	}
+	out, err1 := os.Create("./public/assets/" + header.Filename)
+	Soundname = header.Filename
+
+	if err1 != nil {
 		fmt.Fprintf(w, "Unable to upload the file")
 	}
 	defer out.Close()
-	_, err = io.Copy(out, file)
-	if err != nil {
+	_, err2 := io.Copy(out, file)
+	if err2 != nil {
 		fmt.Fprintln(w, err)
 	}
 	fmt.Fprintf(w, "File uploaded successfully :")
 	fmt.Fprintf(w, header.Filename)
-	http.Redirect(w, r, "/", 301)
 }
 
 func init() {
@@ -205,6 +197,15 @@ func init() {
 	Alarm2.initializeAlarms(jsondata, 1)
 	Alarm3.initializeAlarms(jsondata, 2)
 	Alarm4.initializeAlarms(jsondata, 3)
+
+	var assets []string
+	assets = append(assets, "./public/assets/")
+	ls := exec.Command("ls", assets...)
+	cmdReader, err := ls.CombinedOutput()
+	if err != nil {
+		fmt.Println("ERROR")
+	}
+	Soundname = string(cmdReader[:])
 }
 
 func main() {
@@ -214,31 +215,350 @@ func main() {
 	currenttime := t.Format("15:04")
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
+		breaktime := false
+		duration := time.Second * 3
 		t = time.Now()
 		currenttime = t.Format("15:04")
-		// bundledAlarms := [4]Alarm{Alarm1, Alarm2, Alarm3, Alarm4}
-		// for _, alarm := range bundledAlarms {
-		// alarm.Alarmtime = currenttime
+
 		if Alarm1.Alarmtime == currenttime {
-			var runningalarm sync.WaitGroup
-			runningalarm.Add(1)
-			Alarm1.RunAlarm(currenttime, &runningalarm)
-			runningalarm.Wait()
+			Alarm1.CurrentlyRunning = true
+			if Alarm1.Sound && Alarm1.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm1.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm1.Alarmtime) {
+						Alarm1.CurrentlyRunning = false
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+
+				}
+
+			} else if Alarm1.Sound && !Alarm1.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+				for {
+					if !Alarm1.CurrentlyRunning {
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else if OverTenMinutes(Alarm1.Alarmtime) {
+						Alarm1.CurrentlyRunning = false
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					}
+				}
+			} else if !Alarm1.Sound && Alarm1.Vibration {
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm1.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm1.Alarmtime) {
+						Alarm1.CurrentlyRunning = false
+						VibOff()
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+				}
+			} else {
+				Alarm1.CurrentlyRunning = false
+			}
+
 		} else if Alarm2.Alarmtime == currenttime {
-			var runningalarm sync.WaitGroup
-			runningalarm.Add(1)
-			Alarm2.RunAlarm(currenttime, &runningalarm)
-			runningalarm.Wait()
+			Alarm2.CurrentlyRunning = true
+			if Alarm2.Sound && Alarm2.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm2.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm2.Alarmtime) {
+						Alarm2.CurrentlyRunning = false
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+
+				}
+
+			} else if Alarm2.Sound && !Alarm2.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+				for {
+					if !Alarm2.CurrentlyRunning {
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else if OverTenMinutes(Alarm2.Alarmtime) {
+						Alarm2.CurrentlyRunning = false
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					}
+				}
+			} else if !Alarm2.Sound && Alarm2.Vibration {
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm2.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm2.Alarmtime) {
+						Alarm2.CurrentlyRunning = false
+						VibOff()
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+				}
+			} else {
+				Alarm2.CurrentlyRunning = false
+			}
+
 		} else if Alarm3.Alarmtime == currenttime {
-			var runningalarm sync.WaitGroup
-			runningalarm.Add(1)
-			Alarm3.RunAlarm(currenttime, &runningalarm)
-			runningalarm.Wait()
+			Alarm3.CurrentlyRunning = true
+			if Alarm3.Sound && Alarm3.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm3.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm3.Alarmtime) {
+						Alarm3.CurrentlyRunning = false
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+
+				}
+
+			} else if Alarm3.Sound && !Alarm3.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+				for {
+					if !Alarm3.CurrentlyRunning {
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else if OverTenMinutes(Alarm3.Alarmtime) {
+						Alarm3.CurrentlyRunning = false
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					}
+				}
+			} else if !Alarm3.Sound && Alarm3.Vibration {
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm3.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm3.Alarmtime) {
+						Alarm3.CurrentlyRunning = false
+						VibOff()
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+				}
+			} else {
+				Alarm3.CurrentlyRunning = false
+			}
+
 		} else if Alarm4.Alarmtime == currenttime {
-			var runningalarm sync.WaitGroup
-			runningalarm.Add(1)
-			Alarm4.RunAlarm(currenttime, &runningalarm)
-			runningalarm.Wait()
+			Alarm4.CurrentlyRunning = true
+			if Alarm4.Sound && Alarm4.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm4.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm4.Alarmtime) {
+						Alarm4.CurrentlyRunning = false
+						VibOff()
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+
+				}
+
+			} else if Alarm4.Sound && !Alarm4.Vibration {
+				errrrror := Playsound.Start()
+				if errrrror != nil {
+					fmt.Println("ERRRRRROR")
+				}
+				for {
+					if !Alarm4.CurrentlyRunning {
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					} else if OverTenMinutes(Alarm4.Alarmtime) {
+						Alarm4.CurrentlyRunning = false
+						errrrrorkill := Playsound.Process.Kill()
+						if errrrrorkill != nil {
+							fmt.Println("ERRRRRROR")
+						}
+						break
+					}
+				}
+			} else if !Alarm4.Sound && Alarm4.Vibration {
+				for {
+					VibOn()
+					for i := 1; i <= 200; i++ {
+						if !Alarm4.CurrentlyRunning {
+							breaktime = true
+							break
+						}
+					}
+					if breaktime {
+						VibOff()
+						breaktime = false
+						break
+					} else if OverTenMinutes(Alarm4.Alarmtime) {
+						Alarm4.CurrentlyRunning = false
+						VibOff()
+					} else {
+						VibOff()
+						time.Sleep(duration)
+					}
+				}
+			} else {
+				Alarm4.CurrentlyRunning = false
+			}
 		}
 	})
 	c.Start()
@@ -247,230 +567,112 @@ func main() {
 	fs := http.FileServer(http.Dir("./public"))
 	http.Handle("/", fs)
 
-	http.HandleFunc("/alarm1time", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		Alarm1.Alarmtime = r.FormValue("mytime1")
-		var time1 sync.WaitGroup
-		time1.Add(1)
-		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time1)
-		time1.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm1sound", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("sound1")
-		if len(stringedinput) == 0 {
-			if Alarm1.CurrentlyRunning == true {
-				Alarm1.CurrentlyRunning = false
-				Alarm1.Sound = false
-			} else if Alarm1.CurrentlyRunning == false {
-				Alarm1.Sound = false
-			}
-		} else {
-			Alarm1.Sound = true
+	http.HandleFunc("/time", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
 		}
-		var sound1 sync.WaitGroup
-		sound1.Add(1)
-		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound1)
-		sound1.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm1vibration", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("vibration1")
-		if len(stringedinput) == 0 {
-			if Alarm1.CurrentlyRunning == true {
-				Alarm1.CurrentlyRunning = false
-				Alarm1.Vibration = false
-			} else if Alarm1.CurrentlyRunning == false {
-				Alarm1.Vibration = false
-			}
-		} else {
-			Alarm1.Vibration = true
+		name := r.FormValue("name")
+		time := r.FormValue("value")
+		//fmt.Println(name)
+		if name == "alarm1" {
+			Alarm1.Alarmtime = time
+			Alarm1.CurrentlyRunning = false
+		} else if name == "alarm2" {
+			Alarm2.Alarmtime = time
+			Alarm2.CurrentlyRunning = false
+		} else if name == "alarm3" {
+			Alarm3.Alarmtime = time
+			Alarm3.CurrentlyRunning = false
+		} else if name == "alarm4" {
+			Alarm4.Alarmtime = time
+			Alarm4.CurrentlyRunning = false
 		}
-		var vibration1 sync.WaitGroup
-		vibration1.Add(1)
-		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration1)
-		vibration1.Wait()
-		http.Redirect(w, r, "/", 301)
+		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json")
 	})
-	http.HandleFunc("/alarm2time", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		Alarm2.Alarmtime = r.FormValue("mytime2")
-		var time2 sync.WaitGroup
-		time2.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time2)
-		time2.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm2sound", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("sound2")
-		if len(stringedinput) == 0 {
-			if Alarm2.CurrentlyRunning == true {
-				Alarm2.CurrentlyRunning = false
-				Alarm2.Sound = false
-			} else if Alarm2.CurrentlyRunning == false {
-				Alarm2.Sound = false
-			}
-		} else {
-			Alarm2.Sound = true
+
+	http.HandleFunc("/sound", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
 		}
-		var sound2 sync.WaitGroup
-		sound2.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound2)
-		sound2.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm2vibration", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("vibration2")
-		if len(stringedinput) == 0 {
-			if Alarm2.CurrentlyRunning == true {
-				Alarm2.CurrentlyRunning = false
-				Alarm2.Vibration = false
-			} else if Alarm2.CurrentlyRunning == false {
-				Alarm2.Vibration = false
-			}
+		name := r.FormValue("name")
+		sound := r.FormValue("value")
+		//fmt.Println(name)
+		var boolsound bool
+		if sound == "on" {
+			boolsound = true
 		} else {
-			Alarm2.Vibration = true
+			boolsound = false
 		}
-		var vibration2 sync.WaitGroup
-		vibration2.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration2)
-		vibration2.Wait()
-		http.Redirect(w, r, "/", 301)
+
+		if name == "alarm1" {
+			Alarm1.Sound = boolsound
+			Alarm1.CurrentlyRunning = false
+		} else if name == "alarm2" {
+			Alarm2.Sound = boolsound
+			Alarm2.CurrentlyRunning = false
+		} else if name == "alarm3" {
+			Alarm3.Sound = boolsound
+			Alarm3.CurrentlyRunning = false
+		} else if name == "alarm4" {
+			Alarm4.Sound = boolsound
+			Alarm4.CurrentlyRunning = false
+		}
+		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json")
 	})
-	http.HandleFunc("/alarm3time", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		Alarm3.Alarmtime = r.FormValue("mytime3")
-		var time3 sync.WaitGroup
-		time3.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time3)
-		time3.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm3sound", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("sound3")
-		if len(stringedinput) == 0 {
-			if Alarm3.CurrentlyRunning == true {
-				Alarm3.CurrentlyRunning = false
-				Alarm3.Sound = false
-			} else if Alarm3.CurrentlyRunning == false {
-				Alarm3.Sound = false
-			}
+
+	http.HandleFunc("/vibration", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
+		}
+		name := r.FormValue("name")
+		vibration := r.FormValue("value")
+		//fmt.Println(name)
+		var boolvibration bool
+		if vibration == "on" {
+			boolvibration = true
 		} else {
-			Alarm3.Sound = true
+			boolvibration = false
 		}
-		var sound3 sync.WaitGroup
-		sound3.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound3)
-		sound3.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm3vibration", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("vibration3")
-		if len(stringedinput) == 0 {
-			if Alarm3.CurrentlyRunning == true {
-				Alarm3.CurrentlyRunning = false
-				Alarm3.Vibration = false
-			} else if Alarm3.CurrentlyRunning == false {
-				Alarm3.Vibration = false
-			}
-		} else {
-			Alarm3.Vibration = true
+		if name == "alarm1" {
+			Alarm1.Vibration = boolvibration
+			Alarm1.CurrentlyRunning = false
+		} else if name == "alarm2" {
+			Alarm2.Vibration = boolvibration
+			Alarm2.CurrentlyRunning = false
+		} else if name == "alarm3" {
+			Alarm3.Vibration = boolvibration
+			Alarm3.CurrentlyRunning = false
+		} else if name == "alarm4" {
+			Alarm4.Vibration = boolvibration
+			Alarm4.CurrentlyRunning = false
 		}
-		var vibration3 sync.WaitGroup
-		vibration3.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration3)
-		vibration3.Wait()
-		http.Redirect(w, r, "/", 301)
+		writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json")
 	})
-	http.HandleFunc("/alarm4time", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		Alarm4.Alarmtime = r.FormValue("mytime4")
-		var time4 sync.WaitGroup
-		time4.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &time4)
-		time4.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm4sound", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("sound4")
-		if len(stringedinput) == 0 {
-			if Alarm4.CurrentlyRunning == true {
-				Alarm4.CurrentlyRunning = false
-				Alarm4.Sound = false
-			} else if Alarm4.CurrentlyRunning == false {
-				Alarm4.Sound = false
-			}
-		} else {
-			Alarm4.Sound = true
+
+	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
+		if Alarm1.CurrentlyRunning {
+			Alarm1.CurrentlyRunning = false
+			Alarm1.addTime(Alarm1.Alarmtime, "m", 10)
+		} else if Alarm2.CurrentlyRunning {
+			Alarm2.CurrentlyRunning = false
+			Alarm2.addTime(Alarm2.Alarmtime, "m", 10)
+		} else if Alarm3.CurrentlyRunning {
+			Alarm3.CurrentlyRunning = false
+			Alarm3.addTime(Alarm3.Alarmtime, "m", 10)
+		} else if Alarm4.CurrentlyRunning {
+			Alarm4.CurrentlyRunning = false
+			Alarm4.addTime(Alarm4.Alarmtime, "m", 10)
 		}
-		var sound4 sync.WaitGroup
-		sound4.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &sound4)
-		sound4.Wait()
-		http.Redirect(w, r, "/", 301)
-	})
-	http.HandleFunc("/alarm4vibration", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
-		stringedinput := r.FormValue("vibration4")
-		if len(stringedinput) == 0 {
-			if Alarm4.CurrentlyRunning == true {
-				Alarm4.CurrentlyRunning = false
-				Alarm4.Vibration = false
-			} else if Alarm4.CurrentlyRunning == false {
-				Alarm4.Vibration = false
-			}
-		} else {
-			Alarm4.Vibration = true
-		}
-		var vibration4 sync.WaitGroup
-		vibration4.Add(1)
-		go writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json", &vibration4)
-		vibration4.Wait()
 		http.Redirect(w, r, "/", 301)
 	})
 
 	http.HandleFunc("/upload", uploadHandler)
 	log.Println("Listening...")
 	log.Fatal(http.ListenAndServe(":3000", nil))
-}
-
-func VibOn() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Input1 := rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 := rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable := rpio.Pin(17)
-	Enable.Output()
-	Enable.High()
-}
-
-func VibOff() {
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer rpio.Close()
-	Input1 := rpio.Pin(5)
-	Input1.Output()
-	Input1.High()
-	Input2 := rpio.Pin(6)
-	Input2.Output()
-	Input2.Low()
-	Enable := rpio.Pin(17)
-	Enable.Output()
-	Enable.Low()
 }

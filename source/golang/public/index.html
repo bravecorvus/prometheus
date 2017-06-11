@@ -1,131 +1,293 @@
 <!--Andrew Lee 2016-->
 <html>
-<head>
-        <script src="/js/jquery-3.1.1.min.js"></script>
-         <script type="text/javascript" src="nixie/nixie.js"></script>
-        <link rel="stylesheet" type="text/css" href="/css/styles.css">
-        <script src="/js/script.js"></script>
-</head>
-<body>
+  <head>
+          <script src="/js/jquery-3.1.1.min.js"></script>
+          <script type="text/javascript" src="nixie/nixie.js"></script>
+          <link rel="stylesheet" type="text/css" href="/css/styles.css">
+          <!--<script src="/js/script.js"></script>-->
+  </head>
+  <body>
 
-<div id="pagetitle">
-<p id="atomicclock">Atomic Clock</p>
-<form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
-<div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
-</div>
+    <div id="pagetitle">
+      <p id="atomicclock">Atomic Clock</p>
+      <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
+      <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
+    </div>
 
-<div id="main">
-<div id="leftside">
-<div id="alarm1">
-    <h1 id="tit1">ALARM 1</h1>
-    <br>
-    <label>Enter Time: </label>
-    <form action="/alarm1time" method="post"><input class="time" type="time" id="mytime1" name="mytime1"></input><button>Submit Time</button></form>
-    <br>
-    <form name="alarm1sound" id ="alarm1sound" action="/alarm1sound" method="post">
-    <label class="switch">
-        <div id="alarmsound1"></div>
-    </label>
-    </form>
-    <label>Sound</label>
-    <br>
-    <form name="alarm1vibration" id ="alarm1vibration" action="/alarm1vibration" method="post">
-    <label class="switch">
-        <div id="alarmvibration1"></div>
-    </label>
-    </form>
-    <label>Vibration</label>
-</div> <!-- alarm1 -->
-<div id="alarm2">
-    <h1 id="tit2">ALARM 2</h1>
-    <br>
-    <label>Enter Time: </label>
-    <form action="/alarm2time" method="post"><input class="time" type="time" id="mytime2" name="mytime2"></input><button>Submit Time</button></form>
-    <br>
-    <form name="alarm2sound" id ="alarm2sound" action="/alarm2sound" method="post">
-    <label class="switch">
-        <div id="alarmsound2"></div>
-    </label>
-    </form>
-    <label>Sound</label>
-    <br>
-    <form name="alarm2vibration" id ="alarm2vibration" action="/alarm2vibration" method="post">
-    <label class="switch">
-        <div id="alarmvibration2"></div>
-    </label>
-    </form>
-    <label>Vibration</label>
-</div> <!-- alarm2 -->
-</div> <!-- leftside -->
-<div id="rightside">
-<div id="alarm3">
-    <h1 id="tit3">ALARM 3</h1>
-    <br>
-    <label>Enter Time: </label>
-    <form action="/alarm3time" method="post"><input class="time" type="time" id="mytime3" name="mytime3"></input><button>Submit Time</button></form>
-    <br>
-    <form name="alarm3sound" id ="alarm3sound" action="/alarm3sound" method="post">
-    <label class="switch">
-        <div id="alarmsound3"></div>
-    </label>
-    </form>
-    <label>Sound</label>
-    <br>
-    <form name="alarm3vibration" id ="alarm3vibration" action="/alarm3vibration" method="post">
-    <label class="switch">
-        <div id="alarmvibration3"></div>
-    </label>
-    </form>
-    <label>Vibration</label>
-</div> <!-- alarm3 -->
-<div id="alarm4">
-    <h1 id="tit4">ALARM 4</h1>
-    <br>
-    <label>Enter Time: </label>
-    <form action="/alarm4time" method="post"><input class="time" type="time" id="mytime4" name="mytime4"></input><button>Submit Time</button></form>
-    <br>
-    <form name="alarm4sound" id ="alarm4sound" action="/alarm4sound" method="post">
-    <label class="switch">
-        <div id="alarmsound4"></div>
-    </label>
-    </form>
-    <label>Sound</label>
-    <br>
-    <form name="alarm4vibration" id ="alarm4vibration" action="/alarm4vibration" method="post">
-    <label class="switch">
-        <div id="alarmvibration4"></div>
-    </label>
-    </form>
-    <label>Vibration</label>
-</div> <!-- alarm4 -->
-</div> <!-- rightside -->
-</div> <!-- main -->
-<div id="afterclock">
-<div id="afterclockleft">
-    <form ref='uploadForm' 
-        id='uploadForm' 
-        action='/upload' 
-        method='post' 
-        encType="multipart/form-data">
-            <input id="file" name="file" type="file">
-            <input id="button" type='submit' value="Submit New Alarm Sound"/>
-    </form>    
-</div>
-</div>
-        <script type="text/javascript">
-            var nd = new NixieClock();
-            nd.id = 'nd1';
-            nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
-            nd.charWidth = 90;
-            nd.charHeight = 150;
-            nd.extraGapsWidths[1] = 12;
-            nd.extraGapsWidths[3] = 12;
-            nd.charGapWidth = 10;
-            document.getElementById(nd.id).parentNode.style.background = "black";
-            document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
-            nd.init();
-            nd.run();
-            nd.setText('-1.234567890');
-        </script>
-</body>
+  <script type="text/javascript" src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
+  <div id="app">
+
+          <br>
+          <br>
+          <br>
+
+    <div id="main" >
+
+      <div id="leftside">
+        <div v-for="(alarm, index) in alarmsleft" :id="alarm.name">
+          <input v-model="alarmsleft[index].time" class="time" type="time"></input>
+          <button @click="submittimeleft(index)">Submit Time</button>
+
+          <br>
+          <br>
+
+          <label class="switch">
+              <input :value="alarmsleft[index].sound" v-if="alarmsleft[index].sound=='on'" @click="submitsoundleft(index)" type="checkbox" /checked>
+              <input :value="alarmsleft[index].sound" v-else @click="submitsoundleft(index)" type="checkbox">
+              <div class="slider round"></div>
+          </label>
+          </form>
+          <label>Sound</label>
+
+          <br>
+          <br>
+
+          <label class="switch">
+              <input :value="alarmsleft[index].vibration" v-if="alarmsleft[index].vibration=='on'" @click="submitvibrationleft(index)" type="checkbox" /checked>
+              <input :value="alarmsleft[index].vibration" v-else @click="submitvibrationleft(index)" type="checkbox">
+              <div class="slider round"></div>
+          </label>
+          </form>
+          <label>Vibration</label>
+          
+          <br>
+          <br>
+          <br>
+
+        </div> <!--alarm.name-->
+      </div>
+
+      <div id="rightside"> 
+        <div v-for="(alarm, index) in alarmsright" :id="alarm.name">
+          <input v-model="alarmsright[index].time" class="time" type="time"></input>
+          <button @click="submittimeright(index)">Submit Time</button>
+
+          <br>
+          <br>
+
+          <label class="switch">
+              <input :value="alarmsright[index].sound" v-if="alarmsright[index].sound=='on'" @click="submitsoundright(index)" type="checkbox" /checked>
+              <input :value="alarmsright[index].sound" v-else @click="submitsoundright(index)" type="checkbox">
+              <div class="slider round"></div>
+          </label>
+          </form>
+          <label>Sound</label>
+
+          <br>
+          <br>
+
+          <label class="switch">
+              <input :value="alarmsright[index].vibration" v-if="alarmsright[index].vibration=='on'" @click="submitvibrationright(index)" type="checkbox" /checked>
+              <input :value="alarmsright[index].vibration" v-else @click="submitvibrationright(index)" type="checkbox">
+              <div class="slider round"></div>
+          </label>
+          </form>
+          <label>Vibration</label>
+
+          <br>
+          <br>
+          <br>
+
+        </div>
+
+      </div>
+    </div><!--main-->
+
+    <div id="afterclock">
+
+      <form enctype="multipart/form-data">
+        <div class="row">
+          <div class="column-small-12 padd0 align-center">
+            <div id="drop-box">
+              <p>Select Files</p>
+            </div>
+          </div>
+          <div class="column-small-12 padd0">
+            <input type="file" name="file" id="file" />
+          </div>
+        </div>
+      </form>
+    </div><!--afterclock-->
+
+  </div><!--app-->
+
+  <script>
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      alarmsleft: [],
+      alarmsright: [],
+      trackinfo: []
+    },
+    methods: {
+
+      submittimeright(arg) {
+        $.ajax(
+            {
+              url: "/time",
+              type: 'post',
+              data: {
+                name: this.alarmsright[arg].name,
+                value: this.alarmsright[arg].time 
+              }
+            }
+          );
+      },
+
+      submittimeleft(arg) {
+        $.ajax(
+            {
+              url: "/time",
+              type: 'post',
+              data: {
+                name: this.alarmsleft[arg].name,
+                value: this.alarmsleft[arg].time 
+              }
+            }
+          );
+      },
+
+      submitsoundright(arg) {
+        if (this.alarmsright[arg].sound == 'on') {
+          this.alarmsright[arg].sound = 'off';
+        } else {
+          this.alarmsright[arg].sound = 'on';
+        }
+        $.ajax(
+            {
+              url: "/sound",
+              type: 'post',
+              data: {
+                name: this.alarmsright[arg].name,
+                value: this.alarmsright[arg].sound 
+              }
+            }
+          );
+      },
+
+      submitsoundleft(arg) {
+        if (this.alarmsleft[arg].sound == 'on') {
+          this.alarmsleft[arg].sound = 'off';
+        } else {
+          this.alarmsleft[arg].sound = 'on';
+        }
+        $.ajax(
+            {
+              url: "/sound",
+              type: 'post',
+              data: {
+                name: this.alarmsleft[arg].name,
+                value: this.alarmsleft[arg].sound 
+              }
+            }
+          );
+      },
+
+      submitvibrationright(arg) {
+        if (this.alarmsright[arg].vibration == 'on') {
+          this.alarmsright[arg].vibration = 'off';
+        } else {
+          this.alarmsright[arg].vibration = 'on';
+        }
+        $.ajax(
+            {
+              url: "/vibration",
+              type: 'post',
+              data: {
+                name: this.alarmsright[arg].name,
+                value: this.alarmsright[arg].vibration 
+              }
+            }
+          );
+      },
+
+      submitvibrationleft(arg) {
+        if (this.alarmsleft[arg].vibration == 'on') {
+          this.alarmsleft[arg].vibration = 'off';
+        } else {
+          this.alarmsleft[arg].vibration = 'on';
+        }
+        $.ajax(
+            {
+              url: "/vibration",
+              type: 'post',
+              data: {
+                name: this.alarmsleft[arg].name,
+                value: this.alarmsleft[arg].vibration 
+              }
+            }
+          );
+
+      },
+    },
+
+    created() {
+      $.getJSON('../json/alarms.json')
+        .done(data => {
+          this.alarmsleft = data.slice(0, 2);
+          this.alarmsright = data.slice(2);
+        });
+    }
+  })
+
+  
+  var nd = new NixieClock();
+  nd.id = 'nd1';
+  nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
+  nd.charWidth = 90;
+  nd.charHeight = 150;
+  nd.extraGapsWidths[1] = 12;
+  nd.extraGapsWidths[3] = 12;
+  nd.charGapWidth = 10;
+  document.getElementById(nd.id).parentNode.style.background = "black";
+  document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+  nd.init();
+  nd.run();
+  nd.setText('-1.234567890');
+
+  $(function(){
+
+    $("#drop-box").click(function(){
+      $("#file").click();
+    });
+
+    $(document).on('drop dragover', function (e) {
+          e.preventDefault();
+      }); 
+
+    $('input[type=file]').on('change', fileUpload);
+
+    function fileUpload(event){  
+      $("#drop-box").html("<p>"+event.target.value+" uploading...</p>");
+      files = event.target.files;
+      var data = new FormData();
+      var error = 0;
+      for (var i = 0; i < files.length; i++) {
+          var file = files[i];
+          console.log(file.size);
+        if(!file.type.match('audio.*')) {
+            $("#drop-box").html("<p> Audio only. Select another file</p>");
+            error = 1;
+          }else{
+            data.append('audio', file, file.name);
+          }
+      }
+      if(!error){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/upload", true);
+        xhr.send(data);
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            $("#afterclock").html("<p> File Uploaded. Select more files</p>");
+          } else {
+            $("#afterclock").html("<p> Error in upload, try again.</p>");
+          }
+        };
+      }
+    }
+
+  });
+  </script>
+
+  </body>
 </html>
