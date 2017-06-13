@@ -21,7 +21,7 @@ func init() {
 func main() {
 	//c := cron.New()
 	//c.AddFunc("0 * * * * *", func() {
-	fmt.Println(IP)
+	//fmt.Println(IP)
 	IP = getIP()
 	fmt.Println(IP)
 	send(IP)
