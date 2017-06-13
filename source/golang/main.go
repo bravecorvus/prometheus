@@ -41,7 +41,7 @@ var Soundname string
 var Playsound = exec.Command("cvlc", "\"./public/assets/"+Soundname+"\"")
 
 func VibOn() {
-	//fmt.Println("VibOn")
+	fmt.Println("VibOn")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -59,7 +59,7 @@ func VibOn() {
 }
 
 func VibOff() {
-	//fmt.Println("VibOff")
+	fmt.Println("VibOff")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
