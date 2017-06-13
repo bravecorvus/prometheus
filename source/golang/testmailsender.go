@@ -110,7 +110,7 @@ func send(body string) {
 
 	msg := "From: " + from + "\n" +
 		"To: " + to + "\n" +
-		"Subject: Hello there\n\n" +
+		"Subject: IP Change from Prometheus " +
 		body
 
 	err := smtp.SendMail("smtp.gmail.com:587",
