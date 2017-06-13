@@ -40,6 +40,7 @@ var Soundname string
 var Playsound = exec.Command("cvlc", "\"./public/assets/"+Soundname+"\"")
 
 func VibOn() {
+	fmt.Println("VibOn")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -57,6 +58,7 @@ func VibOn() {
 }
 
 func VibOff() {
+	fmt.Println("VibOff")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -221,8 +223,10 @@ func main() {
 		currenttime = t.Format("15:04")
 
 		if Alarm1.Alarmtime == currenttime {
+			fmt.Println("Alarm 1 matches")
 			Alarm1.CurrentlyRunning = true
 			if Alarm1.Sound && Alarm1.Vibration {
+				fmt.Println("Sound and Vibration")
 				errrrror := Playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
@@ -232,11 +236,14 @@ func main() {
 					VibOn()
 					for i := 1; i <= 200; i++ {
 						if !Alarm1.CurrentlyRunning {
+							fmt.Println("Breaking loop")
 							breaktime = true
 							break
 						}
 					}
 					if breaktime {
+
+						fmt.Println("breaking loop")
 						VibOff()
 						errrrrorkill := Playsound.Process.Kill()
 						if errrrrorkill != nil {
@@ -245,6 +252,7 @@ func main() {
 						breaktime = false
 						break
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
+						fmt.Println("Its been 10 minutes")
 						Alarm1.CurrentlyRunning = false
 						VibOff()
 						errrrrorkill := Playsound.Process.Kill()
@@ -260,12 +268,14 @@ func main() {
 				}
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
+				fmt.Println("Sound")
 				errrrror := Playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
 				for {
 					if !Alarm1.CurrentlyRunning {
+						fmt.Println("Breaking loop")
 						errrrrorkill := Playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
@@ -286,6 +296,7 @@ func main() {
 					for i := 1; i <= 200; i++ {
 						if !Alarm1.CurrentlyRunning {
 							breaktime = true
+							fmt.Println("Breaking loop")
 							break
 						}
 					}
@@ -294,6 +305,7 @@ func main() {
 						breaktime = false
 						break
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
+						fmt.Println("Its been ten minutes")
 						Alarm1.CurrentlyRunning = false
 						VibOff()
 					} else {
