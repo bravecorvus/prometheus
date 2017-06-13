@@ -320,12 +320,12 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		os.Exit(1)
 	}
 	out, err1 := os.Create("./public/assets/" + header.Filename)
-	stdout, err1 := rm.Output()
-	if err2 != nil {
-		fmt.Println(err.Error())
+	rmstdout, rmerr := rm.Output()
+	if rmerr != nil {
+		fmt.Println(rmerr.Error())
 		return
 	}
-	fmt.Println(string(stdout))
+	fmt.Println(string(rmstdout))
 
 	//if err != nil {
 	//fmt.Println("ERROR")
