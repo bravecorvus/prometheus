@@ -72,9 +72,9 @@ func getIP() string {
 	var b bytes.Buffer
 	if err := Execute(&b,
 		exec.Command("/sbin/ifconfig", "wlan0"),
-		exec.Command("grep", "'inet addr:'"),
+		exec.Command("grep", "\"inet addr:\""),
 		exec.Command("cut", "-d:", "-f2"),
-		exec.Command("awk", "'{print $1}'"),
+		exec.Command("awk", "\"{print $1}\""),
 	); err != nil {
 		log.Fatalln(err)
 	}
