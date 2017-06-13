@@ -41,7 +41,7 @@ var Soundname string
 var Playsound = exec.Command("cvlc", "\"./public/assets/"+Soundname+"\"")
 
 func VibOn() {
-	fmt.Println("VibOn")
+	// fmt.Println("VibOn")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -59,7 +59,7 @@ func VibOn() {
 }
 
 func VibOff() {
-	fmt.Println("VibOff")
+	// fmt.Println("VibOff")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -254,8 +254,8 @@ func main() {
 
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm1.CurrentlyRunning {
 							//fmt.Println("Breaking loop")
 							breaktime = true
@@ -315,8 +315,8 @@ func main() {
 			} else if !Alarm1.Sound && Alarm1.Vibration {
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm1.CurrentlyRunning {
 							breaktime = true
 							//fmt.Println("Breaking loop")
@@ -350,8 +350,8 @@ func main() {
 
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm2.CurrentlyRunning {
 							breaktime = true
 							break
@@ -405,8 +405,8 @@ func main() {
 			} else if !Alarm2.Sound && Alarm2.Vibration {
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm2.CurrentlyRunning {
 							breaktime = true
 							break
@@ -438,8 +438,8 @@ func main() {
 
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm3.CurrentlyRunning {
 							breaktime = true
 							break
@@ -493,8 +493,8 @@ func main() {
 			} else if !Alarm3.Sound && Alarm3.Vibration {
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm3.CurrentlyRunning {
 							breaktime = true
 							break
@@ -526,8 +526,8 @@ func main() {
 
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm4.CurrentlyRunning {
 							breaktime = true
 							break
@@ -581,8 +581,8 @@ func main() {
 			} else if !Alarm4.Sound && Alarm4.Vibration {
 				for {
 					VibOn()
-					time.Sleep(time.Second * 1)
 					for i := 1; i <= 200; i++ {
+						time.Sleep(time.Millisecond * 1)
 						if !Alarm4.CurrentlyRunning {
 							breaktime = true
 							break
