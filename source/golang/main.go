@@ -693,15 +693,19 @@ func main() {
 		if Alarm1.CurrentlyRunning {
 			Alarm1.CurrentlyRunning = false
 			Alarm1.addTime(Alarm1.Alarmtime, "m", 10)
+			writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json")
 		} else if Alarm2.CurrentlyRunning {
 			Alarm2.CurrentlyRunning = false
 			Alarm2.addTime(Alarm2.Alarmtime, "m", 10)
+			writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json")
 		} else if Alarm3.CurrentlyRunning {
 			Alarm3.CurrentlyRunning = false
 			Alarm3.addTime(Alarm3.Alarmtime, "m", 10)
+			writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json")
 		} else if Alarm4.CurrentlyRunning {
 			Alarm4.CurrentlyRunning = false
 			Alarm4.addTime(Alarm4.Alarmtime, "m", 10)
+			writeBackJson(Alarm1, Alarm2, Alarm3, Alarm4, "./public/json/alarms.json")
 		}
 		http.Redirect(w, r, "/", 301)
 	})
