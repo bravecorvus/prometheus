@@ -223,7 +223,7 @@ func main() {
 		currenttime = t.Format("15:04")
 
 		if Alarm1.Alarmtime == currenttime {
-			fmt.Println("Alarm 1 matches")
+			fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
 			if Alarm1.Sound && Alarm1.Vibration {
 				fmt.Println("Sound and Vibration")
