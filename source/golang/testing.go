@@ -1,34 +1,48 @@
 package main
 
 import (
-	"fmt"
-	"reflect"
-	"strconv"
+	"github.com/stianeikeland/go-rpio"
 	"time"
 )
 
+func VibOn() {
+	//fmt.Println("VibOn")
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable := rpio.Pin(17)
+	Enable.Output()
+	Enable.High()
+}
+
+func VibOff() {
+	//fmt.Println("VibOff")
+	if err := rpio.Open(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer rpio.Close()
+	Input1 := rpio.Pin(5)
+	Input1.Output()
+	Input1.High()
+	Input2 := rpio.Pin(6)
+	Input2.Output()
+	Input2.Low()
+	Enable := rpio.Pin(17)
+	Enable.Output()
+	Enable.Low()
+}
+
 func main() {
-	year, month, day := time.Now().Date()
-	dastring := "02:01"
-	var hour int
-	var minutes int
-	if string([]rune(dastring)[0]) == "0" {
-		hour, _ = strconv.Atoi(string([]rune(dastring)[1:2]))
-	} else {
-		hour, _ = strconv.Atoi(string([]rune(dastring)[0:2]))
-	}
-
-	if string([]rune(dastring)[3]) == "0" {
-		minutes, _ = strconv.Atoi(string([]rune(dastring)[4]))
-	} else {
-		minutes, _ = strconv.Atoi(string([]rune(dastring)[3:]))
-	}
-
-	fmt.Println("year: ", reflect.TypeOf(year))
-	fmt.Println("month: ", reflect.TypeOf(int(month)))
-	fmt.Println("day: ", reflect.TypeOf(day))
-	fmt.Println("hour: ", hour)
-	fmt.Println("minute: ", minutes)
-	dadatetime := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local)
-	fmt.Println(dadatetime)
+	VibOn()
+	time.Sleep(10)
+	VibOff()
 }
