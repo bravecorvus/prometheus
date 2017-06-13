@@ -3,8 +3,9 @@ package main
 import (
 	"bytes"
 	"io"
+	"fmt"
 	"log"
-	"os"
+	// "os"
 	"os/exec"
 )
 
@@ -52,10 +53,12 @@ func main() {
 	var b bytes.Buffer
 	if err := Execute(&b,
 		exec.Command("ls", "/home/pi/Downloads"),
-		exec.Command("grep", "as"),
-		exec.Command("sort", "-r"),
+		// exec.Command("grep", "as"),
+		// exec.Command("sort", "-r"),
 	); err != nil {
 		log.Fatalln(err)
 	}
-	io.Copy(os.Stdout, &b)
+	var str string
+	str = b.String()
+	fmt.Println(str)
 }
