@@ -43,7 +43,7 @@ var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 var Soundname string
 var Playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
-var IP, newIP string
+var IP, NewIP string
 
 func writeIP(arg string) {
 	writebuf := []byte(arg)
@@ -135,8 +135,8 @@ func getEmail() string {
 
 func send(body string) {
 	if body == IP {
-		send(newIP)
-		IP = newIP
+		send(NewIP)
+		IP = NewIP
 		writeIP(IP)
 	}
 	from := "prometheusclock@gmail.com"
@@ -366,7 +366,7 @@ func main() {
 		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
 		if Alarm1.Alarmtime == currenttime {
-			newIP = getIP()
+			NewIP = getIP()
 			send(NewIP)
 			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
@@ -466,7 +466,7 @@ func main() {
 			}
 
 		} else if Alarm2.Alarmtime == currenttime {
-			newIP = getIP()
+			NewIP = getIP()
 			send(NewIP)
 			Alarm2.CurrentlyRunning = true
 			if Alarm2.Sound && Alarm2.Vibration {
@@ -556,7 +556,7 @@ func main() {
 			}
 
 		} else if Alarm3.Alarmtime == currenttime {
-			newIP = getIP()
+			NewIP = getIP()
 			send(NewIP)
 			Alarm3.CurrentlyRunning = true
 			if Alarm3.Sound && Alarm3.Vibration {
@@ -646,7 +646,7 @@ func main() {
 			}
 
 		} else if Alarm4.Alarmtime == currenttime {
-			newIP = getIP()
+			NewIP = getIP()
 			send(NewIP)
 			Alarm4.CurrentlyRunning = true
 			if Alarm4.Sound && Alarm4.Vibration {
