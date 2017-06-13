@@ -79,7 +79,7 @@ func getIP() string {
 		log.Fatalln(err)
 	}
 	io.Copy(os.Stdout, &b)
-	fmt.Println(b.String())
+	//fmt.Println(b.String())
 	return b.String()
 }
 
