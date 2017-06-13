@@ -155,9 +155,9 @@ func OverTenMinutes(alarmtime string) bool {
 	difference := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute() - timecurrent.Minute()
 	fmt.Println("Difference is", difference)
 	if difference == 10 {
-		return false
-	} else {
 		return true
+	} else {
+		return false
 	}
 }
 
