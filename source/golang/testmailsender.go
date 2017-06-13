@@ -23,7 +23,7 @@ func main() {
 	//c.AddFunc("0 * * * * *", func() {
 	//fmt.Println(IP)
 	IP = getIP()
-	fmt.Println(IP)
+	//fmt.Println(IP)
 	send(IP)
 	//send(IP)
 }
