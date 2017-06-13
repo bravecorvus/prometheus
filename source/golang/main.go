@@ -38,7 +38,7 @@ var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 var Soundname string
-var Playsound = exec.Command("cvlc", "\"./public/assets/"+Soundname+"\"")
+var Playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
 
 func VibOn() {
 	// fmt.Println("VibOn")
