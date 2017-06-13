@@ -51,7 +51,7 @@ func call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
 func main() {
 	var b bytes.Buffer
 	if err := Execute(&b,
-		exec.Command("ls", "/Users/tyndyll/Downloads"),
+		exec.Command("ls", "/home/pi/Downloads"),
 		exec.Command("grep", "as"),
 		exec.Command("sort", "-r"),
 	); err != nil {
