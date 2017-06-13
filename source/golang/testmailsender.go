@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	//"github.com/robfig/cron"
 	"io"
 	"io/ioutil"
 	"log"
@@ -12,9 +13,17 @@ import (
 	"strings"
 )
 
+var IP string
+
+func init() {
+	IP = getIPFromFile()
+}
 func main() {
+	//c := cron.New()
+	//c.AddFunc("0 * * * * *", func() {
 	send("hello there")
 	getIP()
+	send(IP)
 }
 
 func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {
@@ -57,7 +66,7 @@ func call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
 	return stack[0].Wait()
 }
 
-func getIP() {
+func getIP() string {
 	var b bytes.Buffer
 	if err := Execute(&b,
 		exec.Command("/sbin/ifconfig", "wlan0"),
@@ -69,8 +78,17 @@ func getIP() {
 	}
 	io.Copy(os.Stdout, &b)
 	fmt.Println(b.String())
+	return b.String()
 }
 
+func getIPFromFile() string {
+	content, err := ioutil.ReadFile("./public/json/email")
+	if err != nil {
+		fmt.Println("ERROR")
+	}
+	lines := strings.Split(string(content), "\n")
+	return lines[0]
+}
 func getEmail() string {
 	content, err := ioutil.ReadFile("./public/json/email")
 	if err != nil {
