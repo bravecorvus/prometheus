@@ -320,7 +320,16 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		os.Exit(1)
 	}
 	out, err1 := os.Create("./public/assets/" + header.Filename)
-	out2, _ := exec.Command("rm", "./public/assets/"+Soundname).Output
+	stdout, err1 := rm.Output()
+	if err2 != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(string(stdout))
+
+	//if err != nil {
+	//fmt.Println("ERROR")
+	//}
 	Soundname = header.Filename
 
 	if err1 != nil {
