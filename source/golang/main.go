@@ -366,7 +366,7 @@ func main() {
 
 		if Alarm1.Alarmtime == currenttime {
 			newIP = getIP()
-			send(NewIP)
+			send(newIP)
 			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
 			if Alarm1.Sound && Alarm1.Vibration {
@@ -466,7 +466,7 @@ func main() {
 
 		} else if Alarm2.Alarmtime == currenttime {
 			newIP = getIP()
-			send(NewIP)
+			send(newIP)
 			Alarm2.CurrentlyRunning = true
 			if Alarm2.Sound && Alarm2.Vibration {
 				errrrror := Playsound.Start()
@@ -556,7 +556,7 @@ func main() {
 
 		} else if Alarm3.Alarmtime == currenttime {
 			newIP = getIP()
-			send(NewIP)
+			send(newIP)
 			Alarm3.CurrentlyRunning = true
 			if Alarm3.Sound && Alarm3.Vibration {
 				errrrror := Playsound.Start()
@@ -646,7 +646,7 @@ func main() {
 
 		} else if Alarm4.Alarmtime == currenttime {
 			newIP = getIP()
-			send(NewIP)
+			send(newIP)
 			Alarm4.CurrentlyRunning = true
 			if Alarm4.Sound && Alarm4.Vibration {
 				errrrror := Playsound.Start()
