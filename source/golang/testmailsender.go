@@ -79,7 +79,7 @@ func getIP() string {
 		log.Fatalln(err)
 	}
 	io.Copy(os.Stdout, &b)
-	//fmt.Println(b.String())
+	fmt.Println("Get IP", b.String())
 	return b.String()
 }
 
@@ -89,6 +89,7 @@ func getIPFromFile() string {
 		fmt.Println("ERROR")
 	}
 	lines := strings.Split(string(content), "\n")
+	fmt.Println("Get IP From File", lines[0])
 	return lines[0]
 }
 func getEmail() string {
