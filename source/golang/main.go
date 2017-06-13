@@ -241,6 +241,8 @@ func main() {
 		duration := time.Second * 3
 		t = time.Now()
 		currenttime = t.Format("15:04")
+		fmt.Println("currenttime", currenttime)
+		fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
 		if Alarm1.Alarmtime == currenttime {
 			//fmt.Println("Alarm 1")
