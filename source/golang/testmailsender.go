@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/smtp"
-	"os"
+	//"os"
 	"os/exec"
 	"strings"
 )
@@ -70,6 +70,7 @@ func call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
 
 func getIP() string {
 	var b bytes.Buffer
+	var str string
 	if err := Execute(&b,
 		exec.Command("/sbin/ifconfig", "wlan0"),
 		exec.Command("grep", "inet addr:"),
@@ -78,9 +79,9 @@ func getIP() string {
 	); err != nil {
 		log.Fatalln(err)
 	}
-	io.Copy(os.Stdout, &b)
-	fmt.Println("Get IP", b.String())
-	return b.String()
+	str = b.String()
+	//fmt.Println("Get IP", b.String())
+	return str
 }
 
 func getIPFromFile() string {
