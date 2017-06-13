@@ -22,7 +22,8 @@ func main() {
 	//c := cron.New()
 	//c.AddFunc("0 * * * * *", func() {
 	//fmt.Println(IP)
-	IP = getIP()
+	newIP := getIP()
+	fmt.Println(newIP == IP)
 	//fmt.Println(IP)
 	send(IP)
 	//send(IP)
