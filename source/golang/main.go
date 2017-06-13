@@ -668,6 +668,7 @@ func main() {
 	})
 
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("snoozed")
 		if Alarm1.CurrentlyRunning {
 			Alarm1.CurrentlyRunning = false
 			Alarm1.addTime(Alarm1.Alarmtime, "m", 10)
