@@ -29,7 +29,7 @@ func main() {
 			IP = newIP
 			writeIP(IP)
 		}
-		//fmt.Println(newIP == IP)
+		fmt.Println(newIP == IP)
 		//fmt.Println(IP)
 		//fmt.Println(newIP)
 		//fmt.Println(IP)
