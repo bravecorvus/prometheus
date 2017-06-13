@@ -24,6 +24,8 @@ func main() {
 	//fmt.Println(IP)
 	newIP := getIP()
 	fmt.Println(newIP == IP)
+	fmt.Println(IP)
+	fmt.Println(newIP)
 	//fmt.Println(IP)
 	send(IP)
 	//send(IP)
