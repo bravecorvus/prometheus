@@ -4,6 +4,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/robfig/cron"
@@ -12,8 +13,10 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/smtp"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -39,7 +42,7 @@ var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 var Soundname string
 var Playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
-var newIP string
+var IP, newIP string
 
 func writeIP(arg string) {
 	writebuf := []byte(arg)
