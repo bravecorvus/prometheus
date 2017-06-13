@@ -15,9 +15,6 @@ alarm.m4a
 source/webinterface/public/json/*
 source/webinterface/public/assets/alarm.m4a
 source/webinterface/public/json/time.json
-<<<<<<< HEAD
 source/golang/public/json/\._time\.txt
-=======
->>>>>>> master
-
 source/golang/main
+source/golang/testmailsender
