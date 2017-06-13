@@ -21,9 +21,9 @@ func init() {
 func main() {
 	//c := cron.New()
 	//c.AddFunc("0 * * * * *", func() {
-	send("hello there")
-	getIP()
+	IP = getIP()
 	send(IP)
+	//send(IP)
 }
 
 func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {
