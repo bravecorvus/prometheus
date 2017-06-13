@@ -20,16 +20,28 @@ func init() {
 	IP = getIPFromFile()
 }
 func main() {
-	//c := cron.New()
-	//c.AddFunc("0 * * * * *", func() {
-	//fmt.Println(IP)
-	newIP := getIP()
-	fmt.Println(newIP == IP)
-	fmt.Println(IP)
-	fmt.Println(newIP)
-	//fmt.Println(IP)
-	send(IP)
-	//send(IP)
+	c := cron.New()
+	c.AddFunc("0 * * * * *", func() {
+		//fmt.Println(IP)
+		newIP := getIP()
+		if newIP == IP {
+			send(newIP)
+			IP = newIP
+			writeIP(IP)
+		}
+		//fmt.Println(newIP == IP)
+		//fmt.Println(IP)
+		//fmt.Println(newIP)
+		//fmt.Println(IP)
+	})
+}
+
+func writeIP(arg string) {
+	writebuf := []byte(arg)
+	err := ioutil.WriteFile("./public/json/ip", writebuf, 0644)
+	if err != nil {
+		fmt.Println("ERROR")
+	}
 }
 
 func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {
@@ -89,7 +101,7 @@ func getIP() string {
 		fmt.Println("ERROR")
 	}
 	str = regex.ReplaceAllString(str, "")
-	fmt.Println("Get IP", str)
+	//fmt.Println("Get IP", str)
 	return str
 }
 
@@ -99,7 +111,7 @@ func getIPFromFile() string {
 		fmt.Println("ERROR")
 	}
 	lines := strings.Split(string(content), "\n")
-	fmt.Println("Get IP From File", lines[0])
+	//fmt.Println("Get IP From File", lines[0])
 	return lines[0]
 }
 
