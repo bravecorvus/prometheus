@@ -131,8 +131,12 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 func OverTenMinutes(alarmtime string) bool {
 	// fmt.Println("OverTenMinutes")
 	timealarm, err := time.Parse("15:04", alarmtime)
+	fmt.Print("alarm time is")
+	fmt.Println(timealarm)
 	Errhandler(err)
 	timecurrent := time.Now()
+	fmt.Print("current time is")
+	fmt.Println(timecurrent)
 	difference := timealarm.Minute() - timecurrent.Minute()
 	if difference >= 10 {
 		return false
