@@ -41,7 +41,7 @@ var Soundname string
 var Playsound = exec.Command("cvlc", "\"./public/assets/"+Soundname+"\"")
 
 func VibOn() {
-	fmt.Println("VibOn")
+	//fmt.Println("VibOn")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -59,7 +59,7 @@ func VibOn() {
 }
 
 func VibOff() {
-	fmt.Println("VibOff")
+	//fmt.Println("VibOff")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -116,7 +116,7 @@ func Errhandler(err error) {
 
 func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
 	currenttime, _ := time.Parse("15:04", originaltime)
-	fmt.Println("before fixed snooze time", currenttime)
+	//fmt.Println("before fixed snooze time", currenttime)
 	var updatedtime = time.Now()
 	switch {
 	case hms == "h":
@@ -127,7 +127,7 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 		updatedtime = currenttime.Add(time.Duration(byhowmuch) * time.Second)
 	}
 	arg.Alarmtime = updatedtime.Format("15:04")
-	fmt.Println("fixed snooze time", arg.Alarmtime)
+	//fmt.Println("fixed snooze time", arg.Alarmtime)
 }
 
 func OverTenMinutes(alarmtime string) bool {
@@ -147,14 +147,13 @@ func OverTenMinutes(alarmtime string) bool {
 		minutes, _ = strconv.Atoi(string([]rune(alarmtime)[3:]))
 	}
 
-	dadatetime := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local)
-	fmt.Print("alarm time is ")
-	fmt.Println(dadatetime)
+	//fmt.Print("alarm time is ")
+	//fmt.Println(dadatetime)
 	timecurrent := time.Now()
-	fmt.Print("current time is ")
-	fmt.Println(timecurrent)
+	//fmt.Print("current time is ")
+	//fmt.Println(timecurrent)
 	difference := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute() - timecurrent.Minute()
-	fmt.Println("Difference is", difference)
+	//fmt.Println("Difference is", difference)
 	if difference == 10 {
 		return true
 	} else {
@@ -183,7 +182,7 @@ func writeBackJson(Alarm1 Alarm, Alarm2 Alarm, Alarm3 Alarm, Alarm4 Alarm, filep
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("audio")
 	//_, filename, err := r.FormFile("filename")
-	fmt.Println(header.Filename)
+	//fmt.Println(header.Filename)
 	//fmt.Println(header)
 
 	if err != nil {
@@ -244,10 +243,10 @@ func main() {
 		currenttime = t.Format("15:04")
 
 		if Alarm1.Alarmtime == currenttime {
-			fmt.Println("Alarm 1")
+			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
 			if Alarm1.Sound && Alarm1.Vibration {
-				fmt.Println("Sound and Vibration")
+				//fmt.Println("Sound and Vibration")
 				errrrror := Playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
@@ -257,14 +256,14 @@ func main() {
 					VibOn()
 					for i := 1; i <= 200; i++ {
 						if !Alarm1.CurrentlyRunning {
-							fmt.Println("Breaking loop")
+							//fmt.Println("Breaking loop")
 							breaktime = true
 							break
 						}
 					}
 					if breaktime {
 
-						fmt.Println("breaking loop")
+						//fmt.Println("breaking loop")
 						VibOff()
 						errrrrorkill := Playsound.Process.Kill()
 						if errrrrorkill != nil {
@@ -273,7 +272,7 @@ func main() {
 						breaktime = false
 						break
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
-						fmt.Println("Its been 10 minutes")
+						//fmt.Println("Its been 10 minutes")
 						Alarm1.CurrentlyRunning = false
 						VibOff()
 						errrrrorkill := Playsound.Process.Kill()
@@ -289,14 +288,14 @@ func main() {
 				}
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
-				fmt.Println("Sound")
+				//fmt.Println("Sound")
 				errrrror := Playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
 				for {
 					if !Alarm1.CurrentlyRunning {
-						fmt.Println("Breaking loop")
+						//fmt.Println("Breaking loop")
 						errrrrorkill := Playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
@@ -317,7 +316,7 @@ func main() {
 					for i := 1; i <= 200; i++ {
 						if !Alarm1.CurrentlyRunning {
 							breaktime = true
-							fmt.Println("Breaking loop")
+							//fmt.Println("Breaking loop")
 							break
 						}
 					}
@@ -326,7 +325,7 @@ func main() {
 						breaktime = false
 						break
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
-						fmt.Println("Its been ten minutes")
+						//fmt.Println("Its been ten minutes")
 						Alarm1.CurrentlyRunning = false
 						VibOff()
 					} else {
@@ -689,7 +688,7 @@ func main() {
 	})
 
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("snoozed")
+		//fmt.Println("snoozed")
 		if Alarm1.CurrentlyRunning {
 			Alarm1.CurrentlyRunning = false
 			Alarm1.addTime(Alarm1.Alarmtime, "m", 10)
