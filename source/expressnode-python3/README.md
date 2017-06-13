@@ -1,7 +1,7 @@
 # Node.js Web Server for Atomic Pi Project
 ## Andrew Lee
 
-_*Please note, the Node.js + Python3 program is no longer being actively developed, and is stored on the repo for referencing purposes. Please refer to my newer and better [golang implementation](../golang/)*_
+***Please note, the Node.js + Python3 program is no longer being actively developed, and is stored on the repo for referencing purposes. Please refer to my newer and better [golang implementation](../golang/)***
 
 ### [Main Project](https://github.com/gilgameshskytrooper/AtomicClock)
 
