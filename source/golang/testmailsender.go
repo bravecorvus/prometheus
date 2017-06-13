@@ -19,6 +19,7 @@ var IP string
 func init() {
 	IP = getIPFromFile()
 }
+
 func main() {
 	c := cron.New()
 	c.AddFunc("0 * * * * *", func() {
@@ -34,6 +35,7 @@ func main() {
 		//fmt.Println(newIP)
 		//fmt.Println(IP)
 	})
+	c.Start()
 }
 
 func writeIP(arg string) {
