@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"regexp"
 	//"github.com/robfig/cron"
 	"io"
 	"io/ioutil"
@@ -83,7 +84,12 @@ func getIP() string {
 		log.Fatalln(err)
 	}
 	str = b.String()
-	//fmt.Println("Get IP", b.String())
+	regex, err := regexp.Compile("\n")
+	if err != nil {
+		fmt.Println("ERROR")
+	}
+	str = regex.ReplaceAllString(str, "")
+	fmt.Println("Get IP", str)
 	return str
 }
 
