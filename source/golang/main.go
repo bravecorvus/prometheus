@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"time"
 )
 
@@ -130,15 +131,29 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 
 func OverTenMinutes(alarmtime string) bool {
 	// fmt.Println("OverTenMinutes")
-	timealarm, err := time.Parse("15:04", alarmtime)
-	fmt.Print("alarm time is")
-	fmt.Println(timealarm)
-	Errhandler(err)
+	year, month, day := time.Now().Date()
+	var hour int
+	var minutes int
+	if string([]rune(alarmtime)[0]) == "0" {
+		hour, _ = strconv.Atoi(string([]rune(alarmtime)[1:2]))
+	} else {
+		hour, _ = strconv.Atoi(string([]rune(alarmtime)[0:2]))
+	}
+
+	if string([]rune(alarmtime)[3]) == "0" {
+		minutes, _ = strconv.Atoi(string([]rune(alarmtime)[4]))
+	} else {
+		minutes, _ = strconv.Atoi(string([]rune(alarmtime)[3:]))
+	}
+
+	dadatetime := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local)
+	fmt.Print("alarm time is ")
+	fmt.Println(dadatetime)
 	timecurrent := time.Now()
-	fmt.Print("current time is")
+	fmt.Print("current time is ")
 	fmt.Println(timecurrent)
-	difference := timealarm.Minute() - timecurrent.Minute()
-	if difference >= 10 {
+	difference := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute() - timecurrent.Minute()
+	if difference == 10 {
 		return false
 	} else {
 		return true
