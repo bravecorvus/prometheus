@@ -1,21 +1,23 @@
-#Node.js Web Server for Atomic Pi Project
-##Andrew Lee
+# Node.js Web Server for Atomic Pi Project
+## Andrew Lee
 
-###[Main Project](https://github.com/gilgameshskytrooper/AtomicClock)
+_*Please note, the Node.js + Python3 program is no longer being actively developed, and is stored on the repo for referencing purposes. Please refer to my newer and better [golang implementation](../golang/)*_
+
+### [Main Project](https://github.com/gilgameshskytrooper/AtomicClock)
 
 ![Atomic Alarm UI](https://github.com/gilgameshskytrooper/AtomicClock/raw/master/assets/AtomicAlarmUI.PNG)
 
-###Credits
+### Credits
 I used the following technologies to make this website:
 The HTML is loosely based on Gokul S Krishnan's [simple_alarm](https://github.com/gsk1692/simple_alarm).
 [jQuery](http://jquery.com/) is a dependency of Bootstrap.
 [node.js](https://nodejs.org/en/) provides the RESTful services needed to run the UI.
 [npm](https://www.npmjs.com/) is the package manager for node.js I needed to install various tools for the project.
 
-###Role in the Atomic Clock Project
+### Role in the Atomic Clock Project
 This server runs the web server that controls the Alarm Configuration files. There are 4 of them: [alarm1.json](/public/json/alarm1.json), [alarm2.json](/public/json/alarm2.json), [alarm3.json](/public/json/alarm3.json), and [alarm4.json](/public/json/alarm4.json). The main alarm clock function will use the configuraton files as the basis for when to run an alarm and to decide when an alarm was enabled or disabled.
 
-###Installation
+### Installation
 If you haven't cloned the main Atomic Clock Project
 ```
 > sudo apt-get install git
@@ -63,7 +65,7 @@ To test your server, use any device with a web browser and connect to [111.111.1
 
 Congratulations, you now have a fully functional Atomic Clock User Interface.
 
-###How it all works
+### How it all works
 When the requested the root [111.111.111:3000](111.111.111:3000), it will send [index.html](/public/index.html), it loads it from the alarm configuration files: [alarm1.json](/public/json/alarm1.json), [alarm2.json](/public/json/alarm2.json), [alarm3.json](/public/json/alarm3.json), and [alarm4.json](/public/json/alarm4.json).
 
 When the user fills out the form, it will update the configuration files and reload the page. **Note: You cannot send the form from the [index.html link](/public/index.html), you must use the [111.111.111:3000](111.111.111:3000)**

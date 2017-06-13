@@ -1,8 +1,8 @@
-# Atomic Clock
+# Prometheus Smart Clock
 
 ### By Andrew Lee
 
-![Atomic Clock Cover](assets/newcover.jpg)
+![Prometheus Clock Cover](assets/newcover.jpg)
 
 
 
@@ -32,15 +32,15 @@ The idea was to have a clock that does everything. The 3 main things I want to i
 ## Implementation
 
 ### Inspiration
-hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. His original code as well as his original schematic is contained in the [hberg32](https://github.com/gilgameshskytrooper/AtomicClock/tree/master/hberg32) directory of this repo. His project can be found at: [Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock).
+hberg32 has already successfully implemented some of the code as well as the hard wiring for a similar project of his. His original code as well as his original schematic is contained in the [hberg32](hberg32/) directory of this repo. His project can be found at: [Merciless Pi Alarm Clock](https://hackaday.io/project/4922-merciless-pi-alarm-clock).
 
 ### Hardware
 
 ![Custom Wire](assets/barrelplugwire.jpeg)
 
-The hardware in this project is heavily based on hberg32's schematics, which can be found at [Merciless Pi Alarm Schematic](hberg32/PiAlarm.fzz). The schematics of my project can be found at [Atomic Clock Schematic](/assets/AtomicClockSchematic.fzz).
+The hardware in this project is heavily based on hberg32's schematics, which can be found at [Merciless Pi Alarm Schematic](hberg32/PiAlarm.fzz). The schematics of my project can be found at [Prometheus Clock Schematic](/assets/AtomicClockSchematic.fzz).
 
-A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power source separate from the rest of the Atomic Clock. The rest of my Project is powered by a 12V @ 2000mA DC Power source, which powers both the Nixie Clock and the Bed Shaker.
+A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power source separate from the rest of the Prometheus Clock. The rest of my Project is powered by a 12V @ 2000mA DC Power source, which powers both the Nixie Clock and the Bed Shaker.
 
 As of now, the DC power goes though the breadoard, and goes to both the Nixie Clock, (via a custom barrel plug to breadboard wire I made) as well as a L293D which draws a consistant amount from the main circuit to ensure the clock receives enough V's and the Bed Shaker doesn't fry from too much.
 
