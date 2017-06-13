@@ -115,8 +115,8 @@ func Errhandler(err error) {
 }
 
 func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
-	currenttime, err := time.Parse("15:04", originaltime)
-	Errhandler(err)
+	currenttime, _ := time.Parse("15:04", originaltime)
+	fmt.Println("before fixed snooze time", currenttime)
 	var updatedtime = time.Now()
 	switch {
 	case hms == "h":
@@ -127,6 +127,7 @@ func (arg *Alarm) addTime(originaltime string, hms string, byhowmuch int) { //ta
 		updatedtime = currenttime.Add(time.Duration(byhowmuch) * time.Second)
 	}
 	arg.Alarmtime = updatedtime.Format("15:04")
+	fmt.Println("fixed snooze time", arg.Alarmtime)
 }
 
 func OverTenMinutes(alarmtime string) bool {
