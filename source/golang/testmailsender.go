@@ -84,7 +84,7 @@ func getIP() string {
 }
 
 func getIPFromFile() string {
-	content, err := ioutil.ReadFile("./public/json/email")
+	content, err := ioutil.ReadFile("./public/json/ip")
 	if err != nil {
 		fmt.Println("ERROR")
 	}
@@ -92,6 +92,7 @@ func getIPFromFile() string {
 	fmt.Println("Get IP From File", lines[0])
 	return lines[0]
 }
+
 func getEmail() string {
 	content, err := ioutil.ReadFile("./public/json/email")
 	if err != nil {
