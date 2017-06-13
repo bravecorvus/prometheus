@@ -1,5 +1,4 @@
 //main.go
-//TODO: Add ajax function handlers for time, sound, and vibration
 
 package main
 
@@ -135,30 +134,31 @@ func getEmail() string {
 
 func send(body string) {
 	if body == IP {
-		send(NewIP)
+		return
+	} else {
 		IP = NewIP
 		writeIP(IP)
+		from := "prometheusclock@gmail.com"
+		pass := "abcprometheusclock"
+		var to string
+		to = getEmail()
+
+		msg := "From: " + from + "\n" +
+			"To: " + to + "\n" +
+			"Subject: New Prometheus IP: " +
+			body
+
+		err := smtp.SendMail("smtp.gmail.com:587",
+			smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
+			from, []string{to}, []byte(msg))
+
+		if err != nil {
+			log.Printf("smtp error: %s", err)
+			return
+		}
+
+		log.Print("sent")
 	}
-	from := "prometheusclock@gmail.com"
-	pass := "abcprometheusclock"
-	var to string
-	to = getEmail()
-
-	msg := "From: " + from + "\n" +
-		"To: " + to + "\n" +
-		"Subject: IP Change from Prometheus " +
-		body
-
-	err := smtp.SendMail("smtp.gmail.com:587",
-		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
-		from, []string{to}, []byte(msg))
-
-	if err != nil {
-		log.Printf("smtp error: %s", err)
-		return
-	}
-
-	log.Print("sent")
 }
 
 func VibOn() {
@@ -320,6 +320,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		os.Exit(1)
 	}
 	out, err1 := os.Create("./public/assets/" + header.Filename)
+	out2, _ := exec.Command("rm", "./public/assets/"+Soundname).Output
 	Soundname = header.Filename
 
 	if err1 != nil {
@@ -331,7 +332,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, err)
 	}
 	fmt.Fprintf(w, "File uploaded successfully :")
-	fmt.Fprintf(w, header.Filename)
+	//fmt.Fprintf(w, header.Filename)
 }
 
 func init() {
