@@ -74,7 +74,7 @@ fieldset {
   height: 60;
 }
 
-button, #button, #snoozebutton {
+#file, button, #button, #snoozebutton {
   border-color: black;
     margin-left: 15px;
     padding: 7px 12px;
