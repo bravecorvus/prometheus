@@ -316,6 +316,8 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	//if err != nil {
 	//fmt.Println("ERROR")
 	//}
+	var oldsound string = Soundname
+	Soundname = header.Filename
 
 	if err1 != nil {
 		fmt.Fprintf(w, "Unable to upload the file")
@@ -327,11 +329,10 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "File uploaded successfully :")
 	//fmt.Fprintf(w, header.Filename)
-	rmerror := exec.Command("rm", "public/assets/"+Soundname).Run()
+	rmerror := exec.Command("rm", "public/assets/"+oldsound).Run()
 	if rmerror != nil {
 		fmt.Println("ERROR rm")
 	}
-	Soundname = header.Filename
 }
 
 func init() {
