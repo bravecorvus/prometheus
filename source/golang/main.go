@@ -316,7 +316,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	//if err != nil {
 	//fmt.Println("ERROR")
 	//}
-	Soundname = header.Filename
 
 	if err1 != nil {
 		fmt.Fprintf(w, "Unable to upload the file")
@@ -332,6 +331,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if rmerror != nil {
 		fmt.Println("ERROR rm")
 	}
+	Soundname = header.Filename
 }
 
 func init() {
