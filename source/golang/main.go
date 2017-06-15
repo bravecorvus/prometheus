@@ -311,7 +311,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	rmerror := exec.Command("rm", "./public/assets/"+Soundname).Run()
+	rmerror := exec.Command("rm", "'./public/assets/"+Soundname+"'").Run()
 	if rmerror != nil {
 		fmt.Println("ERROR rm")
 	}
