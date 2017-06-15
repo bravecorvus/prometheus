@@ -41,7 +41,6 @@ var Alarm2 = Alarm{}
 var Alarm3 = Alarm{}
 var Alarm4 = Alarm{}
 var Soundname string
-var Playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
 var IP, NewIP string
 
 func writeIP(arg string) {
@@ -382,7 +381,8 @@ func main() {
 			Alarm1.CurrentlyRunning = true
 			if Alarm1.Sound && Alarm1.Vibration {
 				//fmt.Println("Sound and Vibration")
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
@@ -401,7 +401,7 @@ func main() {
 
 						//fmt.Println("breaking loop")
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -411,7 +411,7 @@ func main() {
 						//fmt.Println("Its been 10 minutes")
 						Alarm1.CurrentlyRunning = false
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -425,7 +425,8 @@ func main() {
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
 				//fmt.Println("Sound")
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
@@ -433,14 +434,14 @@ func main() {
 					time.Sleep(time.Second * 1)
 					if !Alarm1.CurrentlyRunning {
 						//fmt.Println("Breaking loop")
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
 						break
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
 						Alarm1.CurrentlyRunning = false
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -480,7 +481,8 @@ func main() {
 			send(NewIP)
 			Alarm2.CurrentlyRunning = true
 			if Alarm2.Sound && Alarm2.Vibration {
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
@@ -496,7 +498,7 @@ func main() {
 					}
 					if breaktime {
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -505,7 +507,7 @@ func main() {
 					} else if OverTenMinutes(Alarm2.Alarmtime) {
 						Alarm2.CurrentlyRunning = false
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -518,21 +520,22 @@ func main() {
 				}
 
 			} else if Alarm2.Sound && !Alarm2.Vibration {
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm2.CurrentlyRunning {
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
 						break
 					} else if OverTenMinutes(Alarm2.Alarmtime) {
 						Alarm2.CurrentlyRunning = false
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -570,7 +573,8 @@ func main() {
 			send(NewIP)
 			Alarm3.CurrentlyRunning = true
 			if Alarm3.Sound && Alarm3.Vibration {
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
@@ -586,7 +590,7 @@ func main() {
 					}
 					if breaktime {
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -595,7 +599,7 @@ func main() {
 					} else if OverTenMinutes(Alarm3.Alarmtime) {
 						Alarm3.CurrentlyRunning = false
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -608,21 +612,22 @@ func main() {
 				}
 
 			} else if Alarm3.Sound && !Alarm3.Vibration {
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm3.CurrentlyRunning {
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
 						break
 					} else if OverTenMinutes(Alarm3.Alarmtime) {
 						Alarm3.CurrentlyRunning = false
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -660,7 +665,8 @@ func main() {
 			send(NewIP)
 			Alarm4.CurrentlyRunning = true
 			if Alarm4.Sound && Alarm4.Vibration {
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
@@ -676,7 +682,7 @@ func main() {
 					}
 					if breaktime {
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -685,7 +691,7 @@ func main() {
 					} else if OverTenMinutes(Alarm4.Alarmtime) {
 						Alarm4.CurrentlyRunning = false
 						VibOff()
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
@@ -698,21 +704,22 @@ func main() {
 				}
 
 			} else if Alarm4.Sound && !Alarm4.Vibration {
-				errrrror := Playsound.Start()
+				var playsound = exec.Command("cvlc", "./public/assets/"+Soundname)
+				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm4.CurrentlyRunning {
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
 						break
 					} else if OverTenMinutes(Alarm4.Alarmtime) {
 						Alarm4.CurrentlyRunning = false
-						errrrrorkill := Playsound.Process.Kill()
+						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
 						}
