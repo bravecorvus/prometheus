@@ -311,7 +311,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 	var removefile = exec.Command("rm", "./public/assets/"+Soundname)
-	rmerror := exec.Start()
+	rmerror := removefile.Run()
 	if rmerror != nil {
 		fmt.Println("ERROR rm")
 	}
