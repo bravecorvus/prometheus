@@ -311,11 +311,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	rmerror := exec.Command("rm", "public/assets/"+Soundname).Run()
-	if rmerror != nil {
-		fmt.Println("ERROR rm")
-	}
-
 	out, err1 := os.Create("./public/assets/" + header.Filename)
 
 	//if err != nil {
@@ -333,6 +328,10 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Fprintf(w, "File uploaded successfully :")
 	//fmt.Fprintf(w, header.Filename)
+	rmerror := exec.Command("rm", "public/assets/"+Soundname).Run()
+	if rmerror != nil {
+		fmt.Println("ERROR rm")
+	}
 }
 
 func init() {
