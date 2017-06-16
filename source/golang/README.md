@@ -5,7 +5,7 @@
 ## Function
 [main](main.go) functions as both the server, which hosts the web-based user interface as well as the hardware controlling mechanisms.
 
-## Build from source
+## Build From Source
 In order to be able to use the interface, the user will have to install the necessary dependencies for this to run.
 
 First, this program uses VLC to play music (by spawning a shell process).
@@ -32,3 +32,8 @@ The following is a library that allows golang to easily interact with the GPIO p
 >go get github.com/stianeikeland/go-rpio
 ```
 
+Then, you just have to build the program. Then connect the relevant wires and you are good to go (More of that on our Wiki)
+```
+>cd Prometheus/source/golang/
+>go build main.go
+```
