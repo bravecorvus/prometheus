@@ -343,12 +343,15 @@ func init() {
 
 	var assets []string
 	assets = append(assets, "./public/assets/")
-	ls := exec.Command("ls", assets...)
-	cmdReader, err := ls.CombinedOutput()
-	if err != nil {
-		fmt.Println("ERROR")
+
+	var b bytes.Buffer
+	if err := Execute(&b,
+		exec.Command("ls", "public/assets"),
+	); err != nil {
+		log.Fatalln(err)
 	}
-	Soundname = string(cmdReader[:])
+	Soundname = strings.TrimSpace(b.String())
+	fmt.Println(Soundname)
 	d1 := []byte(Soundname)
 	errrrrrrrrr := ioutil.WriteFile("initial", d1, 0644)
 	if errrrrrrrrr != nil {

@@ -2,9 +2,10 @@ package main
 
 import (
 	"bytes"
-	"io"
 	"fmt"
+	"io"
 	"log"
+	"strings"
 	// "os"
 	"os/exec"
 )
@@ -52,13 +53,11 @@ func call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
 func main() {
 	var b bytes.Buffer
 	if err := Execute(&b,
-		exec.Command("ls", "/home/pi/Downloads"),
-		// exec.Command("grep", "as"),
-		// exec.Command("sort", "-r"),
+		exec.Command("ls", "public/assets"),
 	); err != nil {
 		log.Fatalln(err)
 	}
 	var str string
-	str = b.String()
+	str = strings.TrimSpace(b.String())
 	fmt.Println(str)
 }
