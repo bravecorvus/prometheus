@@ -109,7 +109,7 @@ func getIP() string {
 	}
 	str = regex.ReplaceAllString(str, "")
 	//fmt.Println("Get IP", str)
-	return str
+	return strings.TrimSpace(str)
 }
 
 func getIPFromFile() string {
@@ -341,8 +341,7 @@ func init() {
 	Alarm3.initializeAlarms(jsondata, 2)
 	Alarm4.initializeAlarms(jsondata, 3)
 
-	var assets []string
-	assets = append(assets, "./public/assets/")
+	IP = strings.TrimSpace(getIPFromFile())
 
 	var b bytes.Buffer
 	if err := Execute(&b,
@@ -351,7 +350,7 @@ func init() {
 		log.Fatalln(err)
 	}
 	Soundname = strings.TrimSpace(b.String())
-	fmt.Println(Soundname)
+	//fmt.Println(Soundname)
 	d1 := []byte(Soundname)
 	errrrrrrrrr := ioutil.WriteFile("initial", d1, 0644)
 	if errrrrrrrrr != nil {
