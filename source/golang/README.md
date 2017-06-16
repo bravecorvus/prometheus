@@ -32,7 +32,7 @@ The following is a library that allows golang to easily interact with the GPIO p
 >go get github.com/stianeikeland/go-rpio
 ```
 
-Then, you just have to build the program. Then connect the relevant wires and you are good to go (More of that on our [Wiki](wiki/Hardware-Set-Up))
+Then, you just have to build the program. Then connect the relevant wires and you are good to go (More of that on our [Wiki](https://github.com/gilgameshskytrooper/Prometheus/wiki/Hardware-Set-Up))
 ```
 >cd Prometheus/source/golang/
 >go build main.go
