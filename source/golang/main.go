@@ -350,7 +350,10 @@ func init() {
 	}
 	Soundname = string(cmdReader[:])
 	d1 := []byte(Soundname)
-	errrrrrrrrrrr := ioutil.WriteFile("initial", d1, 0644)
+	errrrrrrrrr := ioutil.WriteFile("initial", d1, 0644)
+	if errrrrrrrrr != nil {
+		fmt.Println(errrrrrrrrr)
+	}
 }
 
 func main() {
