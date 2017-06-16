@@ -1,6 +1,6 @@
 # Golang Prometheus Software
 
-![Golang](../../assets/golang.png)
+![Golang](https://68.media.tumblr.com/93601f0c11deeb9189b152096ffe8ec3/tumblr_ormg9e9Zr51s5a4bko1_1280.png)
 
 ### Author: Andrew Lee
 
