@@ -302,7 +302,7 @@ func writeBackJson(Alarm1 Alarm, Alarm2 Alarm, Alarm3 Alarm, Alarm4 Alarm, filep
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	rmerror := exec.Command("rm", "public/assets/"+Soundname).Run()
 	if rmerror != nil {
-		fmt.Println(rmerror)
+		fmt.Println(os.Stderr, rmerror)
 	}
 	file, header, err := r.FormFile("audio")
 	Soundname = header.Filename
