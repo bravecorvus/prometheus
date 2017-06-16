@@ -280,7 +280,23 @@
         xhr.send(data);
         xhr.onload = function () {
           if (xhr.status === 200) {
-            $("#afterclock").html("<p> File Uploaded. Select more files</p>");
+            $("#afterclock").html("\
+                <div id='afterclockleft'>\
+                    <form enctype='multipart/form-data'>\
+                      <div class='row'>\
+                        <div class='column-small-12 padd0 align-center'>\
+                          <div id='drop-box'>\
+                            <p>Select Files</p>\
+                          </div>\
+                        </div>\
+                        <div class='column-small-12 padd0'>\
+                        <input type='file' name='file' id='file' />\
+                      </div>\
+                    </div>\
+                  </form>\
+              </div>\
+              <br>\
+              <p>File Uploaded. Select more files</p>");
           } else {
             $("#afterclock").html("<p> Error in upload, try again.</p>");
           }
