@@ -1,5 +1,7 @@
 # Golang Prometheus Software
 
+![Golang](../../assets/golang.png)
+
 ### Author: Andrew Lee
 
 ## Function
