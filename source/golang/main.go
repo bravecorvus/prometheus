@@ -349,6 +349,8 @@ func init() {
 		fmt.Println("ERROR")
 	}
 	Soundname = string(cmdReader[:])
+	d1 := []byte(Soundname)
+	errrrrrrrrrrr := ioutil.WriteFile("initial", d1, 0644)
 }
 
 func main() {
