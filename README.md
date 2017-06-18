@@ -2,7 +2,7 @@
 
 ### By Andrew Lee
 
-![Prometheus Clock Cover](assets/newcover.jpg)
+![Prometheus Clock Cover](assets/cover.jpg)
 
 
 
