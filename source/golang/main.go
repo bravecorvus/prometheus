@@ -149,6 +149,7 @@ func getEmail() string {
 //If the old IP and the new IP don't match, send the user an email notifying them of this change. Please change the stored at ./public/json/ip to get these notifications
 func send(body string) {
 	if body == IP {
+		//If the IP didn't change, just ignore
 		return
 	} else {
 		IP = NewIP

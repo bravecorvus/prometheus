@@ -39,3 +39,23 @@ Then, you just have to build the program. Then connect the relevant wires and yo
 >cd Prometheus/source/golang/
 >go build main.go
 ```
+
+## Set-Up (Pre-Built Binary)
+If you install the bindary directly from [https://github.com/gilgameshskytrooper/Prometheus/releases](https://github.com/gilgameshskytrooper/Prometheus/releases), then the only thing you need to do is to fill in the correct email address stored in [public/json/email](public/json/email), so that Prometheus can send you an email notification if the IP on your Pi changes. (Mainly if you have a dynamically assigned IP address from your ISP). If you have a static IP, this part of the set up. Once the email where you want to receive notifications, you are good to go. Start `./main`.
+
+
+## Set-Up (Built from source Binary)
+If you cloned the repo, and built the binary from source, then you will need to replace the following code:
+```
+//Account from which Prometheus sends an email from.
+from := "email@example.com"
+pass := "password"
+```
+
+Replace the from/pass values with a valid email address from which Prometheus will send the notification about an IP change. (Note, this is only necessary if you built from source. A email is provided if you use the pre-built binary). Then, replace the email stored at [public/json/email](public/json/email) which is the email which Prometheus will send the IP change notification to.
+
+## Initial Start
+At program start, you will receive an automatic email notifying you of an IP change since this is a stored value, at [public/json/ip](public/json/ip). Once your IP gets stored, then it will only notify you when it changes.
+
+## User Interface
+(***See general [User Interface page](https://github.com/gilgameshskytrooper/Prometheus/wiki/User-Interface-Tutorial)***)

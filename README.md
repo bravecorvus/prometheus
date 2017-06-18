@@ -6,28 +6,28 @@
 
 
 
-### [I JUST WANT TO GET THIS UP AND RUNNING](Quickstart.md)
+### [I JUST WANT TO GET THIS UP AND RUNNING](https://github.com/gilgameshskytrooper/Prometheus/wiki/Quickstart)
 
 
 ### Project Hierarchy
 
 | 	Directory   | Description 	                                                               				|
 | ------------- | ----------------------------------------------------------------------------------------- |
-| NCS314/  | Fork with modified version of GRA and AFCH's Nixie Clock Arduino Sketches  |
-| assets/  | Content related the the aesthetic presentation of this project such as images  |
-| hberg32/  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project  |
-| source/  | Where all the original source code of project is stored  |
-| source/webinterface | Node web server for the remote functionality portion of this project |
+| [NCS314/](NCS314)  | Fork with modified version of GRA and AFCH's Nixie Clock Arduino Sketches  |
+| [assets/](assets/)  | Content related the the aesthetic presentation of this project such as images  |
+| [hberg32/](hberg32)  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project  |
+| [source/expressnode-python3](source/expressnode-python3)  | Where all the original implementation based on [Python3](https://www.python.org/) and [Node](https://nodejs.org/en/) is stored |
+| [source/golang](source/golang) | The current implementation of the web server/hardware controller written in [Golang](https://golang.org/) |
 
 
 
-The idea was to have a clock that does everything. The 3 main things I want to integrate in this project are:
+Prometheus is the clock that does everything. The 3 main things I want to integrate in this project are:
 
-1) Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roommate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system for when I really need to wake up.
+1. Connect the clock to a bed shaker so my alarm clock can wake me up discretely without waking up my roommate, but also the ability to wake me up in a super noisy fashion by playing an alarm tone through my speaker system for when I really need to wake up.
+2. A way to set the alarm via my phone, iPad, or Browser through a polished and intuitive web-interface controller as well as an easy way to set a new alarm sound.
+3. Display time using nixie cathode tubes displays.
 
-2) A way to set the alarm via my phone, iPad, or Browser through a polished and intuitive web-interface controller.
-
-3) Display time using nixie cathode tubes displays.
+The current golang program accomplishes all 3 of these things marvelously. Try the [Wiki](https://github.com/gilgameshskytrooper/Prometheus/wiki) if any information is lacking down here.
 
 ## Implementation
 
@@ -44,31 +44,22 @@ A few notes on my set-up. My Raspberry Pi has a separate (standard 5V) power sou
 
 As of now, the DC power goes though the breadoard, and goes to both the Nixie Clock, (via a custom barrel plug to breadboard wire I made) as well as a L293D which draws a consistant amount from the main circuit to ensure the clock receives enough V's and the Bed Shaker doesn't fry from too much.
 
-The L293D gets the logic for Input 1, Input 2, and Enable 1, 2 from the Raspberry Pi GPIO pins, which are in turn controlled by main.py.
+You can read more [here](https://github.com/gilgameshskytrooper/Prometheus/wiki/Hardware-Set-Up)
 
-### [Remote Control Functionality](/source/webinterface/README.md)
+### [Remote Control Functionality](/source/golang/main.go)
 
 ![Demo](assets/AtomicAlarmUI.PNG)
 
-The UI portion of this project consists of a Express NodeJS web server running on the Raspberry Pi which can be accessed on any internet capable browser. The core of this webserver is a simple RESTFULful web app server.js, which handles the root get request (e.g. 130.111.111:3000 where 130.111.111 is the IP address of the Raspberry Pi) by sending a simple HTML form (/public/index.html). At document load, the client side Javascript file replaces the values of the HTML template with the values stored in 4 JSON files which hold the configuration data for the 4 alarms (/public/json/alarm1.json ~ alarm4.json). When the user submits the form, the Express server handles the request as a put request, and reads in the form data through a NPM package, body-parser, and writes the updated information back to the alarm configuration JSON files, and reloads the page.
+The UI portion of this project consists of a Golang web server running on the Raspberry Pi which can be accessed on any internet capable browser. The web server serves up the intial [index.html](source/golang/public/index.html) page at the root of the webserver (e.g. 111.111.111:3000 where 111.111.111 is the wlan0 IP of the Raspberry Pi). Through heavy use of [Vue.js](http://vuejs.org/), this page acts very must like a single page application. It makes heavy use of the AJAX post requests for the switch buttons, file uploads, and time form submit. It populates the values of the alarm times, sound, and vibration buttons with the values stored in [alarms.json](source/golang/public/json/alarms.json) which holds the configuration data for the 4 alarms. When the user submits the form, the Golang web server handles the request as a put request, reads the data, changes the internally stored values for the 4 alarms, and writes back the values into [alarms.json](source/golang/public/json/alarms.json). The only button on the page that requires a hard refresh is the snooze button at the top because the web server needs to compute the value of +10 minutes on the currenly running alarm.
 
 A working model of the web interface can be found here: [Web Interface Showcase](https://atomicalarmui.herokuapp.com/)
 
 When the requested the root [https://atomicalarmui.herokuapp.com/](https://atomicalarmui.herokuapp.com/), it will send [index.html](https://atomicalarmui.herokuapp.com/index.html), it loads it from the alarm configuration files: [alarm1.json](https://atomicalarmui.herokuapp.com/json/alarm1.json), [alarm2.json](https://atomicalarmui.herokuapp.com/json/alarm2.json), [alarm3.json](https://atomicalarmui.herokuapp.com/json/alarm3.json), and [alarm4.json](https://atomicalarmui.herokuapp.com/json/alarm4.json).
 
-When the user fills out the form, it will update the configuration files and update the page. Feel free to fiddle around with the Web Interface Mockup to verify that it works (e.g. clicking on the alarm_.json links: [alarm1.json](https://atomicalarmui.herokuapp.com/json/alarm1.json), [alarm2.json](https://atomicalarmui.herokuapp.com/json/alarm2.json), [alarm3.json](https://atomicalarmui.herokuapp.com/json/alarm3.json), and [alarm4.json](https://atomicalarmui.herokuapp.com/json/alarm4.json) which will open them as raw text files in your browser, loading the [web interface](https://atomicalarmui.herokuapp.com/), changing the values and submitting the new values, then reloading the json configuration links to ensure the configuration file values were indeed changed.)**Note: You cannot send the form from the [index.html link](https://atomicalarmui.herokuapp.com/index.html), you must use the [root link](https://atomicalarmui.herokuapp.com/)**
+### [Main Alarm Logic](/source/golang/main.go)
+Using a 3rd party library, Golang is also able to control the hardware interfaces (bed vibrator and speakers). The main logic for when to start running an alarm is a cron task that runs once a minute: if an alarm time configuration matches the current time, then run the relevant waking methods (i.e. vibration/sound)
 
-More specific implementation information is written [here](/source/webinterface/README.md).
-
-### [Main Alarm Logic](source/main.py)
-The main program is a event driven program which uses the pyinotifyer library to recursively see when files are written/closed by the Node server. Based on which files were modified, the program picks actions from 3 camps: 1) update alarms 2) update snooze 3) update time. 1 and 2 are explicitly controlled by the user via the web interface, but 3 is automatically updated once a minute. Hence, depending on the updated file, this program will update the Alarms class variables based on new values stored in the JSON configuration files that the user updates via the Web Interface GUI. Once a minute when "time.json" is updated by the Node server, the program checks to see if any of the alarms have matching times with the current time, and if there is a match, it will run the alarm protocol in the following way: If sound is turned on, it will play the [alarm song](source/webinterface/assets/alarm.m4a) via the cvlc command line media player library (outputting the sound to my mean sound-system) and/or turn on the bed vibrator via GPIO signal. If vibration is turned on, then it will use GPIO to turn on Input 1, and Enable 1, 2 on the L293D in order to turn on the bed vibrator.
-
-The programs/packages needed to make this work is the Python library pyinotifyer and cvlc.
-
-```
-$sudo pip3 install pyinotifyer
-$sudo apt-get install vlc-nox
-```
+More specific implementation information is written [here](/source/golang/README.md).
 
 ## [Where's My WiFi?](SetUpEduroamOnPi.md)
 Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
