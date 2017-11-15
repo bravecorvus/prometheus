@@ -164,6 +164,7 @@ func main() {
 			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
 			if Alarm1.Sound && Alarm1.Vibration {
+				fmt.Println("YOLO")
 				//fmt.Println("Sound and Vibration")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
