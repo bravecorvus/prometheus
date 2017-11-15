@@ -76,10 +76,9 @@ func GetIP() string {
 	var str string
 	if err := Execute(&b,
 		//Since piping commands are a bit of a pain, using the above functions Call() and Execute(), execute "/sbin/ifconfig wlan0 | grep 'inet addr:' | cut -d -f2 | awk '{print $1}'"
-		exec.Command("/sbin/ifconfig", "wlan0"),
-		exec.Command("grep", "inet addr:"),
-		exec.Command("cut", "-d:", "-f2"),
-		exec.Command("awk", "{print $1}"),
+		exec.Command("ifconfig", "wlan0"),
+		exec.Command("grep", "inet"),
+		exec.Command("awk", "NR==1{print $2}"),
 	); err != nil {
 		log.Fatalln(err)
 	}
