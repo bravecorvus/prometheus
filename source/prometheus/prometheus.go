@@ -159,15 +159,11 @@ func main() {
 		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
 		if Alarm1.Alarmtime == currenttime {
-			fmt.Println(Alarm1.Alarmtime)
-			fmt.Println(currenttime)
-			fmt.Println(Alarm1.Sound)
-			fmt.Println(Alarm1.Vibration)
-			fmt.Println("YOLO1")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
 			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
+
 			if Alarm1.Sound && Alarm1.Vibration {
 				//fmt.Println("Sound and Vibration")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -237,8 +233,8 @@ func main() {
 						break
 					}
 				}
+
 			} else if !Alarm1.Sound && Alarm1.Vibration {
-				fmt.Println("YOLO2")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -543,7 +539,7 @@ func main() {
 			}
 		}
 	})
-	c.Start()
+	c.Run()
 
 	// Server index.html under ./public/index.html
 	fs := http.FileServer(http.Dir(utils.Pwd() + "/public"))
