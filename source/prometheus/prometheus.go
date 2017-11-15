@@ -158,6 +158,9 @@ func main() {
 		//fmt.Println("currenttime", currenttime)
 		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
+		// Check if there is network connectivity (if not, then restart network interfaces)
+		utils.RestartNetwork()
+
 		if Alarm1.Alarmtime == currenttime {
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)

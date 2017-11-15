@@ -6,7 +6,7 @@
 
 
 
-### [I JUST WANT TO GET THIS UP AND RUNNING](https://github.com/gilgameshskytrooper/Prometheus/wiki/Quickstart)
+### [I JUST WANT TO GET THIS UP AND RUNNING](Quickstart.md)
 
 
 ### Project Hierarchy

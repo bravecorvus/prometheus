@@ -6,12 +6,14 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"net/smtp"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"../structs"
 )
@@ -171,4 +173,23 @@ func Pwd() string {
 		log.Fatal(err)
 	}
 	return dir
+}
+
+// RestartIfNoIP is a function that restarts the Network if not network is detected
+func RestartNetwork() {
+	_, err := http.Get("http://google.com")
+	if err != nil {
+		var b bytes.Buffer
+		if err := Execute(&b,
+			exec.Command("ifdown", "wlan0"),
+		); err != nil {
+			log.Fatalln(err)
+		}
+		time.Sleep(time.Second * 5)
+		if err := Execute(&b,
+			exec.Command("ifup", "--force", "wlan0"),
+		); err != nil {
+			log.Fatalln(err)
+		}
+	}
 }
