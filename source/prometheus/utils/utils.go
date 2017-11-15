@@ -167,11 +167,10 @@ func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Al
 }
 
 func Pwd() string {
-
-	ex, err := os.Executable()
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	exPath := filepath.Dir(ex)
-	return strings.TrimSpace(exPath)
+	fmt.Println(dir)
+	return dir
 }
