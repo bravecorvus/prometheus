@@ -159,6 +159,7 @@ func main() {
 		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
 		if Alarm1.Alarmtime == currenttime {
+			fmt.Println("YOLO1")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
 			//fmt.Println("Alarm 1")
@@ -235,6 +236,7 @@ func main() {
 				}
 
 			} else if !Alarm1.Sound && Alarm1.Vibration {
+				fmt.Println("YOLO2")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
