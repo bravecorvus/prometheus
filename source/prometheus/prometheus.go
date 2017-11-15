@@ -541,7 +541,7 @@ func main() {
 			}
 		}
 	})
-	c.Run()
+	c.Start()
 
 	// Server index.html under ./public/index.html
 	fs := http.FileServer(http.Dir(utils.Pwd() + "/public"))
