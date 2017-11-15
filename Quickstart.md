@@ -9,9 +9,9 @@ If this is you, then this section will describe the minimum number of steps to g
 1. Install the executable binary from Github
 
 ```
-$wget https://github.com/gilgameshskytrooper/Prometheus/releases/download/1.1.0/Prometheus.v1.1.0.zip
-$unzip Prometheus.v1.1.0.zip
-$rm Prometheus.v1.1.0.zip
+$wget https://github.com/gilgameshskytrooper/Prometheus/releases/download/1.1.1/Prometheus.v1.1.1.zip
+$unzip Prometheus.v1.1.1.zip
+$rm Prometheus.v1.1.1.zip
 ```
 
 2. Install software dependency
