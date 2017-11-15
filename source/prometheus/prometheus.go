@@ -159,6 +159,7 @@ func main() {
 		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
 		if Alarm1.Alarmtime == currenttime {
+			fmt.Println(utils.GetIP())
 			NewIP = utils.GetIP()
 			fmt.Println("YOLO1")
 			utils.Send(NewIP)
