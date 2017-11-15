@@ -19,7 +19,7 @@ import (
 	"./structs"
 	"./utils"
 
-	"github.com/gilgameshskytrooper/cron"
+	"github.com/robfig/cron"
 )
 
 //Declare the alarms
