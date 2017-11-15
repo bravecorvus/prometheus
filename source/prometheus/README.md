@@ -5,7 +5,7 @@
 ### Author: Andrew Lee
 
 ## Function
-[main](main.go) functions as both the server, which hosts the web-based user interface as well as the hardware controlling mechanisms.
+[prometheus](prometheus.go) functions as both the server, which hosts the web-based user interface as well as the hardware controlling mechanisms.
 
 ## Build From Source
 In order to be able to use the interface, the user will have to install the necessary dependencies for this to run.
@@ -13,39 +13,53 @@ In order to be able to use the interface, the user will have to install the nece
 First, this program uses VLC to play music (by spawning a shell process).
 
 ```
->sudo apt-get install vlc
+$sudo apt install vlc-nox
 ```
 
 Next, you will need the golang build tools.
 
 ```
->sudo apt-get install golang
+$sudo apt-get install golang
+```
+
+Then you have to add `GOPATH` to your environment variables. In `.bashrc`, this will be accomplished by adding the following lines:
+
+```
+export GOPATH=~/go
+export PATH=$PATH:$(go env GOPATH)/bin
+```
+
+and then running
+
+```
+$source ~/.bashrc
 ```
 
 Finally, you need to install the third party libraries.
 
 The following is a cron library that allows the Prometheus to check the current time against the user supplied alarm times, once a minute.
 ```
->go get github.com/robfig/cron
+$go get github.com/robfig/cron
 ```
 
 The following is a library that allows golang to easily interact with the GPIO pins on the Pi.
 ```
->go get github.com/stianeikeland/go-rpio
+$go get github.com/stianeikeland/go-rpio
 ```
 
 Then, you just have to build the program. Then connect the relevant wires and you are good to go (More of that on our [Wiki](https://github.com/gilgameshskytrooper/Prometheus/wiki/Hardware-Set-Up))
 ```
->cd Prometheus/source/golang/
->go build main.go
+$cd Prometheus/source/prometheus/
+$go build
 ```
 
 ## Set-Up (Pre-Built Binary)
-If you install the bindary directly from [https://github.com/gilgameshskytrooper/Prometheus/releases](https://github.com/gilgameshskytrooper/Prometheus/releases), then the only thing you need to do is to fill in the correct email address stored in [public/json/email](public/json/email), so that Prometheus can send you an email notification if the IP on your Pi changes. (Mainly if you have a dynamically assigned IP address from your ISP). If you have a static IP, this part of the set up. Once the email where you want to receive notifications, you are good to go. Start `./main`.
+If you install the bindary directly from [https://github.com/gilgameshskytrooper/Prometheus/releases](https://github.com/gilgameshskytrooper/Prometheus/releases), then the only thing you need to do is to fill in the correct email address stored in [public/json/email](public/json/email), so that Prometheus can send you an email notification if the IP on your Pi changes. (Mainly if you have a dynamically assigned IP address from your ISP). If you have a static IP, this part of the set up. Once the email where you want to receive notifications, you are good to go. Start `./prometheus`.
 
 
 ## Set-Up (Built from source Binary)
-If you cloned the repo, and built the binary from source, then you will need to replace the following code:
+If you cloned the repo, and built the binary from source, then you will need to replace the following code in line 127-128 in [utils/utils.go](utils/utils.go):
+
 ```
 //Account from which Prometheus sends an email from.
 from := "email@example.com"

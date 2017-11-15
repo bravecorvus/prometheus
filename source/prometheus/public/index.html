@@ -224,10 +224,11 @@
     },
 
     created() {
-      $.getJSON('../json/alarms.json')
-        .done(data => {
-          this.alarmsleft = data.slice(0, 2);
-          this.alarmsright = data.slice(2);
+        $.ajaxSetup({ cache: false });
+        $.getJSON('../json/alarms.json')
+            .done(data => {
+            this.alarmsleft = data.slice(0, 2);
+            this.alarmsright = data.slice(2);
         });
     }
   })

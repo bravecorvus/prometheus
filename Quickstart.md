@@ -2,21 +2,79 @@
 
 If this is you, then this section will describe the minimum number of steps to get this up and running (I suggest against this since my setup is pretty specific to my needs.
 
-### Software Stuff
+## Software Stuff
 
-Going into the command line, do the following
+### Easy Way
+
+1. Install the executable binary from Github
 
 ```
-$sudo apt-get install git python3 pip3 vlc-nox node npm
-$sudo pip3 install pyinotify
-$git clone https://github.com/gilgameshskytrooper/AtomicClock.git
-$cd AtomicClock/source/webinterface
-$sudo node install
-$sudo node install forever -g
+$wget https://github.com/gilgameshskytrooper/Prometheus/releases/download/1.1.0/Prometheus.v1.1.0.zip
+$unzip Prometheus.v1.1.0.zip
+$rm Prometheus.v1.1.0.zip
 ```
 
+2. Install software dependency
 
-### Hardware Stuff
+```
+$sudo apt install vlc-nox
+```
+
+2. Set the email you want Prometheus to email about a change to the IP
+
+```
+$vi /PATH_TO_PROMETHEUS/public/json/email
+```
+
+3. If you want the program to run on boot, add the executable command in `rc.local`
+
+```
+$vi rc.local
+```
+
+If you want a more manual solution, I would suggest opening a tmux window (so that the program persists even when you exit ssh) or opening a VNC session and running it in a terminal in the GUI.
+
+### Install From Source
+
+1. Going into the command line, do the following
+
+```
+$sudo apt-get install git vlc-nox golang
+$git clone https://github.com/gilgameshskytrooper/Prometheus.git
+$cd Prometheus/source/prometheus
+```
+
+2. Add a GOPATH environment variable to your shell variables. In `.bashrc`, this will be accomplished by adding the following lines:
+
+```
+export GOPATH=~/go
+export PATH=$PATH:$(go env GOPATH)/bin
+```
+
+3. Install Prometheus dependencies
+
+```
+$go get github.com/stianeikeland/go-rpio
+$go get github.com/robfig/cron
+```
+
+4. You need to replace the values of lines 127 and 128 to be of an email of your choice (The executable binary will have this part filled in with the email address of prometheusclock@gmail.com and the correct password, but I don't want to pass around this email flippantly)
+***Note, you must use an email that has insecure access enabled (Check [here](https://support.google.com/accounts/answer/6010255?hl=en) for detail on how to set this up on Google)***
+
+```
+$vi /PATH_TO_PROMETHEUS/utils/utils.go
+```
+
+5. Run program
+
+```
+$/PATH_TO_PROMETHEUS/source/prometheus/prometheus
+```
+
+Easiest way to do this is to add this line to `rc.local` so that the alarm program gets started at boot.
+
+
+## Hardware Stuff
 This part is specific to the hardware you will connect, but here I will share the setup assuming you are using the same setup as me. (e.g. you already own a bed vibrator that runs 12V @ 0.5A and center pin positive, you have a separate power source that is 12V @1+A, and a sound system)
 
 You will need the following Items
@@ -93,18 +151,7 @@ ctl.!default {
 
 [CTRL-O, RETURN, CTRL-X to Save and exit]
 
-### Run The Alarm Clock
-
-You will need 2 terminal windows open. If you are SSH'ing, I suggest you open a VNC Window as this will allow for the programs to continue running even if you close the session. (SSH will close the processes running if you exit the SSH shell)
-
-```
-$cd /rootofAtomicClockProject/source/webinterface/
-$forever server.js
-```
-
-The above steps will start the web server
-
-Next get your IP address via the following command
+### Access The Alarm Clock
 
 ```
 $ifconfig
@@ -112,11 +159,6 @@ $ifconfig
 
 Copy down the address that is listed as wlan0 inet addr. This address is how you will use another device on the same WiFi network to access the website. (i.e. http:111.11.111.111:3000 where you will change 111.11.111.111 to be your IP but keep :3000 at the end to specify you will access the Pi via your web browser at port 3000)
 
-Next, to start the main program,
-
-```
-$cd /rootofAtomicClockProject/source/
-$python3 main.py
-```
+Now, as long as you are same network (Or, if you are lucky enough to get your Pi a static IP, then you will be able to access it from anywhere you have network access), you can access the Web Interface through the site 111.11.111.111:3000 (replacing 111.11.111.111 with the value of IP)
 
 ## Have Fun!
