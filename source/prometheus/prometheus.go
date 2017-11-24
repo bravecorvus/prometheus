@@ -44,6 +44,7 @@ func Errhandler(err error) {
 //Function to check whether the alarm has been running for more than 10 minutes
 //***NOT WORKING AS OF NOW, BUT DOES NOT NEGATIVELY AFFECT THE FUNCTIONALITY OF THE REST OF THE PROGRAM***
 func OverTenMinutes(alarmtime string) bool {
+	fmt.Println("func OverTenMinutes(alarmtime string) bool")
 	// fmt.Println("OverTenMinutes")
 	year, month, day := time.Now().Date()
 	var hour int
@@ -67,9 +68,11 @@ func OverTenMinutes(alarmtime string) bool {
 	//fmt.Println(timecurrent)
 	difference := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute() - timecurrent.Minute()
 	//fmt.Println("Difference is", difference)
-	if difference == 10 {
+	if difference > 10 {
+		fmt.Println("Difference is 10 or more minutes")
 		return true
 	} else {
+		fmt.Println("Difference is not 10 or more minutes")
 		return false
 	}
 }
@@ -162,12 +165,14 @@ func main() {
 		utils.RestartNetwork()
 
 		if Alarm1.Alarmtime == currenttime {
+			fmt.Println("if Alarm1.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
 			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
 
 			if Alarm1.Sound && Alarm1.Vibration {
+				fmt.Println("if Alarm1.Sound && Alarm1.Vibration {")
 				//fmt.Println("Sound and Vibration")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
@@ -175,6 +180,7 @@ func main() {
 					fmt.Println("ERRRRRROR")
 				}
 
+				fmt.Println("Start alarm actions")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -212,12 +218,14 @@ func main() {
 				}
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
+				fmt.Println("} else if Alarm1.Sound && !Alarm1.Vibration {")
 				//fmt.Println("Sound")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
+				fmt.Println("Start alarm actions")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm1.CurrentlyRunning {
@@ -238,6 +246,8 @@ func main() {
 				}
 
 			} else if !Alarm1.Sound && Alarm1.Vibration {
+				fmt.Println("} else if !Alarm1.Sound && Alarm1.Vibration {")
+				fmt.Println("Start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -266,6 +276,7 @@ func main() {
 			}
 
 		} else if Alarm2.Alarmtime == currenttime {
+			fmt.Println("} else if Alarm2.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
 			Alarm2.CurrentlyRunning = true
@@ -275,7 +286,7 @@ func main() {
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-
+				fmt.Println("Start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -309,11 +320,13 @@ func main() {
 				}
 
 			} else if Alarm2.Sound && !Alarm2.Vibration {
+				fmt.Println("} else if Alarm2.Sound && !Alarm2.Vibration {")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
+				fmt.Println("start alarm protocols")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm2.CurrentlyRunning {
@@ -332,6 +345,8 @@ func main() {
 					}
 				}
 			} else if !Alarm2.Sound && Alarm2.Vibration {
+				fmt.Println("} else if !Alarm2.Sound && Alarm2.Vibration {")
+				fmt.Println("start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -358,6 +373,7 @@ func main() {
 			}
 
 		} else if Alarm3.Alarmtime == currenttime {
+			fmt.Println("} else if Alarm3.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
 			Alarm3.CurrentlyRunning = true
@@ -367,7 +383,7 @@ func main() {
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-
+				fmt.Println("start alarm protols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -401,11 +417,13 @@ func main() {
 				}
 
 			} else if Alarm3.Sound && !Alarm3.Vibration {
+				fmt.Println("} else if Alarm3.Sound && !Alarm3.Vibration {")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
+				fmt.Println("start alarm protocols")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm3.CurrentlyRunning {
@@ -450,6 +468,7 @@ func main() {
 			}
 
 		} else if Alarm4.Alarmtime == currenttime {
+			fmt.Println("} else if Alarm4.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
 			Alarm4.CurrentlyRunning = true
@@ -460,6 +479,7 @@ func main() {
 					fmt.Println("ERRRRRROR")
 				}
 
+				fmt.Println("Start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -493,11 +513,13 @@ func main() {
 				}
 
 			} else if Alarm4.Sound && !Alarm4.Vibration {
+				fmt.Println("} else if Alarm4.Sound && !Alarm4.Vibration {")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
+				fmt.Println("Start alarm protocols")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm4.CurrentlyRunning {
@@ -516,6 +538,8 @@ func main() {
 					}
 				}
 			} else if !Alarm4.Sound && Alarm4.Vibration {
+				fmt.Println("} else if !Alarm4.Sound && Alarm4.Vibration {")
+				fmt.Println("start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {

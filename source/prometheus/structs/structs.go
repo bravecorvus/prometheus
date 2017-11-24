@@ -27,6 +27,7 @@ type Alarm struct {
 
 //Get the alarms configurations from the ./public/json/alarms.json
 func GetRawJson(filepath string) []JsonAlarms {
+	fmt.Println("func GetRawJson(filepath string) []JsonAlarms {")
 	raw, err1 := ioutil.ReadFile(filepath)
 	if err1 != nil {
 		fmt.Println("ERROR")
@@ -43,6 +44,7 @@ func GetRawJson(filepath string) []JsonAlarms {
 
 //Populate the values of all 4 internally stored alarms using the values stored in the ./public/json/alarms.json
 func (argumentalarm *Alarm) InitializeAlarms(jsondata []JsonAlarms, index int) {
+	fmt.Println("func (argumentalarm *Alarm) InitializeAlarms(jsondata []JsonAlarms, index int) {")
 	argumentalarm.Name = string(jsondata[index].JsonName)
 	argumentalarm.Alarmtime = string(jsondata[index].JsonTime)
 	if string(jsondata[index].JsonSound) == "on" {
@@ -61,6 +63,7 @@ func (argumentalarm *Alarm) InitializeAlarms(jsondata []JsonAlarms, index int) {
 
 //Function that adds 10 minutes to the currently running alarm. Necessary because internally, alarm times are stored as strings, rather than the time class
 func (arg *Alarm) AddTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
+	fmt.Println("func (arg *Alarm) AddTime(originaltime string, hms string, byhowmuch int) {")
 	currenttime, _ := time.Parse("15:04", originaltime)
 	//fmt.Println("before fixed snooze time", currenttime)
 	var updatedtime = time.Now()

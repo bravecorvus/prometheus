@@ -23,6 +23,7 @@ var IP, NewIP string
 
 //Taking in the IP as a string as the argument, write the IP address to ./public/json/ip to use when the program is restarted
 func WriteIP(arg string) {
+	fmt.Println("func WriteIP(arg string) {")
 	writebuf := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/ip", writebuf, 0644)
 	if err != nil {
@@ -32,6 +33,7 @@ func WriteIP(arg string) {
 
 //Used to execute complex pipes to filter out the wlan0 IP address of the Pi via ifconfig, awk, and cut
 func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {
+	fmt.Println("func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {")
 	var error_buffer bytes.Buffer
 	pipe_stack := make([]*io.PipeWriter, len(stack)-1)
 	i := 0
@@ -53,6 +55,7 @@ func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {
 
 //Used to execute complex pipes to filter out the wlan0 IP address of the Pi via ifconfig, awk, and cut
 func Call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
+	fmt.Println("func Call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {")
 	if stack[0].Process == nil {
 		if err = stack[0].Start(); err != nil {
 			return err
@@ -74,6 +77,7 @@ func Call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
 
 //Function that returns the current wlan0 address as a string
 func GetIP() string {
+	fmt.Println("func GetIP() string {")
 	var b bytes.Buffer
 	var str string
 	if err := Execute(&b,
@@ -96,6 +100,7 @@ func GetIP() string {
 
 //Read the IP from the file, "./public/json/ip", return it as a string
 func GetIPFromFile() string {
+	fmt.Println("func GetIPFromFile() string {")
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/ip")
 	if err != nil {
 		fmt.Println("ERROR")
@@ -107,6 +112,7 @@ func GetIPFromFile() string {
 
 //grab the email from "./public/json/email" to be used if the user has a dynamically assigned IP, and the IP changes from before
 func GetEmail() string {
+	fmt.Println("func GetEmail() string {")
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/email")
 	if err != nil {
 		fmt.Println("ERROR")
@@ -118,6 +124,7 @@ func GetEmail() string {
 //Function that checks to see if the current IP matches the IP string currently registered.
 //If the old IP and the new IP don't match, send the user an email notifying them of this change. Please change the stored at ./public/json/ip to get these notifications
 func Send(body string) {
+	fmt.Println("func Send(body string) {")
 	if body == IP {
 		//If the IP didn't change, just ignore
 		return
@@ -150,6 +157,7 @@ func Send(body string) {
 
 //Since the Sound and Vibration variables are stored as "on" or "off" in the alarms.json file, this function converts a boolean to the on/off format
 func convertBooltoString(arg bool) string {
+	fmt.Println("func convertBooltoString(arg bool) string {")
 	if arg {
 		return "on"
 	} else {
@@ -159,6 +167,7 @@ func convertBooltoString(arg bool) string {
 
 //Write back the correct alarm configurations to ./public/json/alarms.json so that the information can be retrieved when ./main is restarted
 func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Alarm, Alarm4 structs.Alarm, filepath string) {
+	fmt.Println("func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Alarm, Alarm4 structs.Alarm, filepath string) {")
 	content := []byte("[{\"name\":\"" + Alarm1.Name + "\",\"time\":\"" + Alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm1.Vibration) + "\"},\n{\"name\":\"" + Alarm2.Name + "\",\"time\":\"" + Alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm2.Vibration) + "\"},\n{\"name\":\"" + Alarm3.Name + "\",\"time\":\"" + Alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm3.Vibration) + "\"},\n{\"name\":\"" + Alarm4.Name + "\",\"time\":\"" + Alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm4.Vibration) + "\"}]")
 	err := ioutil.WriteFile(filepath, content, 0644)
 	if err != nil {
@@ -168,6 +177,7 @@ func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Al
 }
 
 func Pwd() string {
+	fmt.Println("func Pwd() string {")
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -177,6 +187,7 @@ func Pwd() string {
 
 // RestartIfNoIP is a function that restarts the Network if not network is detected
 func RestartNetwork() {
+	fmt.Println("func RestartNetwork() {")
 	_, err := http.Get("http://google.com")
 	if err != nil {
 		var b bytes.Buffer
