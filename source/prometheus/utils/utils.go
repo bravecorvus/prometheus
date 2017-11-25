@@ -190,17 +190,16 @@ func RestartNetwork() {
 	fmt.Println("func RestartNetwork() {")
 	_, err := http.Get("http://google.com")
 	if err != nil {
-		var b bytes.Buffer
-		if err := Execute(&b,
-			exec.Command("ifdown", "wlan0"),
-		); err != nil {
-			log.Fatalln(err)
+		ifdown := exec.Command("ifdown", "wlan0")
+		ifdownerror := ifdown.Run()
+		if ifdownerror != nil {
+			fmt.Println("ifdown wlan0 command failed")
 		}
 		time.Sleep(time.Second * 5)
-		if err := Execute(&b,
-			exec.Command("ifup", "--force", "wlan0"),
-		); err != nil {
-			log.Fatalln(err)
+		ifup := exec.Command("ifup", "wlan0")
+		ifuperror := ifup.Run()
+		if ifuperror != nil {
+			fmt.Println("ifup wlan0 command failed")
 		}
 	}
 }
