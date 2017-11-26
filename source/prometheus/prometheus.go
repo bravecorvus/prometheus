@@ -161,10 +161,9 @@ func main() {
 		//fmt.Println("currenttime", currenttime)
 		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
-		// Check if there is network connectivity (if not, then restart network interfaces)
-		go utils.RestartNetwork()
-
 		if Alarm1.Alarmtime == currenttime {
+			// Check if there is network connectivity (if not, then restart network interfaces)
+			go utils.RestartNetwork()
 			fmt.Println("if Alarm1.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
@@ -276,6 +275,8 @@ func main() {
 			}
 
 		} else if Alarm2.Alarmtime == currenttime {
+			// Check if there is network connectivity (if not, then restart network interfaces)
+			go utils.RestartNetwork()
 			fmt.Println("} else if Alarm2.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
@@ -373,6 +374,8 @@ func main() {
 			}
 
 		} else if Alarm3.Alarmtime == currenttime {
+			// Check if there is network connectivity (if not, then restart network interfaces)
+			go utils.RestartNetwork()
 			fmt.Println("} else if Alarm3.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
@@ -468,6 +471,8 @@ func main() {
 			}
 
 		} else if Alarm4.Alarmtime == currenttime {
+			// Check if there is network connectivity (if not, then restart network interfaces)
+			go utils.RestartNetwork()
 			fmt.Println("} else if Alarm4.Alarmtime == currenttime {")
 			NewIP = utils.GetIP()
 			utils.Send(NewIP)
