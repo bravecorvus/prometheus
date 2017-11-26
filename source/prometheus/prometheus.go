@@ -162,7 +162,7 @@ func main() {
 		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
 
 		// Check if there is network connectivity (if not, then restart network interfaces)
-		utils.RestartNetwork()
+		go utils.RestartNetwork()
 
 		if Alarm1.Alarmtime == currenttime {
 			fmt.Println("if Alarm1.Alarmtime == currenttime {")

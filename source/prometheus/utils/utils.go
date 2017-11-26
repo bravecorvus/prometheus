@@ -200,7 +200,7 @@ func RestartNetwork() {
 		ifuperror := ifup.Run()
 		if ifuperror != nil {
 			fmt.Println("ifup wlan0 command failed")
-			RestartNetwork()
+			go RestartNetwork()
 		}
 	}
 }
