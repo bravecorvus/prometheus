@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -58,18 +59,17 @@ func OverTenMinutes(alarmtime string) bool {
 		minutes, _ = strconv.Atoi(string([]rune(alarmtime)[3:]))
 	}
 
-	//fmt.Print("alarm time is ")
-	//fmt.Println(dadatetime)
+	fmt.Println("Alarm Time is", alarmtime)
 	timecurrent := time.Now()
-	//fmt.Print("current time is ")
-	//fmt.Println(timecurrent)
+	fmt.Print("current time is ", timecurrent)
 	difference := time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute() - timecurrent.Minute()
-	//fmt.Println("Difference is", difference)
-	if difference > 10 {
-		fmt.Println("Difference is 10 or more minutes")
+	fmt.Println("Difference is", difference)
+	fmt.Println("difference type is", reflect.TypeOf(difference))
+	if difference > 1 {
+		fmt.Println("Difference is 1 or more minutes")
 		return true
 	} else {
-		fmt.Println("Difference is not 10 or more minutes")
+		fmt.Println("Difference is not 1 or more minutes")
 		return false
 	}
 }
