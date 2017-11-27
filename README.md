@@ -58,7 +58,7 @@ When the requested the root [https://atomicalarmui.herokuapp.com/](https://atomi
 ### [Main Alarm Logic](/source/prometheus/prometheus.go)
 Using a 3rd party library, Golang is also able to control the hardware interfaces (bed vibrator and speakers). The main logic for when to start running an alarm is a cron task that runs once a minute: if an alarm time configuration matches the current time, then run the relevant waking methods (i.e. vibration/sound)
 
-More specific implementation information is written [here](/source/prometheus/README.md).
+More specific implementation information is written on the [godocs](https://godoc.org/github.com/gilgameshskytrooper/Prometheus/source/prometheus) page.
 
 ## [Where's My WiFi?](SetUpEduroamOnPi.md)
 Because my school happens to disable ssh and VNC connections for users on the guest network (presumably for security reasons), I needed to set up my Raspberry Pi to work nicely with the school's eduroam. However, getting this to work was quite the struggle, and it seems to be a common issue for aspiring inventors trying to get their Raspberry Pi to work on their school's implementation of eduroam. Therefore, I carefully documented the steps I took to connect my Pi to the encrypted network. For anyone having trouble connecting their Pi (or any single-board computers such as chip) to eduroam, I encourage you to take a look at this document.
