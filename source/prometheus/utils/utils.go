@@ -20,7 +20,6 @@ import (
 
 //Taking in the IP as a string as the argument, write the IP address to ./public/json/ip to use when the program is restarted
 func WriteIP(arg string) {
-	fmt.Println("func WriteIP(arg string) {")
 	writebuf := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/ip", writebuf, 0644)
 	if err != nil {
@@ -31,7 +30,6 @@ func WriteIP(arg string) {
 //Call is used to execute complex pipes to filter out the wlan0 IP address of the Pi via ifconfig, awk, and cut
 // It is called by Execute once organizes all the separate components of the pipe command
 func Call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
-	fmt.Println("func Call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {")
 	if stack[0].Process == nil {
 		if err = stack[0].Start(); err != nil {
 			return err
@@ -53,7 +51,6 @@ func Call(stack []*exec.Cmd, pipes []*io.PipeWriter) (err error) {
 
 //Execute is used to execute complex pipes to filter out the wlan0 IP address of the Pi via ifconfig, awk, and cut
 func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {
-	fmt.Println("func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {")
 	var error_buffer bytes.Buffer
 	pipe_stack := make([]*io.PipeWriter, len(stack)-1)
 	i := 0
@@ -91,14 +88,12 @@ func ExampleExecute() {
 		fmt.Println("ERROR")
 	}
 	str = regex.ReplaceAllString(str, "")
-	//fmt.Println("Get IP", str)
 	fmt.Println(strings.TrimSpace(str))
 }
 
 // GetIP returns the current wlan0 address as a string
 // This is basically running the following command in shell: "ifconfig wlan0 | grep inet | awk 'NR==1{print $2}'" and returning the output as a string
 func GetIP() string {
-	fmt.Println("func GetIP() string {")
 	var b bytes.Buffer
 	var str string
 	if err := Execute(&b,
@@ -119,7 +114,6 @@ func GetIP() string {
 
 //GetIPFromFile reads the IP from the file, "./public/json/ip", return it as a string
 func GetIPFromFile() string {
-	fmt.Println("func GetIPFromFile() string {")
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/ip")
 	if err != nil {
 		fmt.Println("ERROR")
@@ -130,7 +124,6 @@ func GetIPFromFile() string {
 
 // GetEnableEmail reads the user preference of whether or not they want to be emailed when Prometheus detects a change in IP.
 func GetEnableEmail() bool {
-	fmt.Println("func GetEnableEmail() string {")
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/enableemail")
 	if err != nil {
 		fmt.Println("ERROR")
@@ -145,7 +138,6 @@ func GetEnableEmail() bool {
 
 //GetEmail gets the email from "./public/json/email" to be used if the user has a dynamically assigned IP, and the IP changes from before
 func GetEmail() string {
-	fmt.Println("func GetEmail() string {")
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/email")
 	if err != nil {
 		fmt.Println("ERROR")
@@ -157,7 +149,6 @@ func GetEmail() string {
 //Function that checks to see if the current IP matches the IP string currently registered.
 //If the old IP and the new IP don't match, send the user an email notifying them of this change. Please change the stored at ./public/json/enableemail to prevent this from happening (via the web interface)
 func CheckIPChange() {
-	fmt.Println("func CheckIPChange() {")
 	if GetIPFromFile() != GetIP() {
 		WriteIP(GetIP())
 		sendemail := exec.Command("./prometheusemail", GetEmail(), GetIP())
@@ -171,7 +162,6 @@ func CheckIPChange() {
 
 //Since the Sound and Vibration variables are stored as "on" or "off" in the alarms.json file, this is a simple function that converts a boolean to the "on"/"off" string
 func convertBooltoString(arg bool) string {
-	fmt.Println("func convertBooltoString(arg bool) string {")
 	if arg {
 		return "on"
 	} else {
@@ -181,7 +171,6 @@ func convertBooltoString(arg bool) string {
 
 //WriteBackJson writes back the correct alarm configurations to ./public/json/alarms.json so that the information can be retrieved when ./main is restarted
 func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Alarm, Alarm4 structs.Alarm, filepath string) {
-	fmt.Println("func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Alarm, Alarm4 structs.Alarm, filepath string) {")
 	content := []byte("[{\"name\":\"" + Alarm1.Name + "\",\"time\":\"" + Alarm1.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm1.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm1.Vibration) + "\"},\n{\"name\":\"" + Alarm2.Name + "\",\"time\":\"" + Alarm2.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm2.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm2.Vibration) + "\"},\n{\"name\":\"" + Alarm3.Name + "\",\"time\":\"" + Alarm3.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm3.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm3.Vibration) + "\"},\n{\"name\":\"" + Alarm4.Name + "\",\"time\":\"" + Alarm4.Alarmtime + "\",\"sound\":\"" + convertBooltoString(Alarm4.Sound) + "\",\"vibration\":\"" + convertBooltoString(Alarm4.Vibration) + "\"}]")
 	err := ioutil.WriteFile(filepath, content, 0644)
 	if err != nil {
@@ -193,7 +182,6 @@ func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Al
 // Pwd finds the directory of the main process (which would be ../) so that Prometheus can find ../public
 // Mainly, this is necessary so that Prometheus can be started in rc.local. The directory becomes relative to the root when started as a startup process. Hence, the ./public folder will no longer be locatable through relative positioning. Pwd ensures you don't have to hardcode the path of the program directory.
 func Pwd() string {
-	fmt.Println("func Pwd() string {")
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
 		log.Fatal(err)
@@ -203,7 +191,6 @@ func Pwd() string {
 
 // RestartIfNoIP is a function that restarts the Network if not network is detected
 func RestartNetwork() {
-	fmt.Println("func RestartNetwork() {")
 	_, err := http.Get("http://google.com")
 	if err != nil {
 		ifdown := exec.Command("ifdown", "wlan0")

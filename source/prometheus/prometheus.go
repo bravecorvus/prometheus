@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -44,8 +43,6 @@ func Errhandler(err error) {
 
 //Function to check whether the alarm has been running for more than 10 minutes
 func OverTenMinutes(alarmtime string) bool {
-	fmt.Println("func OverTenMinutes(alarmtime string) bool")
-	// fmt.Println("OverTenMinutes")
 	year, month, day := time.Now().Date()
 	var hour int
 	var minutes int
@@ -61,17 +58,11 @@ func OverTenMinutes(alarmtime string) bool {
 		minutes, _ = strconv.Atoi(string([]rune(alarmtime)[3:]))
 	}
 
-	fmt.Println("Alarm Time is", alarmtime)
 	timecurrent := time.Now()
-	fmt.Print("current time is ", timecurrent)
 	difference := timecurrent.Minute() - time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute()
-	fmt.Println("Difference is", difference)
-	fmt.Println("difference type is", reflect.TypeOf(difference))
 	if difference == 10 {
-		fmt.Println("Difference is 10 or more minutes")
 		return true
 	} else {
-		fmt.Println("Difference is not 10 or more minutes")
 		return false
 	}
 }
@@ -86,9 +77,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("audio")
 	//Set the Soundname attribute to the new soundname
 	Soundname = header.Filename
-	//_, filename, err := r.FormFile("filename")
-	//fmt.Println(header.Filename)
-	//fmt.Println(header)
 
 	if err != nil {
 		fmt.Fprintln(w, err)
@@ -98,10 +86,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	//Write the soundname to ./public/assets/sound_name.extension
 	out, err1 := os.Create(utils.Pwd() + "/public/assets/" + header.Filename)
-
-	//if err != nil {
-	//fmt.Println("ERROR")
-	//}
 
 	if err1 != nil {
 		fmt.Fprintf(w, "Unable to upload the file")
@@ -186,31 +170,26 @@ func main() {
 		if Alarm1.Alarmtime == currenttime {
 
 			go utils.RestartNetwork()
-			fmt.Println("if Alarm1.Alarmtime == currenttime {")
 			Alarm1.CurrentlyRunning = true
 
 			if Alarm1.Sound && Alarm1.Vibration {
-				fmt.Println("if Alarm1.Sound && Alarm1.Vibration {")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
 
-				fmt.Println("Start alarm actions")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
 						time.Sleep(time.Millisecond * 50)
 						if !Alarm1.CurrentlyRunning {
-							//fmt.Println("Breaking loop")
 							breaktime = true
 							break
 						}
 					}
 					if breaktime {
 
-						//fmt.Println("breaking loop")
 						gpio.VibOff()
 						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
@@ -219,7 +198,6 @@ func main() {
 						breaktime = false
 						break
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
-						//fmt.Println("Its been 10 minutes")
 						Alarm1.CurrentlyRunning = false
 						gpio.VibOff()
 						errrrrorkill := playsound.Process.Kill()
@@ -235,18 +213,14 @@ func main() {
 				}
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
-				fmt.Println("} else if Alarm1.Sound && !Alarm1.Vibration {")
-				//fmt.Println("Sound")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-				fmt.Println("Start alarm actions")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm1.CurrentlyRunning {
-						//fmt.Println("Breaking loop")
 						errrrrorkill := playsound.Process.Kill()
 						if errrrrorkill != nil {
 							fmt.Println("ERRRRRROR")
@@ -263,15 +237,12 @@ func main() {
 				}
 
 			} else if !Alarm1.Sound && Alarm1.Vibration {
-				fmt.Println("} else if !Alarm1.Sound && Alarm1.Vibration {")
-				fmt.Println("Start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
 						time.Sleep(time.Millisecond * 50)
 						if !Alarm1.CurrentlyRunning {
 							breaktime = true
-							//fmt.Println("Breaking loop")
 							break
 						}
 					}
@@ -280,7 +251,6 @@ func main() {
 						breaktime = false
 						break
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
-						//fmt.Println("Its been ten minutes")
 						Alarm1.CurrentlyRunning = false
 						gpio.VibOff()
 					} else {
@@ -295,7 +265,6 @@ func main() {
 		} else if Alarm2.Alarmtime == currenttime {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
-			fmt.Println("} else if Alarm2.Alarmtime == currenttime {")
 			Alarm2.CurrentlyRunning = true
 			if Alarm2.Sound && Alarm2.Vibration {
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -303,7 +272,6 @@ func main() {
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-				fmt.Println("Start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -337,13 +305,11 @@ func main() {
 				}
 
 			} else if Alarm2.Sound && !Alarm2.Vibration {
-				fmt.Println("} else if Alarm2.Sound && !Alarm2.Vibration {")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-				fmt.Println("start alarm protocols")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm2.CurrentlyRunning {
@@ -362,8 +328,6 @@ func main() {
 					}
 				}
 			} else if !Alarm2.Sound && Alarm2.Vibration {
-				fmt.Println("} else if !Alarm2.Sound && Alarm2.Vibration {")
-				fmt.Println("start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -392,7 +356,6 @@ func main() {
 		} else if Alarm3.Alarmtime == currenttime {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
-			fmt.Println("} else if Alarm3.Alarmtime == currenttime {")
 			Alarm3.CurrentlyRunning = true
 			if Alarm3.Sound && Alarm3.Vibration {
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -400,7 +363,6 @@ func main() {
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-				fmt.Println("start alarm protols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -434,13 +396,11 @@ func main() {
 				}
 
 			} else if Alarm3.Sound && !Alarm3.Vibration {
-				fmt.Println("} else if Alarm3.Sound && !Alarm3.Vibration {")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-				fmt.Println("start alarm protocols")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm3.CurrentlyRunning {
@@ -487,7 +447,6 @@ func main() {
 		} else if Alarm4.Alarmtime == currenttime {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
-			fmt.Println("} else if Alarm4.Alarmtime == currenttime {")
 			Alarm4.CurrentlyRunning = true
 			if Alarm4.Sound && Alarm4.Vibration {
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -496,7 +455,6 @@ func main() {
 					fmt.Println("ERRRRRROR")
 				}
 
-				fmt.Println("Start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -530,13 +488,11 @@ func main() {
 				}
 
 			} else if Alarm4.Sound && !Alarm4.Vibration {
-				fmt.Println("} else if Alarm4.Sound && !Alarm4.Vibration {")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
 					fmt.Println("ERRRRRROR")
 				}
-				fmt.Println("Start alarm protocols")
 				for {
 					time.Sleep(time.Second * 1)
 					if !Alarm4.CurrentlyRunning {
@@ -555,8 +511,6 @@ func main() {
 					}
 				}
 			} else if !Alarm4.Sound && Alarm4.Vibration {
-				fmt.Println("} else if !Alarm4.Sound && Alarm4.Vibration {")
-				fmt.Println("start alarm protocols")
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -598,7 +552,6 @@ func main() {
 		}
 		name := r.FormValue("name")
 		time := r.FormValue("value")
-		//fmt.Println(name)
 		//Check to see which alarm the user is actually trying to modify, and modify the correct internally stored time
 		if name == "alarm1" {
 			Alarm1.Alarmtime = time
@@ -625,7 +578,6 @@ func main() {
 		}
 		name := r.FormValue("name")
 		sound := r.FormValue("value")
-		//fmt.Println(name)
 		var boolsound bool
 		if sound == "on" {
 			boolsound = true
@@ -659,7 +611,6 @@ func main() {
 		}
 		name := r.FormValue("name")
 		vibration := r.FormValue("value")
-		//fmt.Println(name)
 		var boolvibration bool
 		if vibration == "on" {
 			boolvibration = true
@@ -685,7 +636,6 @@ func main() {
 	})
 
 	http.HandleFunc("/snooze", func(w http.ResponseWriter, r *http.Request) {
-		//fmt.Println("snoozed")
 		//Using the AddTime() function, add 10 minutes to the currently running alarm, turn off the currently running alarm, and write back the correct configuration back to ./public/json/alarms.json
 		if Alarm1.CurrentlyRunning {
 			Alarm1.CurrentlyRunning = false
@@ -714,7 +664,6 @@ func main() {
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
-		fmt.Println(value)
 		if value == "true" {
 			EnableEmail = true
 			utils.WriteEnableEmail("true")
@@ -731,7 +680,6 @@ func main() {
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
-		fmt.Println(value)
 		utils.WriteEmail(value)
 	})
 
