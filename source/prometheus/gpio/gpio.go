@@ -1,3 +1,4 @@
+// gpio is the speciic package that stores the functions called by Prometheus to run the bed vibrator (via go-rpio package)
 package gpio
 
 import (
@@ -9,7 +10,6 @@ import (
 
 //Sends the signal to turn on the bed vibrator by sending a High (true) signal to GPIO 17
 func VibOn() {
-	// fmt.Println("VibOn")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -28,7 +28,6 @@ func VibOn() {
 
 //Sends the signal to turn off the bed vibrator by sending a Low (false) signal to GPIO 17
 func VibOff() {
-	// fmt.Println("VibOff")
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

@@ -1,312 +1,402 @@
 <!--Andrew Lee 2016-->
 <html>
-  <head>
-    <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-    <script src="/js/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="nixie/nixie.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
-    <!--<script src="/js/script.js"></script>-->
-  </head>
-  <body>
 
-    <div id="pagetitle">
-      <p id="atomicclock">Prometheus Clock</p>
-      <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
-      <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
-    </div>
+    <head>
+        <link rel="shortcut icon" href="favicon.png" type="image/png"/>
+        <script src="/js/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="nixie/nixie.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    </head>
 
-  <script type="text/javascript" src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
-  <div id="app">
-    <br>
-    <br>
-    <br>
+    <body>
 
-    <div id="main" >
-
-      <div id="leftside">
-        <div v-for="(alarm, index) in alarmsleft" :id="alarm.name">
-          <input v-model="alarmsleft[index].time" class="time" type="time"></input>
-          <button @click="submittimeleft(index)">Submit Time</button>
-
-          <br>
-          <br>
-
-          <label class="switch">
-              <input :value="alarmsleft[index].sound" v-if="alarmsleft[index].sound=='on'" @click="submitsoundleft(index)" type="checkbox" /checked>
-              <input :value="alarmsleft[index].sound" v-else @click="submitsoundleft(index)" type="checkbox">
-              <div class="slider round"></div>
-          </label>
-          </form>
-          <label>Sound</label>
-
-          <br>
-          <br>
-
-          <label class="switch">
-              <input :value="alarmsleft[index].vibration" v-if="alarmsleft[index].vibration=='on'" @click="submitvibrationleft(index)" type="checkbox" /checked>
-              <input :value="alarmsleft[index].vibration" v-else @click="submitvibrationleft(index)" type="checkbox">
-              <div class="slider round"></div>
-          </label>
-          </form>
-          <label>Vibration</label>
-          
-          <br>
-          <br>
-          <br>
-
-        </div> <!--alarm.name-->
-      </div>
-
-      <div id="rightside"> 
-        <div v-for="(alarm, index) in alarmsright" :id="alarm.name">
-          <input v-model="alarmsright[index].time" class="time" type="time"></input>
-          <button @click="submittimeright(index)">Submit Time</button>
-
-          <br>
-          <br>
-
-          <label class="switch">
-              <input :value="alarmsright[index].sound" v-if="alarmsright[index].sound=='on'" @click="submitsoundright(index)" type="checkbox" /checked>
-              <input :value="alarmsright[index].sound" v-else @click="submitsoundright(index)" type="checkbox">
-              <div class="slider round"></div>
-          </label>
-          </form>
-          <label>Sound</label>
-
-          <br>
-          <br>
-
-          <label class="switch">
-              <input :value="alarmsright[index].vibration" v-if="alarmsright[index].vibration=='on'" @click="submitvibrationright(index)" type="checkbox" /checked>
-              <input :value="alarmsright[index].vibration" v-else @click="submitvibrationright(index)" type="checkbox">
-              <div class="slider round"></div>
-          </label>
-          </form>
-          <label>Vibration</label>
-
-          <br>
-          <br>
-          <br>
-
+        <div id="pagetitle">
+            <p id="atomicclock">Prometheus Clock</p>
+            <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
+            <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
         </div>
 
-      </div>
-    </div><!--main-->
+        <script type="text/javascript" src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
 
-    <br>
-    <div id="afterclock">
-    <div id="afterclockleft">
-      <form enctype="multipart/form-data">
-        <div class="row">
-          <div class="column-small-12 padd0 align-center">
-            <div id="drop-box">
-              <p>Select Files</p>
-            </div>
-          </div>
-          <div class="column-small-12 padd0">
-            <input type="file" name="file" id="file" />
-          </div>
-        </div>
-      </form>
-      </div><!--afterclockleft-->
-    </div><!--afterclock-->
+        <div id="app"> <!--Vue.js-->
+            <br>
+            <br>
+            <br>
+            <div id="main" >
 
-  </div><!--app-->
+                <div id="leftside">
+                    <div v-for="(alarm, index) in alarmsleft" :id="alarm.name">
+                        <input v-model="alarmsleft[index].time" class="time" type="time"></input>
+                        <button @click="submittimeleft(index)">Submit Time</button>
 
-  <script>
-  var vm = new Vue({
-    el: '#app',
-    data: {
-      alarmsleft: [],
-      alarmsright: [],
-      trackinfo: []
-    },
-    methods: {
+                        <br>
+                        <br>
 
-      submittimeright(arg) {
-        $.ajax(
-            {
-              url: "/time",
-              type: 'post',
-              data: {
-                name: this.alarmsright[arg].name,
-                value: this.alarmsright[arg].time 
-              }
-            }
-          );
-      },
+                        <label class="switch">
+                        <input :value="alarmsleft[index].sound" v-if="alarmsleft[index].sound=='on'" @click="submitsoundleft(index)" type="checkbox" /checked>
+                        <input :value="alarmsleft[index].sound" v-else @click="submitsoundleft(index)" type="checkbox">
+                        <div class="slider round"></div>
+                        </label>
+                        </form>
+                        <label>Sound</label>
 
-      submittimeleft(arg) {
-        $.ajax(
-            {
-              url: "/time",
-              type: 'post',
-              data: {
-                name: this.alarmsleft[arg].name,
-                value: this.alarmsleft[arg].time 
-              }
-            }
-          );
-      },
+                        <br>
+                        <br>
 
-      submitsoundright(arg) {
-        if (this.alarmsright[arg].sound == 'on') {
-          this.alarmsright[arg].sound = 'off';
-        } else {
-          this.alarmsright[arg].sound = 'on';
-        }
-        $.ajax(
-            {
-              url: "/sound",
-              type: 'post',
-              data: {
-                name: this.alarmsright[arg].name,
-                value: this.alarmsright[arg].sound 
-              }
-            }
-          );
-      },
+                        <label class="switch">
+                        <input :value="alarmsleft[index].vibration" v-if="alarmsleft[index].vibration=='on'" @click="submitvibrationleft(index)" type="checkbox" /checked>
+                        <input :value="alarmsleft[index].vibration" v-else @click="submitvibrationleft(index)" type="checkbox">
+                        <div class="slider round"></div>
+                        </label>
+                        </form>
+                        <label>Vibration</label>
 
-      submitsoundleft(arg) {
-        if (this.alarmsleft[arg].sound == 'on') {
-          this.alarmsleft[arg].sound = 'off';
-        } else {
-          this.alarmsleft[arg].sound = 'on';
-        }
-        $.ajax(
-            {
-              url: "/sound",
-              type: 'post',
-              data: {
-                name: this.alarmsleft[arg].name,
-                value: this.alarmsleft[arg].sound 
-              }
-            }
-          );
-      },
+                        <br>
+                        <br>
+                        <br>
 
-      submitvibrationright(arg) {
-        if (this.alarmsright[arg].vibration == 'on') {
-          this.alarmsright[arg].vibration = 'off';
-        } else {
-          this.alarmsright[arg].vibration = 'on';
-        }
-        $.ajax(
-            {
-              url: "/vibration",
-              type: 'post',
-              data: {
-                name: this.alarmsright[arg].name,
-                value: this.alarmsright[arg].vibration 
-              }
-            }
-          );
-      },
+                    </div> <!--alarm.name-->
 
-      submitvibrationleft(arg) {
-        if (this.alarmsleft[arg].vibration == 'on') {
-          this.alarmsleft[arg].vibration = 'off';
-        } else {
-          this.alarmsleft[arg].vibration = 'on';
-        }
-        $.ajax(
-            {
-              url: "/vibration",
-              type: 'post',
-              data: {
-                name: this.alarmsleft[arg].name,
-                value: this.alarmsleft[arg].vibration 
-              }
-            }
-          );
+                </div><!--leftside-->
 
-      },
-    },
+                <div id="rightside"> 
+                    <div v-for="(alarm, index) in alarmsright" :id="alarm.name">
+                        <input v-model="alarmsright[index].time" class="time" type="time"></input>
+                        <button @click="submittimeright(index)">Submit Time</button>
 
-    created() {
-        $.ajaxSetup({ cache: false });
-        $.getJSON('../json/alarms.json')
-            .done(data => {
-            this.alarmsleft = data.slice(0, 2);
-            this.alarmsright = data.slice(2);
-        });
-    }
-  })
+                        <br>
+                        <br>
 
-  
-  var nd = new NixieClock();
-  nd.id = 'nd1';
-  nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
-  nd.charWidth = 90;
-  nd.charHeight = 150;
-  nd.extraGapsWidths[1] = 12;
-  nd.extraGapsWidths[3] = 12;
-  nd.charGapWidth = 10;
-  document.getElementById(nd.id).parentNode.style.background = "black";
-  document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
-  nd.init();
-  nd.run();
-  nd.setText('-1.234567890');
+                        <label class="switch">
+                        <input :value="alarmsright[index].sound" v-if="alarmsright[index].sound=='on'" @click="submitsoundright(index)" type="checkbox" /checked>
+                        <input :value="alarmsright[index].sound" v-else @click="submitsoundright(index)" type="checkbox">
+                        <div class="slider round"></div>
+                        </label>
+                        </form>
+                        <label>Sound</label>
 
-  $(function(){
+                        <br>
+                        <br>
 
-    $("#drop-box").click(function(){
-      $("#file").click();
-    });
+                        <label class="switch">
+                        <input :value="alarmsright[index].vibration" v-if="alarmsright[index].vibration=='on'" @click="submitvibrationright(index)" type="checkbox" /checked>
+                        <input :value="alarmsright[index].vibration" v-else @click="submitvibrationright(index)" type="checkbox">
+                        <div class="slider round"></div>
+                        </label>
+                        </form>
+                        <label>Vibration</label>
 
-    $(document).on('drop dragover', function (e) {
-          e.preventDefault();
-      }); 
+                        <br>
+                        <br>
+                        <br>
 
-    $('input[type=file]').on('change', fileUpload);
+                    </div><!--alarm.name-->
 
-    function fileUpload(event){  
-      $("#drop-box").html("<p>"+event.target.value+" uploading...</p>");
-      files = event.target.files;
-      var data = new FormData();
-      var error = 0;
-      for (var i = 0; i < files.length; i++) {
-          var file = files[i];
-          console.log(file.size);
-        if(!file.type.match('audio.*')) {
-            $("#drop-box").html("<p> Audio only. Select another file</p>");
-            error = 1;
-          }else{
-            data.append('audio', file, file.name);
-          }
-      }
-      if(!error){
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/upload", true);
-        xhr.send(data);
-        xhr.onload = function () {
-          if (xhr.status === 200) {
-            $("#afterclock").html("\
-                <div id='afterclockleft'>\
-                    <form enctype='multipart/form-data'>\
-                      <div class='row'>\
-                        <div class='column-small-12 padd0 align-center'>\
-                          <div id='drop-box'>\
-                            <p>Select Files</p>\
-                          </div>\
-                        </div>\
-                        <div class='column-small-12 padd0'>\
-                        <input type='file' name='file' id='file' />\
-                      </div>\
-                    </div>\
-                  </form>\
-              </div>\
-              <br>\
-              <p>File Uploaded. Select more files</p>");
-          } else {
-            $("#afterclock").html("<p> Error in upload, try again.</p>");
-          }
-        };
-      }
-    }
+                </div><!--rightside-->
+            </div><!--main-->
 
-  });
-  </script>
+            <br>
+            <div id="afterclock">
 
-  </body>
-</html>
+                <div id="afterclockleft">
+                    <br>
+                    <br>
+                    <form enctype="multipart/form-data">
+
+                        <div class="row">
+                            <div class="column-small-12 padd0 align-center">
+                                <div id="drop-box">
+                                    <h3><em>Change Alarm Audio</em></h3>
+                                    <br>
+                                    <br>
+                                </div><!--drop-box-->
+                            </div><!--column-small-12-->
+                            <div class="column-small-12 padd0">
+                                <input type="file" name="file" id="file" />
+                            </div><!--column-small-12...-->
+                        </div><!--row-->
+
+                    </form>
+                    <br>
+                    <p>Current Track: {{this.trackinfo}}</p>
+                </div><!--afterclockleft-->
+
+                <div id="afterclockright">
+                    <br>
+                    <br>
+                    <h3><em>Enable IP Change Email Notifications</em></h3>
+                    <br>
+                    <br>
+                    <label class="switch" style="float: left;">
+                        <input :value="enableemail" v-if="enableemail==true" @click="submitenableemail()" type="checkbox" /checked>
+                        <input :value="enableemail" v-else @click="submitenableemail()" type="checkbox">
+                        <div class="slider round"></div>
+                    </label>
+
+                    <div v-if="enableemail==true" style="float: right; margin-left: 10px;">
+                        <button @click="submitemail()" style="float: right;">Submit New Email</button>
+                        <input v-model="email" class="text" type="text" style="float: right;"></input>
+                    </div><!--v-if-->
+
+                    <div v-else>
+                        <br>
+                    </div><!--v-else-->
+
+                    <br>
+
+                </div> <!--id="afterclockright"-->
+            </div><!--afterclock-->
+        </div><!--app-->
+
+        <script>
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    alarmsleft: [],
+                    alarmsright: [],
+                    trackinfo: [],
+                    email: [],
+                    enableemail: [],
+                },
+
+                methods: {
+
+                    submittimeright(arg) {
+                        $.ajax(
+                            {
+                                url: "/time",
+                                type: 'post',
+                                data: {
+                                    name: this.alarmsright[arg].name,
+                                    value: this.alarmsright[arg].time 
+                                }
+                            }
+                        );
+                    },
+
+                    submittimeleft(arg) {
+                        $.ajax(
+                            {
+                                url: "/time",
+                                type: 'post',
+                                data: {
+                                    name: this.alarmsleft[arg].name,
+                                    value: this.alarmsleft[arg].time 
+                                }
+                            }
+                        );
+                    },
+
+                    submitsoundright(arg) {
+                        if (this.alarmsright[arg].sound == 'on') {
+                            this.alarmsright[arg].sound = 'off';
+                        } else {
+                            this.alarmsright[arg].sound = 'on';
+                        }
+                        $.ajax(
+                            {
+                                url: "/sound",
+                                type: 'post',
+                                data: {
+                                    name: this.alarmsright[arg].name,
+                                    value: this.alarmsright[arg].sound 
+                                }
+                            }
+                        );
+                    },
+
+                    submitsoundleft(arg) {
+                        if (this.alarmsleft[arg].sound == 'on') {
+                            this.alarmsleft[arg].sound = 'off';
+                        } else {
+                            this.alarmsleft[arg].sound = 'on';
+                        }
+                        $.ajax(
+                            {
+                                url: "/sound",
+                                type: 'post',
+                                data: {
+                                    name: this.alarmsleft[arg].name,
+                                    value: this.alarmsleft[arg].sound 
+                                }
+                            }
+                        );
+                    },
+
+                    submitvibrationright(arg) {
+                        if (this.alarmsright[arg].vibration == 'on') {
+                            this.alarmsright[arg].vibration = 'off';
+                        } else {
+                            this.alarmsright[arg].vibration = 'on';
+                        }
+                        $.ajax(
+                            {
+                                url: "/vibration",
+                                type: 'post',
+                                data: {
+                                    name: this.alarmsright[arg].name,
+                                    value: this.alarmsright[arg].vibration 
+                                }
+                            }
+                        );
+                    },
+
+                    submitvibrationleft(arg) {
+                        if (this.alarmsleft[arg].vibration == 'on') {
+                            this.alarmsleft[arg].vibration = 'off';
+                        } else {
+                            this.alarmsleft[arg].vibration = 'on';
+                        }
+                        $.ajax(
+                            {
+                                url: "/vibration",
+                                type: 'post',
+                                data: {
+                                    name: this.alarmsleft[arg].name,
+                                    value: this.alarmsleft[arg].vibration 
+                                }
+                            }
+                        );
+                    },
+
+                    submitenableemail() {
+                        if (this.enableemail == true) {
+                            this.enableemail = false;
+                        } else {
+                            this.enableemail = true;
+                        }
+                        $.ajax(
+                            {
+                                url: "/enableemail",
+                                type: 'post',
+                                data: {
+                                    value: this.enableemail,
+                                }
+                            }
+                        );
+                    },
+
+                    submitemail() {
+                        $.ajax(
+                            {
+                                url: "/newemail",
+                                type: 'post',
+                                data: {
+                                    value: this.email, 
+                                }
+                            }
+                        );
+                    },
+                },
+
+                created() {
+
+                    $.ajaxSetup({ cache: false });
+
+                    $.getJSON('../json/alarms.json')
+                        .done(data => {
+                            this.alarmsleft = data.slice(0, 2);
+                            this.alarmsright = data.slice(2);
+                        });
+
+                        $.get('../json/email')
+                            .done( data => {
+                            this.email = String(data).replace(/\n/g, '');
+                    });
+
+                    $.get('../json/enableemail')
+                        .done( data => {
+                            if (data.replace(/\n/g, '') == "true") {
+                                this.enableemail = true;
+                            } else {
+                                this.enableemail = false;
+                            }
+                    });
+
+                    $.get('../json/trackinfo')
+                        .done( data => {
+                            this.trackinfo = String(data).replace(/\n/g, '');
+                    });
+
+                }
+            })
+
+
+                var nd = new NixieClock();
+                nd.id = 'nd1';
+                nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
+                nd.charWidth = 90;
+                nd.charHeight = 150;
+                nd.extraGapsWidths[1] = 12;
+                nd.extraGapsWidths[3] = 12;
+                nd.charGapWidth = 10;
+                document.getElementById(nd.id).parentNode.style.background = "black";
+                document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
+                nd.init();
+                nd.run();
+                nd.setText('-1.234567890');
+
+                $(function(){
+
+                    $("#drop-box").click(function(){
+                        $("#file").click();
+                    });
+
+                    $(document).on('drop dragover', function (e) {
+                        e.preventDefault();
+                    }); 
+
+                    $('input[type=file]').on('change', fileUpload);
+
+                    function fileUpload(event){  
+
+                        $("#drop-box").html("<p>"+event.target.value+" uploading...</p>");
+                        files = event.target.files;
+                        var data = new FormData();
+                        var error = 0;
+                        for (var i = 0; i < files.length; i++) {
+                            var file = files[i];
+                            console.log(file.size);
+                            if (!file.type.match('audio.*')) {
+                                $("#drop-box").html("<p> Audio only. Select another file</p>");
+                                error = 1;
+                            } else {
+                                data.append('audio', file, file.name);
+                            }
+                        }
+
+                        if(!error){
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("POST", "/upload", true);
+                            xhr.send(data);
+                            xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                $("#afterclock").html("\
+                                <div id='afterclockleft'>\
+                                    <form enctype='multipart/form-data'>\
+                                        <div class='row'>\
+                                            <div class='column-small-12 padd0 align-center'>\
+                                                <div id='drop-box'>\
+                                                    <p>Select Files</p>\
+                                                </div>\
+                                            </div>\
+                                            <div class='column-small-12 padd0'>\
+                                                <input type='file' name='file' id='file' />\
+                                            </div>\
+                                        </div>\
+                                    </form>\
+                                </div>\
+                                <br>\
+                                <p>File Uploaded. Select more files</p>");
+                            } else {
+                                $("#afterclock").html("<p> Error in upload, try again.</p>");
+                            }
+                        };
+                    }
+                }
+
+                });
+            </script>
+
+        </body>
+    </html>

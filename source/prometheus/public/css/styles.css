@@ -62,7 +62,12 @@ fieldset {
 
 #afterclockleft {
   float: left;
-  padding-left: 20%;
+  padding-left: 10%;
+}
+
+#afterclockright {
+  float: right;
+  padding-right: 10%;
 }
 
 .time {
@@ -71,6 +76,14 @@ fieldset {
   background-color: black;
   font-size: 18px;
   width: 150;
+  height: 60;
+}
+
+.text {
+  font-family: Quicksand;
+  color: white;
+  background-color: black;
+  width: 200;
   height: 60;
 }
 

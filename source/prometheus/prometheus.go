@@ -1,5 +1,5 @@
-//main.go
-
+// Main program logic
+// Relies on utils, structs, and gpio libraries.
 package main
 
 import (
@@ -23,16 +23,19 @@ import (
 	"github.com/robfig/cron"
 )
 
-//Declare the alarms
+//Create 4 Alarm objects using structs.Alarm{} struct
 var Alarm1 = structs.Alarm{}
 var Alarm2 = structs.Alarm{}
 var Alarm3 = structs.Alarm{}
 var Alarm4 = structs.Alarm{}
 
+var EnableEmail bool
+var Email string
+
 //Declare the name of the alarm sound stored in ./public/assets/sound_name.extension
 var Soundname string
 
-//General error handler. I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless.
+//General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
 func Errhandler(err error) {
 	if err != nil {
 		fmt.Println("ERROR")
@@ -40,7 +43,6 @@ func Errhandler(err error) {
 }
 
 //Function to check whether the alarm has been running for more than 10 minutes
-//***NOT WORKING AS OF NOW, BUT DOES NOT NEGATIVELY AFFECT THE FUNCTIONALITY OF THE REST OF THE PROGRAM***
 func OverTenMinutes(alarmtime string) bool {
 	fmt.Println("func OverTenMinutes(alarmtime string) bool")
 	// fmt.Println("OverTenMinutes")
@@ -65,11 +67,11 @@ func OverTenMinutes(alarmtime string) bool {
 	difference := timecurrent.Minute() - time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute()
 	fmt.Println("Difference is", difference)
 	fmt.Println("difference type is", reflect.TypeOf(difference))
-	if difference == 1 {
-		fmt.Println("Difference is 1 or more minutes")
+	if difference == 10 {
+		fmt.Println("Difference is 10 or more minutes")
 		return true
 	} else {
-		fmt.Println("Difference is not 1 or more minutes")
+		fmt.Println("Difference is not 10 or more minutes")
 		return false
 	}
 }
@@ -110,36 +112,60 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, err)
 	}
 	fmt.Fprintf(w, "File uploaded successfully :")
-	//fmt.Fprintf(w, header.Filename)
-}
 
-//Initialization
-func init() {
-	// currentDir = utils.Pwd()
-	//Save the JSON alarms configurations into the mold
-	jsondata := structs.GetRawJson(utils.Pwd() + "/public/json/alarms.json")
-	//Set up the intial values for the alarms using the values we get from above
-	Alarm1.InitializeAlarms(jsondata, 0)
-	Alarm2.InitializeAlarms(jsondata, 1)
-	Alarm3.InitializeAlarms(jsondata, 2)
-	Alarm4.InitializeAlarms(jsondata, 3)
-	//Grab the name of the alarm sound file via ls command to the ./public/assets/ folder.
 	var b bytes.Buffer
 	if err := utils.Execute(&b,
 		exec.Command("ls", utils.Pwd()+"/public/assets"),
 	); err != nil {
 		log.Fatalln(err)
 	}
-	//Since the ls stdout returns the string + a newline (\n), the following strips the newline from the string, and saves it as the Soundname variable
+
+	// If a new file got uploaded, make sure this gets reflected in the program var Soundname and also write out the new name into ./public/json/trackinfo
 	Soundname = strings.TrimSpace(b.String())
-	//fmt.Println(Soundname)
 	d1 := []byte(Soundname)
-	errrrrrrrrr := ioutil.WriteFile("initial", d1, 0644)
+	errrrrrrrrr := ioutil.WriteFile(utils.Pwd()+"/public/json/trackinfo", d1, 0644)
 	if errrrrrrrrr != nil {
 		fmt.Println(errrrrrrrrr)
 	}
+
+	fmt.Fprintf(w, header.Filename)
 }
 
+//Initialization sequence
+// 1. Grab the persistent alarm information from the alarms.json file
+// 2. Use this data to store legitimate values of time, vibration, and sound into the 4 struct.Alarm objects
+// 3. Grab the name of the current sound file via an "ls" shell command, and save it to the global variable Sound, and then write that information into ./public/json/trackinfo
+// 4. Get the email of user to be used in the CheckIPChange() function
+// 5. Get the persistent data of whether or not the user wants Prometheus to send emails when the IP changes. (Note, this is probably alot easier done through a dynamic DNS service which runs a background program to constanty check the IP of the Pi, updates a domain name server, and then you can access that as a link such as myclockname.ddns.net:3000
+
+func init() {
+	//Save the JSON alarms configurations into the mold
+	jsondata := structs.GetRawJson(utils.Pwd() + "/public/json/alarms.json")
+	Alarm1.InitializeAlarms(jsondata, 0)
+	Alarm2.InitializeAlarms(jsondata, 1)
+	Alarm3.InitializeAlarms(jsondata, 2)
+	Alarm4.InitializeAlarms(jsondata, 3)
+
+	var b bytes.Buffer
+	if err := utils.Execute(&b,
+		exec.Command("ls", utils.Pwd()+"/public/assets"),
+	); err != nil {
+		log.Fatalln(err)
+	}
+
+	Soundname = strings.TrimSpace(b.String())
+	d1 := []byte(Soundname)
+	errrrrrrrrr := ioutil.WriteFile(utils.Pwd()+"/public/json/trackinfo", d1, 0644)
+	if errrrrrrrrr != nil {
+		fmt.Println(errrrrrrrrr)
+	}
+	Email = utils.GetEmail()
+	EnableEmail = utils.GetEnableEmail()
+}
+
+// Main function
+// Runs the cron job (checking once a minute at exactly the point when second is 00) to check if the current time matches the user supplied alarm time configuration, and then runs the alarm if an enabled alarm matches the time
+// Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
 func main() {
 	// Initialize all 4 instances of alarm clocks
 	// Create function that updates clock once a minute (used to see if any times match up)
@@ -153,18 +179,18 @@ func main() {
 		duration := time.Second * 3
 		t = time.Now()
 		currenttime = t.Format("15:04")
-		utils.CheckIPChange()
+		if EnableEmail {
+			utils.CheckIPChange()
+		}
 
 		if Alarm1.Alarmtime == currenttime {
-			// Check if there is network connectivity (if not, then restart network interfaces)
+
 			go utils.RestartNetwork()
 			fmt.Println("if Alarm1.Alarmtime == currenttime {")
-			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
 
 			if Alarm1.Sound && Alarm1.Vibration {
 				fmt.Println("if Alarm1.Sound && Alarm1.Vibration {")
-				//fmt.Println("Sound and Vibration")
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
 				if errrrror != nil {
@@ -679,6 +705,34 @@ func main() {
 			utils.WriteBackJson(Alarm1, Alarm2, Alarm3, Alarm4, utils.Pwd()+"/public/json/alarms.json")
 		}
 		http.Redirect(w, r, "/", 301)
+	})
+
+	http.HandleFunc("/enableemail", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
+		}
+		value := r.FormValue("value")
+		fmt.Println(value)
+		if value == "true" {
+			EnableEmail = true
+			utils.WriteEnableEmail("true")
+		} else {
+			EnableEmail = false
+			utils.WriteEnableEmail("false")
+		}
+	})
+
+	http.HandleFunc("/newemail", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
+		}
+		value := r.FormValue("value")
+		fmt.Println(value)
+		utils.WriteEmail(value)
 	})
 
 	//Pass on the AJAX post /upload handler to the uploadHandler() function

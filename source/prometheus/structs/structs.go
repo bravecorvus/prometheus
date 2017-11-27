@@ -1,3 +1,4 @@
+// structs is the package that defines the various structs used by Prometheus, namely, JsonAlarms and Alarm as well as the the related functions that operate on the structs
 package structs
 
 import (
@@ -62,7 +63,9 @@ func (argumentalarm *Alarm) InitializeAlarms(jsondata []JsonAlarms, index int) {
 }
 
 //Function that adds 10 minutes to the currently running alarm. Necessary because internally, alarm times are stored as strings, rather than the time class
-func (arg *Alarm) AddTime(originaltime string, hms string, byhowmuch int) { //takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
+// Genrally called when you hit the snooze button on the front-end UI, which does a POST to '/snooze'
+// takes originaltime, and adds byhowmuch hours/minutes/seconds, then returns the string
+func (arg *Alarm) AddTime(originaltime string, hms string, byhowmuch int) {
 	fmt.Println("func (arg *Alarm) AddTime(originaltime string, hms string, byhowmuch int) {")
 	currenttime, _ := time.Parse("15:04", originaltime)
 	//fmt.Println("before fixed snooze time", currenttime)
@@ -76,5 +79,4 @@ func (arg *Alarm) AddTime(originaltime string, hms string, byhowmuch int) { //ta
 		updatedtime = currenttime.Add(time.Duration(byhowmuch) * time.Second)
 	}
 	arg.Alarmtime = updatedtime.Format("15:04")
-	//fmt.Println("fixed snooze time", arg.Alarmtime)
 }
