@@ -18,5 +18,4 @@ source/webinterface/public/json/time.json
 source/golang/public/json/\._time\.txt
 source/golang/main
 source/golang/testmailsender
-
 source/prometheus/prometheus
