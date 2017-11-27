@@ -65,7 +65,7 @@ func OverTenMinutes(alarmtime string) bool {
 	difference := timecurrent.Minute() - time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute()
 	fmt.Println("Difference is", difference)
 	fmt.Println("difference type is", reflect.TypeOf(difference))
-	if difference > 1 {
+	if difference == 1 {
 		fmt.Println("Difference is 1 or more minutes")
 		return true
 	} else {
