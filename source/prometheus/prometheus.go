@@ -15,9 +15,10 @@ import (
 	"strings"
 	"time"
 
-	"./gpio"
-	"./structs"
-	"./utils"
+	
+	"github.com/gilgameshskytrooper/Prometheus/source/prometheus/gpio"
+	"github.com/gilgameshskytrooper/Prometheus/source/prometheus/structs"
+	"github.com/gilgameshskytrooper/Prometheus/source/prometheus/utils"
 
 	"github.com/robfig/cron"
 )

@@ -13,7 +13,6 @@
 
 | 	Directory   | Description 	                                                               				|
 | ------------- | ----------------------------------------------------------------------------------------- |
-| [NCS314/](NCS314)  | Fork with modified version of GRA and AFCH's Nixie Clock Arduino Sketches  |
 | [assets/](assets/)  | Content related the the aesthetic presentation of this project such as images  |
 | [hberg32/](hberg32)  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project  |
 | [archive/expressnode-python3](archive/expressnode-python3)  | Where all the original implementation based on [Python3](https://www.python.org/) and [Node](https://nodejs.org/en/) is stored |

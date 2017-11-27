@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"../structs"
+	"github.com/gilgameshskytrooper/Prometheus/source/prometheus/structs"
 )
 
 //Taking in the IP as a string as the argument, write the IP address to ./public/json/ip to use when the program is restarted
