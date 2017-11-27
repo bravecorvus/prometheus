@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/smtp"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -17,9 +16,6 @@ import (
 
 	"../structs"
 )
-
-//Declare the identity of the current wlan0 IP. Used to check if the IP changed.
-var IP, NewIP string
 
 //Taking in the IP as a string as the argument, write the IP address to ./public/json/ip to use when the program is restarted
 func WriteIP(arg string) {
@@ -123,35 +119,16 @@ func GetEmail() string {
 
 //Function that checks to see if the current IP matches the IP string currently registered.
 //If the old IP and the new IP don't match, send the user an email notifying them of this change. Please change the stored at ./public/json/ip to get these notifications
-func Send(body string) {
-	fmt.Println("func Send(body string) {")
-	if body == IP {
-		//If the IP didn't change, just ignore
-		return
-	} else {
-		IP = NewIP
-		WriteIP(IP)
-		//Account from which Prometheus sends an email from.
-		from := "email@example.com"
-		pass := "password"
-		var to string
-		to = GetEmail()
-
-		msg := "From: " + from + "\n" +
-			"To: " + to + "\n" +
-			"Subject: New Prometheus IP: " +
-			body
-
-		err := smtp.SendMail("smtp.gmail.com:587",
-			smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
-			from, []string{to}, []byte(msg))
-
-		if err != nil {
-			log.Printf("smtp error: %s", err)
-			return
+func CheckIPChange() {
+	fmt.Println("func CheckIPChange() {")
+	if GetIPFromFile() != GetIP() {
+		WriteIP(GetIP())
+		sendemail := exec.Command("./prometheusemail", GetEmail(), GetIP())
+		sendemailerror := sendemail.Run()
+		if sendemailerror != nil {
+			fmt.Println("failed to send email")
 		}
-
-		log.Print("sent")
+		//Account from which Prometheus sends an email from.
 	}
 }
 

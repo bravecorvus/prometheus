@@ -31,9 +31,6 @@ var Alarm4 = structs.Alarm{}
 //Declare the name of the alarm sound stored in ./public/assets/sound_name.extension
 var Soundname string
 
-//Declare the identity of the current wlan0 IP. Used to check if the IP changed.
-var IP, NewIP string
-
 //General error handler. I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless.
 func Errhandler(err error) {
 	if err != nil {
@@ -126,8 +123,6 @@ func init() {
 	Alarm2.InitializeAlarms(jsondata, 1)
 	Alarm3.InitializeAlarms(jsondata, 2)
 	Alarm4.InitializeAlarms(jsondata, 3)
-	//Read the most recent IP address from ./public/json/ip
-	IP = strings.TrimSpace(utils.GetIPFromFile())
 	//Grab the name of the alarm sound file via ls command to the ./public/assets/ folder.
 	var b bytes.Buffer
 	if err := utils.Execute(&b,
@@ -158,15 +153,12 @@ func main() {
 		duration := time.Second * 3
 		t = time.Now()
 		currenttime = t.Format("15:04")
-		//fmt.Println("currenttime", currenttime)
-		//fmt.Println("Alarm1Time", Alarm1.Alarmtime)
+		utils.CheckIPChange()
 
 		if Alarm1.Alarmtime == currenttime {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			fmt.Println("if Alarm1.Alarmtime == currenttime {")
-			NewIP = utils.GetIP()
-			utils.Send(NewIP)
 			//fmt.Println("Alarm 1")
 			Alarm1.CurrentlyRunning = true
 
@@ -278,8 +270,6 @@ func main() {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			fmt.Println("} else if Alarm2.Alarmtime == currenttime {")
-			NewIP = utils.GetIP()
-			utils.Send(NewIP)
 			Alarm2.CurrentlyRunning = true
 			if Alarm2.Sound && Alarm2.Vibration {
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -377,8 +367,6 @@ func main() {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			fmt.Println("} else if Alarm3.Alarmtime == currenttime {")
-			NewIP = utils.GetIP()
-			utils.Send(NewIP)
 			Alarm3.CurrentlyRunning = true
 			if Alarm3.Sound && Alarm3.Vibration {
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -474,8 +462,6 @@ func main() {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			fmt.Println("} else if Alarm4.Alarmtime == currenttime {")
-			NewIP = utils.GetIP()
-			utils.Send(NewIP)
 			Alarm4.CurrentlyRunning = true
 			if Alarm4.Sound && Alarm4.Vibration {
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
