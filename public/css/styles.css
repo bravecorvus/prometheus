@@ -1,0 +1,195 @@
+#atomicclock, #pagetitle {
+  margin-top: 0px !important;
+  padding-top: 0px !important;
+  border-color: black !important; 
+}
+
+#nd1 {
+  width: 100%;
+  margin:0 auto;
+}
+
+#displayoff {
+  display: none;
+}
+
+body {
+    border-color: transparent;
+    font-family: Quicksand;
+    color: white;
+    background-color: black;
+}
+
+form {
+  border-color: transparent;
+  border: 0px, 0px, 0px, 0px;
+  margin: 40px, 0px, 40px, 0px;
+}
+
+fieldset {
+  border-color: transparent;
+  border: 0px, 0px, 0px, 0px;
+  margin: 0px, 0px, 0px, 0px;
+}
+
+#main {
+  border-color: black;
+  width: 100%;
+  margin: 0px auto;
+  outline: none;
+  border: none;
+}
+#leftside {
+  border-color: black;
+  float: left;
+  padding-left: 20%;
+  // width: 500px;
+  margin: 0 auto;
+}
+#rightside {
+  border-color: black;
+  float: right;
+  padding-right: 20%;
+  // width: 500px;
+  margin: 0 auto;
+}
+
+#afterclock {
+  border-color: black;
+  width: 100%;
+  margin: 0px auto; 
+}
+
+#afterclockleft {
+  float: left;
+  padding-left: 10%;
+}
+
+#afterclockright {
+  float: right;
+  padding-right: 10%;
+}
+
+.time {
+  font-family: Quicksand;
+  color: white;
+  background-color: black;
+  font-size: 18px;
+  width: 150;
+  height: 60;
+}
+
+.text {
+  font-family: Quicksand;
+  color: white;
+  background-color: black;
+  width: 200;
+  height: 60;
+}
+
+#file, button, #button, #snoozebutton {
+  border-color: black;
+    margin-left: 15px;
+    padding: 7px 12px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+}
+
+button:hover {background-color: #4cda64}
+
+button:active {
+  background-color: #4cda64;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4cda64;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+#snooze, #snoozeform {
+    display: none;
+}
+
+@font-face {
+    font-family: Quicksand;
+    src: url(Quicksand-Light.otf);
+}
+@font-face {
+  font-family: OstrichSans;
+  src: url(OstrichSans-Bold.otf);
+}
+
+#atomicclock {
+  font-family: OstrichSans;
+  font-size: 100px;
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+#pagetitle {
+   width: 100%;
+   margin: 0 auto;
+}
+hr {
+  color: white;
+}
