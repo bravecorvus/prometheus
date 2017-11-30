@@ -151,7 +151,7 @@ func GetEmail() string {
 func CheckIPChange() {
 	if GetIPFromFile() != GetIP() {
 		WriteIP(GetIP())
-		sendemail := exec.Command("./prometheusemail", GetEmail(), GetIP())
+		sendemail := exec.Command("email/prometheusemail", GetEmail(), GetIP())
 		sendemailerror := sendemail.Run()
 		if sendemailerror != nil {
 			fmt.Println("failed to send email")
