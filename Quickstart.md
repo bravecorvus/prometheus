@@ -4,14 +4,12 @@ If this is you, then this section will describe the minimum number of steps to g
 
 ## Software Stuff
 
-### Easy Way
-
 1. Install the executable binary from Github
 
 ```
-$wget https://github.com/gilgameshskytrooper/Prometheus/releases/download/1.1.1/Prometheus.v1.1.1.zip
-$unzip Prometheus.v1.1.1.zip
-$rm Prometheus.v1.1.1.zip
+$wget https://github.com/gilgameshskytrooper/prometheus/releases/download/2.0.2/prometheus.v2.0.2.zip
+$unzip prometheus.v2.0.2.zip
+$rm prometheus.v2.0.2.zip
 ```
 
 2. Install software dependency
@@ -20,59 +18,17 @@ $rm Prometheus.v1.1.1.zip
 $sudo apt install vlc-nox
 ```
 
-2. Set the email you want Prometheus to email about a change to the IP
-
-```
-$vi /PATH_TO_PROMETHEUS/public/json/email
-```
-
-3. If you want the program to run on boot, add the executable command in `rc.local`
+2. If you want the program to run on boot, add the executable command in `rc.local`
 
 ```
 $vi rc.local
 ```
 
-If you want a more manual solution, I would suggest opening a tmux window (so that the program persists even when you exit ssh) or opening a VNC session and running it in a terminal in the GUI.
-
-### Install From Source
-
-1. Going into the command line, do the following
-
 ```
-$sudo apt-get install git vlc-nox golang
-$git clone https://github.com/gilgameshskytrooper/Prometheus.git
-$cd Prometheus/source/prometheus
+[PATH_TO_PROMETHEUS]/prometheus &
 ```
 
-2. Add a GOPATH environment variable to your shell variables. In `.bashrc`, this will be accomplished by adding the following lines:
-
-```
-export GOPATH=~/go
-export PATH=$PATH:$(go env GOPATH)/bin
-```
-
-3. Install Prometheus dependencies
-
-```
-$go get github.com/stianeikeland/go-rpio
-$go get github.com/robfig/cron
-```
-
-4. You need to replace the values of lines 127 and 128 to be of an email of your choice (The executable binary will have this part filled in with the email address of prometheusclock@gmail.com and the correct password, but I don't want to pass around this email flippantly)
-***Note, you must use an email that has insecure access enabled (Check [here](https://support.google.com/accounts/answer/6010255?hl=en) for detail on how to set this up on Google)***
-
-```
-$vi /PATH_TO_PROMETHEUS/utils/utils.go
-```
-
-5. Run program
-
-```
-$/PATH_TO_PROMETHEUS/source/prometheus/prometheus
-```
-
-Easiest way to do this is to add this line to `rc.local` so that the alarm program gets started at boot.
-
+If you want a more manual solution, I would suggest opening a tmux window (so that the program persists even when you exit ssh) or opening a VNC session and running it in a terminal in the GUI. (If you run the program in regular terminal, it will close the moment you exit ssh)
 
 ## Hardware Stuff
 This part is specific to the hardware you will connect, but here I will share the setup assuming you are using the same setup as me. (e.g. you already own a bed vibrator that runs 12V @ 0.5A and center pin positive, you have a separate power source that is 12V @1+A, and a sound system)
@@ -131,12 +87,12 @@ Input 1 = True | Input 2 = False | then Enable 1, 2 = True.
 Furthermore, after looking at many tutorials, I could not figure out why my circuit was not working, and I realized that I had to ground 12 and 13  as well as 4 and 5 since the Chip's 5V also needed to ground somewhere.
 
 ### Sound
-To get good sound, you will need to output the sound through the USB sound interface.
+To get good sound, you will need to output the sound through a external sound card. Both USB solutions and the built in TRS connector are terrible in sound. I am personally using the Hifiberry Digi Pro board. However, if this is sufficient for your needs, you can skip this section.
 
 I don't remember the specific steps to get Pi to output sound through the USB, but I believe you just need to create a file via
 
 ```
-$nano ~/.asoundrc
+vi ~/.asoundrc
 
 pcm.!default {
     type hw
@@ -149,16 +105,27 @@ ctl.!default {
 }
 ```
 
-[CTRL-O, RETURN, CTRL-X to Save and exit]
+[:wq to Save and exit]
 
 ### Access The Alarm Clock
 
+The web interface is accessible at port 3000 (e.g. 111.111.111:3000).
+
+I suggest you use a dynamic DNS provider such as [ddns.net](ddns.net) which lets you access the Pi at a convenient url. You install a program which constantly updates the DDNS provider so that you will still be able to connect to your Pi even when your IP changes. the
+
+However, if you want to use explicit IP's, you can find that out by doing:
+
 ```
-$ifconfig
+ifconfig
 ```
 
 Copy down the address that is listed as wlan0 inet addr. This address is how you will use another device on the same WiFi network to access the website. (i.e. http:111.11.111.111:3000 where you will change 111.11.111.111 to be your IP but keep :3000 at the end to specify you will access the Pi via your web browser at port 3000)
 
-Now, as long as you are same network (Or, if you are lucky enough to get your Pi a static IP, then you will be able to access it from anywhere you have network access), you can access the Web Interface through the site 111.11.111.111:3000 (replacing 111.11.111.111 with the value of IP)
+Now, as long as you are same network (Or, if you are lucky enough to get your Pi a static IP, then you will be able to access it from anywhere you have network access), you can access the Web Interface through the site 111.11.111.111:3000 (replacing 111.11.111.111 with the value of IP).
+
+A built in part of the Prometheus program sends you an email whenever the IP of the Pi changes. You can turn off this feature in the front end interface, or change the email address you want to receive email on.
+
+
+
 
 ## Have Fun!
