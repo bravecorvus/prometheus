@@ -4,8 +4,15 @@
 
 ### Author: Andrew Lee
 
-## Function
-[prometheus](prometheus.go) functions as both the server, which hosts the web-based user interface as well as the hardware controlling mechanisms. If you want documentation, check out the [godocs](https://godoc.org/github.com/gilgameshskytrooper/prometheus) for the project.
+If you want documentation, check out the [godocs](https://godoc.org/github.com/gilgameshskytrooper/prometheus) for the project.
+
+## Functionality
+
+- [prometheus](https://godoc.org/github.com/gilgameshskytrooper/prometheus/prometheus) functions as both the server, which hosts the web-based user interface as well as the hardware controlling mechanisms
+- [utils](https://godoc.org/github.com/gilgameshskytrooper/prometheus/utils) is the package that contains all the utility functions used by Prometheus
+- [gpio](https://godoc.org/github.com/gilgameshskytrooper/prometheus/gpio) contains the specific functions used to execute GPIO.
+- [structs](https://godoc.org/github.com/gilgameshskytrooper/prometheus/structs) contains the structs used by Prometheus to store alarms and to unmarshal JSON files
+- [public](public/) contains all the static assets such as index.html, css, and javascript. The front-end functionality heavily utilizes [Vue.js](https://vuejs.org/) and I highly recommend it to anyone who is interested in a front-end framework.
 
 ## Installation
 
@@ -114,11 +121,10 @@ ctl.!default {
     type hw
     card 1
 }
-
-
+```
 
 ## Initial Start
 At program start, you will receive an automatic email notifying you of an IP change since this is a stored value, at [public/json/ip](public/json/ip). Once your IP gets stored, then it will only notify you when it changes. Change whether or not you want Prometheus to send you emails regarding changes to your IP in the front-end interface as well as the email you want to receive notifications on.
 
 ## User Interface
-(***See general [User Interface page](https://github.com/gilgameshskytrooper/Prometheus/wiki/User-Interface-Tutorial)***)
+See general [user interface page](https://github.com/gilgameshskytrooper/Prometheus/wiki/User-Interface-Tutorial)
