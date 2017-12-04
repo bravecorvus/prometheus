@@ -16,8 +16,10 @@ import (
 	"time"
 
 	"github.com/gilgameshskytrooper/prometheus/gpio"
+	"github.com/gilgameshskytrooper/prometheus/nixie"
 	"github.com/gilgameshskytrooper/prometheus/structs"
 	"github.com/gilgameshskytrooper/prometheus/utils"
+	"github.com/jacobsa/go-serial/serial"
 
 	"github.com/robfig/cron"
 )
@@ -145,6 +147,21 @@ func init() {
 	}
 	Email = utils.GetEmail()
 	EnableEmail = utils.GetEnableEmail()
+	options := serial.OpenOptions{
+		PortName:        "/dev/cu.usbmodem141421",
+		BaudRate:        115200,
+		DataBits:        8,
+		StopBits:        1,
+		MinimumReadSize: 4,
+	}
+	// Open the port.
+	port, err := serial.Open(options)
+	if err != nil {
+		log.Fatalf("serial.Open: %v", err)
+	}
+
+	// Make sure to close it later.
+	defer port.Close()
 }
 
 // Main function
@@ -156,6 +173,26 @@ func main() {
 	t := time.Now()
 	currenttime := t.Format("15:04")
 	c := cron.New()
+
+	c.AddFunc("@every 1m", func() {
+		b := []byte(nixie.CurrentTimeAsString())
+		n, err := port.Write(b)
+		if err != nil {
+			log.Fatalf("port.Write: %v", err)
+		}
+
+		fmt.Println("Wrote", n, "bytes.")
+		time.Sleep(time.Second * 10)
+		b = []byte("1111111")
+		n, err = port.Write(b)
+		if err != nil {
+			log.Fatalf("port.Write: %v", err)
+		}
+
+		fmt.Println("Wrote", n, "bytes.")
+
+	})
+
 	//Run the following once a minute
 	//Check all 4 alarms to see if the current time matches any configurations
 	c.AddFunc("0 * * * * *", func() {
