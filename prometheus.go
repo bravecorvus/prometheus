@@ -147,8 +147,15 @@ func init() {
 	}
 	Email = utils.GetEmail()
 	EnableEmail = utils.GetEnableEmail()
+}
+
+// Main function
+// Runs the cron job (checking once a minute at exactly the point when second is 00) to check if the current time matches the user supplied alarm time configuration, and then runs the alarm if an enabled alarm matches the time
+// Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
+func main() {
+
 	options := serial.OpenOptions{
-		PortName:        "/dev/cu.usbmodem141421",
+		PortName:        nixie.FindArduino(),
 		BaudRate:        115200,
 		DataBits:        8,
 		StopBits:        1,
@@ -162,12 +169,7 @@ func init() {
 
 	// Make sure to close it later.
 	defer port.Close()
-}
 
-// Main function
-// Runs the cron job (checking once a minute at exactly the point when second is 00) to check if the current time matches the user supplied alarm time configuration, and then runs the alarm if an enabled alarm matches the time
-// Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
-func main() {
 	// Initialize all 4 instances of alarm clocks
 	// Create function that updates clock once a minute (used to see if any times match up)
 	t := time.Now()
