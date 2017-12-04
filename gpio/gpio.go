@@ -35,7 +35,7 @@ func VibOff() {
 	defer rpio.Close()
 	Input1 := rpio.Pin(22)
 	Input1.Output()
-	Input1.High()
+	Input1.Low()
 	Input2 := rpio.Pin(23)
 	Input2.Output()
 	Input2.Low()
