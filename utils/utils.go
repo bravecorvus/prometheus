@@ -232,9 +232,11 @@ func WriteEmail(arg string) {
 
 func CheckShairportSyncInstalled() bool {
 	var b bytes.Buffer
-	if err := Execute(&b,
+	err := Execute(&b,
 		exec.Command("shairport-sync", "-v"),
-	); err != nil {
+	)
+	fmt.Println(err)
+	if err != nil {
 		return false
 	}
 	return true
