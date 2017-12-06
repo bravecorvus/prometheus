@@ -181,20 +181,11 @@ func main() {
 
 	c.AddFunc("@every 1s", func() {
 		if foundNixie {
-
 			b := []byte(nixie.CurrentTimeAsString())
 			n, err := port.Write(b)
 			if err != nil {
 				log.Fatalf("port.Write: %v", err)
 			}
-
-			b = []byte("1111111")
-			n, err = port.Write(b)
-			if err != nil {
-				log.Fatalf("port.Write: %v", err)
-			}
-
-			fmt.Println("Wrote", n, "bytes.")
 		} else {
 			options.PortName = nixie.FindArduino()
 			if options.PortName != "" {
