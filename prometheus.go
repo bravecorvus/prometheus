@@ -163,7 +163,7 @@ func main() {
 	shairportInstalled = utils.CheckShairportSyncInstalled()
 	if shairportInstalled {
 		shairportstart := exec.Command("/usr/local/bin/shairport-sync", "-d")
-		shairportstarterror := shairportkill.Run()
+		shairportstarterror := shairportstart.Run()
 		if shairportstarterror != nil {
 			fmt.Println("Could not start shairport-sync daemon")
 		}
