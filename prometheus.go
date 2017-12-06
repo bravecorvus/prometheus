@@ -24,25 +24,39 @@ import (
 	"github.com/robfig/cron"
 )
 
+var (
+	//Create 4 Alarm objects using structs.Alarm{} struct
+	Alarm1             = structs.Alarm{}
+	Alarm2             = structs.Alarm{}
+	Alarm3             = structs.Alarm{}
+	Alarm4             = structs.Alarm{}
+	foundNixie         bool
+	EnableEmail        bool
+	Email              string
+	shairportInstalled bool
+	shairportStarted   bool
+	Soundname          string
+)
+
 //Create 4 Alarm objects using structs.Alarm{} struct
-var Alarm1 = structs.Alarm{}
-var Alarm2 = structs.Alarm{}
-var Alarm3 = structs.Alarm{}
-var Alarm4 = structs.Alarm{}
+// var Alarm1 = structs.Alarm{}
+// var Alarm2 = structs.Alarm{}
+// var Alarm3 = structs.Alarm{}
+// var Alarm4 = structs.Alarm{}
 
 // Variable to see whether the program was able to find the nixie clock. Used to see if the function to write time to Serial USB needs to be run.
-var foundNixie bool
-
-var EnableEmail bool
-var Email string
+// var foundNixie bool
+//
+// var EnableEmail bool
+// var Email string
 
 // Used to tell program whether or not shairport-sync program is installed or not
 // If it is installed, then the shairport-sync daemon has to be killed every time we want to play an alarm sound.
-var shairportInstalled bool
-var shairportStarted bool
+// var shairportInstalled bool
+// var shairportStarted bool
 
 //Declare the name of the alarm sound stored in ./public/assets/sound_name.extension
-var Soundname string
+// var Soundname string
 
 //General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
 func Errhandler(err error) {
@@ -163,10 +177,12 @@ func init() {
 func main() {
 	shairportInstalled, shairportStarted = utils.CheckShairportSyncInstalled()
 	if shairportInstalled {
-		shairportstart := exec.Command("/usr/local/bin/shairport-sync", "-d")
-		shairportstarterror := shairportstart.Run()
-		if shairportstarterror != nil {
-			fmt.Println("Could not start shairport-sync daemon")
+		if !shairportStarted {
+			shairportstart := exec.Command("/usr/local/bin/shairport-sync", "-d")
+			shairportstarterror := shairportstart.Run()
+			if shairportstarterror != nil {
+				fmt.Println("Could not start shairport-sync daemon")
+			}
 		}
 	}
 	options := serial.OpenOptions{
