@@ -262,6 +262,7 @@ func KillShairportSync() {
 			log.Fatalln(err)
 		}
 		str = b.String()
+		fmt.Println("kill id", strings.TrimSpace(str))
 		killshairport := exec.Command("kill", strings.TrimSpace(str))
 		killshairporterror := killshairport.Run()
 		if killshairporterror != nil {
@@ -279,6 +280,7 @@ func CheckShairportSyncInstalled() bool {
 	if err != nil {
 		fmt.Println("which shairport-sync command failed")
 	}
+	fmt.Println("which shairport-sync", strings.TrimSpace(str))
 	if strings.TrimSpace(stdout.String()) == "" {
 		return false
 	} else {
