@@ -279,7 +279,7 @@ func CheckShairportSyncInstalled() bool {
 	if err != nil {
 		fmt.Println("which shairport-sync command failed")
 	}
-	if stdout.String() == "" {
+	if strings.TrimSpace(stdout.String()) == "" {
 		return false
 	} else {
 		return true
