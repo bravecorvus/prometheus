@@ -231,12 +231,15 @@ func WriteEmail(arg string) {
 }
 
 func CheckShairportSyncInstalled() bool {
-	_, err := exec.Command("shairport-sync", "-v").Output()
+	cmd := exec.Command("shairport-sync", "-v")
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	err := cmd.Run()
 	if err != nil {
+		stderr.String()
 		re := regexp.MustCompile("^Daemon already running on")
-		found := re.FindString(err.Error())
-		fmt.Println(err.Error())
-		fmt.Println(found)
+		found := re.FindString(stderr.String())
+		fmt.Println(stderr.String())
 		if found == "" {
 			return false
 		} else {
