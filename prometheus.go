@@ -30,6 +30,9 @@ var Alarm2 = structs.Alarm{}
 var Alarm3 = structs.Alarm{}
 var Alarm4 = structs.Alarm{}
 
+// Variable to see whether the program was able to find the nixie clock. Used to see if the function to write time to Serial USB needs to be run.
+var foundNixie bool
+
 var EnableEmail bool
 var Email string
 
@@ -164,7 +167,7 @@ func main() {
 	// Open the port.
 	port, err := serial.Open(options)
 	if err != nil {
-		log.Fatalf("serial.Open: %v", err)
+		foundNixie = false
 	}
 
 	// Make sure to close it later.
@@ -176,22 +179,30 @@ func main() {
 	currenttime := t.Format("15:04")
 	c := cron.New()
 
-	c.AddFunc("@every 1m", func() {
-		b := []byte(nixie.CurrentTimeAsString())
-		n, err := port.Write(b)
-		if err != nil {
-			log.Fatalf("port.Write: %v", err)
-		}
+	c.AddFunc("@every 1s", func() {
+		if foundNixie {
 
-		fmt.Println("Wrote", n, "bytes.")
-		time.Sleep(time.Second * 10)
-		b = []byte("1111111")
-		n, err = port.Write(b)
-		if err != nil {
-			log.Fatalf("port.Write: %v", err)
-		}
+			b := []byte(nixie.CurrentTimeAsString())
+			n, err := port.Write(b)
+			if err != nil {
+				log.Fatalf("port.Write: %v", err)
+			}
 
-		fmt.Println("Wrote", n, "bytes.")
+			fmt.Println("Wrote", n, "bytes.")
+			time.Sleep(time.Second * 10)
+			b = []byte("1111111")
+			n, err = port.Write(b)
+			if err != nil {
+				log.Fatalf("port.Write: %v", err)
+			}
+
+			fmt.Println("Wrote", n, "bytes.")
+		} else {
+			options.PortName = nixie.FindArduino()
+			if options.PortName != "" {
+				foundNixie = true
+			}
+		}
 
 	})
 
