@@ -161,6 +161,13 @@ func init() {
 // Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
 func main() {
 	shairportInstalled = utils.CheckShairportSyncInstalled()
+	if shairportInstalled {
+		shairportstart := exec.Command("/usr/local/bin/shairport-sync", "-d")
+		shairportstarterror := shairportkill.Run()
+		if shairportstarterror != nil {
+			fmt.Println("Could not start shairport-sync daemon")
+		}
+	}
 	options := serial.OpenOptions{
 		PortName:        nixie.FindArduino(),
 		BaudRate:        115200,
