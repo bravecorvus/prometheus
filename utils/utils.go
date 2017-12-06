@@ -262,7 +262,7 @@ func KillShairportSync() {
 			log.Fatalln(err)
 		}
 		str = b.String()
-
+		fmt.Println(str)
 		killshairport := exec.Command("kill", str)
 		killshairporterror := killshairport.Run()
 		if killshairporterror != nil {
