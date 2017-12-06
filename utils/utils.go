@@ -243,7 +243,7 @@ func CheckShairportRunning() bool {
 	str = b.String()
 	// doing ps grep | grep shairport | awk 'NR==1{print $NF}' will give the first process with the name shairport-sync
 	// If shairport-sync is indeed running, then there will be 2 rows: the first one will be the actual process (which will be named shairport-sync). the second process is the ps aux | grep .... process itself, and it will be named whatever value we passed to grep (in this cased, it will be named shairport)
-	if str == "shair" {
+	if strings.TrimSpace(str) == "shair" {
 		return false
 	} else {
 		return true
@@ -262,8 +262,7 @@ func KillShairportSync() {
 			log.Fatalln(err)
 		}
 		str = b.String()
-		fmt.Println(str)
-		killshairport := exec.Command("kill", str)
+		killshairport := exec.Command("kill", strings.TrimSpace(str))
 		killshairporterror := killshairport.Run()
 		if killshairporterror != nil {
 			fmt.Println("Could not kill shairport-sync")
