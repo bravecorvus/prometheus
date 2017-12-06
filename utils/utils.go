@@ -239,7 +239,6 @@ func CheckShairportSyncInstalled() bool {
 		stderr.String()
 		re := regexp.MustCompile("^Daemon already running on")
 		found := re.FindString(stderr.String())
-		fmt.Println(stderr.String())
 		if found == "" {
 			return false
 		} else {
