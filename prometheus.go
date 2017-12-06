@@ -161,6 +161,7 @@ func init() {
 // Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
 func main() {
 	shairportInstalled = utils.CheckShairportSyncInstalled()
+	fmt.Println("shairportSync status", shairportInstalled)
 	options := serial.OpenOptions{
 		PortName:        nixie.FindArduino(),
 		BaudRate:        115200,
