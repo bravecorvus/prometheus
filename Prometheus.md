@@ -12,6 +12,7 @@ If you want documentation, check out the [godocs](https://godoc.org/github.com/g
 - [utils](https://godoc.org/github.com/gilgameshskytrooper/prometheus/utils) is the package that contains all the utility functions used by Prometheus
 - [gpio](https://godoc.org/github.com/gilgameshskytrooper/prometheus/gpio) contains the specific functions used to execute GPIO.
 - [structs](https://godoc.org/github.com/gilgameshskytrooper/prometheus/structs) contains the structs used by Prometheus to store alarms and to unmarshal JSON files
+- [nixie](https://godoc.org/github.com/gilgameshskytrooper/prometheus/nixie) contains the code used to interact with the [Arduino nixie clock](https://gra-afch.com/product-category/shield-nixie-clock-for-arduino/). Specifically, the code implemented in [prometheus main package](https://github.com/gilgameshskytrooper/prometheus/blob/master/prometheus.go) sends the current time (using the Go time library) to the Arduino via serial USB.
 - [public](public/) contains all the static assets such as index.html, css, and javascript. The front-end functionality heavily utilizes [Vue.js](https://vuejs.org/) and I highly recommend it to anyone who is interested in a front-end framework.
 
 ## Installation
@@ -29,9 +30,9 @@ sudo apt install vlc-nox
 Then grab the latest executable.
 
 ```
-wget https://github.com/gilgameshskytrooper/prometheus/releases/download/2.0.2/prometheus.v2.0.2.zip
-unzip prometheus.v2.0.2.zip
-rm prometheus.v2.0.2.zip
+wget https://github.com/gilgameshskytrooper/prometheus/releases/download/v2.0.3/prometheus.v2.0.3.zip
+unzip prometheus.v2.0.3.zip
+rm prometheus.v2.0.3.zip
 ```
 
 ***the above link should be accurate, but check the [releases page](https://github.com/gilgameshskytrooper/prometheus/releases) to ensure that you are getting the most recent version***

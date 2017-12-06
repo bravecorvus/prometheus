@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+// Grabs the current time using the time library, and returns it as a string.
+// Important that the string is of length 6 because the Arduino sketch uses the substring() method to extract parts of the entire string and uses char like indexing to grab the relevant information
+// Hence, 1:2:3 will actually yield the string 010203
 func CurrentTimeAsString() string {
 	hour := time.Now().Hour()
 	minute := time.Now().Minute()
@@ -34,6 +37,8 @@ func CurrentTimeAsString() string {
 	return stringhour + stringminute + stringsecond
 }
 
+// Function to find the Arduino clock
+// Specifically, on my Raspberry Pi, the Arduino device is named "/dev/ttyACM0" in the Pi
 func FindArduino() string {
 	contents, _ := ioutil.ReadDir("/dev")
 
