@@ -225,6 +225,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -288,6 +289,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 				errrrror := playsound.Start()
@@ -365,6 +367,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -426,6 +429,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -502,6 +506,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -563,6 +568,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -640,6 +646,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
@@ -702,6 +709,7 @@ func main() {
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
 					}
+					time.Sleep(time.Second * 3)
 				}
 
 				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
