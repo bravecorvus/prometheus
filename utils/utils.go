@@ -16,7 +16,6 @@ import (
 	"time"
 
 	"github.com/gilgameshskytrooper/prometheus/structs"
-	"github.com/gilgameshskytrooper/prometheus/utils"
 )
 
 //Taking in the IP as a string as the argument, write the IP address to ./public/json/ip to use when the program is restarted
@@ -233,7 +232,7 @@ func WriteEmail(arg string) {
 
 func CheckShairportSyncInstalled() bool {
 	var b bytes.Buffer
-	if err := utils.Execute(&b,
+	if err := Execute(&b,
 		exec.Command("shairport-sync", "-v"),
 	); err != nil {
 		return false
