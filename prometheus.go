@@ -39,6 +39,7 @@ var Email string
 // Used to tell program whether or not shairport-sync program is installed or not
 // If it is installed, then the shairport-sync daemon has to be killed every time we want to play an alarm sound.
 var shairportInstalled bool
+var shairportStarted bool
 
 //Declare the name of the alarm sound stored in ./public/assets/sound_name.extension
 var Soundname string
@@ -160,9 +161,9 @@ func init() {
 // Runs the cron job (checking once a minute at exactly the point when second is 00) to check if the current time matches the user supplied alarm time configuration, and then runs the alarm if an enabled alarm matches the time
 // Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
 func main() {
-	shairportInstalled = utils.CheckShairportSyncInstalled()
+	shairportInstalled, shairportStarted = utils.CheckShairportSyncInstalled()
 	if shairportInstalled {
-		shairportstart := exec.Command("shairport-sync", "-d")
+		shairportstart := exec.Command("/usr/local/bin/shairport-sync", "-d")
 		shairportstarterror := shairportstart.Run()
 		if shairportstarterror != nil {
 			fmt.Println("Could not start shairport-sync daemon")
@@ -227,7 +228,7 @@ func main() {
 			if Alarm1.Sound && Alarm1.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -259,7 +260,7 @@ func main() {
 						}
 						breaktime = false
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -274,7 +275,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -291,7 +292,7 @@ func main() {
 			} else if Alarm1.Sound && !Alarm1.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -312,7 +313,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -326,7 +327,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -369,7 +370,7 @@ func main() {
 			if Alarm2.Sound && Alarm2.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -399,7 +400,7 @@ func main() {
 						}
 						breaktime = false
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -414,7 +415,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -431,7 +432,7 @@ func main() {
 			} else if Alarm2.Sound && !Alarm2.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -452,7 +453,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -466,7 +467,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -508,7 +509,7 @@ func main() {
 			if Alarm3.Sound && Alarm3.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -538,7 +539,7 @@ func main() {
 						}
 						breaktime = false
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -553,7 +554,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -570,7 +571,7 @@ func main() {
 			} else if Alarm3.Sound && !Alarm3.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -592,7 +593,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -606,7 +607,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -648,7 +649,7 @@ func main() {
 			if Alarm4.Sound && Alarm4.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -679,7 +680,7 @@ func main() {
 						}
 						breaktime = false
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -694,7 +695,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -711,7 +712,7 @@ func main() {
 			} else if Alarm4.Sound && !Alarm4.Vibration {
 
 				if shairportInstalled {
-					shairportkill := exec.Command("shairport-sync", "-k")
+					shairportkill := exec.Command("/usr/local/bin/shairport-sync", "-k")
 					shairportkillerror := shairportkill.Run()
 					if shairportkillerror != nil {
 						fmt.Println("Could not kill shairport-sync daemon")
@@ -732,7 +733,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")
@@ -746,7 +747,7 @@ func main() {
 							fmt.Println("ERRRRRROR")
 						}
 						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
+							shairportdaemon := exec.Command("/usr/local/bin/shairport-sync", "-d")
 							shairportdaemonerror := shairportdaemon.Run()
 							if shairportdaemonerror != nil {
 								fmt.Println("Could not start shairport-sync daemon")

@@ -230,7 +230,7 @@ func WriteEmail(arg string) {
 
 }
 
-func CheckShairportSyncInstalled() bool {
+func CheckShairportSyncInstalled() (bool, bool) {
 	cmd := exec.Command("shairport-sync", "-v")
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
@@ -240,10 +240,10 @@ func CheckShairportSyncInstalled() bool {
 		re := regexp.MustCompile("^Daemon already running on")
 		found := re.FindString(stderr.String())
 		if found == "" {
-			return false
+			return false, false
 		} else {
-			return true
+			return true, true
 		}
 	}
-	return true
+	return true, false
 }
