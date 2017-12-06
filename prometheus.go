@@ -188,8 +188,6 @@ func main() {
 				log.Fatalf("port.Write: %v", err)
 			}
 
-			fmt.Println("Wrote", n, "bytes.")
-			time.Sleep(time.Second * 10)
 			b = []byte("1111111")
 			n, err = port.Write(b)
 			if err != nil {
