@@ -190,6 +190,8 @@ func main() {
 			options.PortName = nixie.FindArduino()
 			if options.PortName != "" {
 				foundNixie = true
+			} else {
+				foundNixie = false
 			}
 		}
 
