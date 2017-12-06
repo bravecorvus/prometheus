@@ -230,7 +230,28 @@ func WriteEmail(arg string) {
 
 }
 
+func KillShairportSync() {
+	var b bytes.Buffer
+	var str string
+	if err := Execute(&b,
+		exec.Command("ps", "aux"),
+		exec.Command("grep", "shairport"),
+		exec.Command("awk", "NR==1{print $2}"),
+	); err != nil {
+		log.Fatalln(err)
+	}
+	str = b.String()
+	killshairport := exec.Command("kill", str)
+	killshairporterror := killshairport.Run()
+	if killshairporterror != nil {
+		fmt.Println("Could not kill shairport-sync")
+		go RestartNetwork()
+	}
+
+}
+
 func CheckShairportSyncInstalled() (bool, bool) {
+	fmt.Println("beginning of CheckShairportSyncInstalled")
 	cmd := exec.Command("shairport-sync", "-v")
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
@@ -239,6 +260,7 @@ func CheckShairportSyncInstalled() (bool, bool) {
 		stderr.String()
 		re := regexp.MustCompile("^Daemon already running on")
 		found := re.FindString(stderr.String())
+		fmt.Println("End of CheckShairportSyncInstalled")
 		if found == "" {
 			return false, false
 		} else {
