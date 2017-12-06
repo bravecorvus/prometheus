@@ -230,42 +230,59 @@ func WriteEmail(arg string) {
 
 }
 
-func KillShairportSync() {
+func CheckShairportRunning() bool {
 	var b bytes.Buffer
 	var str string
 	if err := Execute(&b,
 		exec.Command("ps", "aux"),
 		exec.Command("grep", "shairport"),
-		exec.Command("awk", "NR==1{print $2}"),
+		exec.Command("awk", "NR==1{print $NF}"),
 	); err != nil {
 		log.Fatalln(err)
 	}
 	str = b.String()
-	killshairport := exec.Command("kill", str)
-	killshairporterror := killshairport.Run()
-	if killshairporterror != nil {
-		fmt.Println("Could not kill shairport-sync")
-		go RestartNetwork()
+	// doing ps grep | grep shairport | awk 'NR==1{print $NF}' will give the first process with the name shairport-sync
+	// If shairport-sync is indeed running, then there will be 2 rows: the first one will be the actual process (which will be named shairport-sync). the second process is the ps aux | grep .... process itself, and it will be named whatever value we passed to grep (in this cased, it will be named shairport)
+	if str == "shair" {
+		return false
+	} else {
+		return true
 	}
-
 }
 
-func CheckShairportSyncInstalled() (bool, bool) {
-	fmt.Println("beginning of CheckShairportSyncInstalled")
-	cmd := exec.Command("shairport-sync", "-v")
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-	err := cmd.Run()
-	if err != nil {
-		stderr.String()
-		re := regexp.MustCompile("^Daemon already running on")
-		found := re.FindString(stderr.String())
-		fmt.Println("End of CheckShairportSyncInstalled")
-		if found == "" {
-			return false, false
-		} else {
-			return true, true
+func KillShairportSync() {
+	if CheckShairportRunning() {
+		var b bytes.Buffer
+		var str string
+		if err := Execute(&b,
+			exec.Command("ps", "aux"),
+			exec.Command("grep", "shairport"),
+			exec.Command("awk", "NR==1{print $2}"),
+		); err != nil {
+			log.Fatalln(err)
+		}
+		str = b.String()
+
+		killshairport := exec.Command("kill", str)
+		killshairporterror := killshairport.Run()
+		if killshairporterror != nil {
+			fmt.Println("Could not kill shairport-sync")
 		}
 	}
-	return true, false
+}
+
+func CheckShairportSyncInstalled() bool {
+	fmt.Println("beginning of CheckShairportSyncInstalled")
+	cmd := exec.Command("which", "shairport-sync")
+	var stdout bytes.Buffer
+	cmd.Stdout = &stdout
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println("which shairport-sync command failed")
+	}
+	if stdout.String() == "" {
+		return false
+	} else {
+		return true
+	}
 }
