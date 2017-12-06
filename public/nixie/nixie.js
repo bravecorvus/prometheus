@@ -230,40 +230,40 @@ function NixieClock()
 
     var h = d.getHours();
     if (h == 0) {
-      h = 12
+      h = 12;
     }
-    if (h == 13) {
-      h = 1
+    else if (h == 13) {
+      h = 1;
     }
-    if (h == 14) {
-      h = 2
+    else if (h == 14) {
+      h = 2;
     }
-    if (h == 15) {
-      h = 3
+    else if (h == 15) {
+      h = 3;
     }
-    if (h == 16) {
-      h = 4
+    else if (h == 16) {
+      h = 4;
     }
-    if (h == 17) {
-      h = 5
+    else if (h == 17) {
+      h = 5;
     }
-    if (h == 18) {
-      h = 6
+    else if (h == 18) {
+      h = 6;
     }
-    if (h == 19) {
-      h = 7
+    else if (h == 19) {
+      h = 7;
     }
-    if (h == 20) {
-      h = 8
+    else if (h == 20) {
+      h = 8;
     }
-    if (h == 21) {
-      h = 9
+    else if (h == 21) {
+      h = 9;
     }
-    if (h == 22) {
-      h = 10
+    else if (h == 22) {
+      h = 10;
     }
-    if (h == 23) {
-      h = 11
+    else if (h == 23) {
+      h = 11;
     }
     var m = d.getMinutes();
 
