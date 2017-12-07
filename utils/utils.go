@@ -23,7 +23,7 @@ func WriteIP(arg string) {
 	writebuf := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/ip", writebuf, 0644)
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println("ERROR WriteIP()")
 	}
 }
 
@@ -106,7 +106,7 @@ func GetIP() string {
 	str = b.String()
 	regex, err := regexp.Compile("\n")
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println("ERROR GetIP()")
 	}
 	str = regex.ReplaceAllString(str, "")
 	return strings.TrimSpace(str)
@@ -116,7 +116,7 @@ func GetIP() string {
 func GetIPFromFile() string {
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/ip")
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println("ERROR GetIPFromFile()")
 	}
 	lines := strings.Split(string(content), "\n")
 	return lines[0]
@@ -125,7 +125,7 @@ func GetIPFromFile() string {
 func UseCustomSoundCard() bool {
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/customsoundcard")
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println("ERROR UseCustomSoundCard()")
 	}
 	lines := strings.Split(string(content), "\n")
 	if lines[0] == "true" {
@@ -139,7 +139,7 @@ func UseCustomSoundCard() bool {
 func GetEnableEmail() bool {
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/enableemail")
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println("ERROR GetEnableEmail()")
 	}
 	lines := strings.Split(string(content), "\n")
 	if lines[0] == "True" {
@@ -153,7 +153,7 @@ func GetEnableEmail() bool {
 func GetEmail() string {
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/email")
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println("ERROR GetEmail()")
 	}
 	lines := strings.Split(string(content), "\n")
 	return (lines[0])
@@ -303,7 +303,7 @@ func WriteCustomSoundCard(arg string) {
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/customsoundcard", content, 0644)
 	if err != nil {
-		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/customsoundcard")
+		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/customsoundcard"
 		os.Exit(1)
 	}
 
