@@ -122,6 +122,19 @@ func GetIPFromFile() string {
 	return lines[0]
 }
 
+func UseCustomSoundCard() bool {
+	content, err := ioutil.ReadFile(Pwd() + "/public/json/customsoundcard")
+	if err != nil {
+		fmt.Println("ERROR")
+	}
+	lines := strings.Split(string(content), "\n")
+	if lines[0] == "true" {
+		return true
+	} else {
+		return false
+	}
+}
+
 // GetEnableEmail reads the user preference of whether or not they want to be emailed when Prometheus detects a change in IP.
 func GetEnableEmail() bool {
 	content, err := ioutil.ReadFile(Pwd() + "/public/json/enableemail")

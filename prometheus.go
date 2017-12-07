@@ -36,6 +36,7 @@ var (
 	shairportInstalled bool
 	shairportStarted   bool
 	Soundname          string
+	CustomSoundCard    bool
 )
 
 //Create 4 Alarm objects using structs.Alarm{} struct
@@ -169,6 +170,7 @@ func init() {
 	}
 	Email = utils.GetEmail()
 	EnableEmail = utils.GetEnableEmail()
+	CustomSoundCard = utils.UseCustomSoundCard()
 }
 
 // Main function
@@ -248,57 +250,111 @@ func main() {
 					utils.KillShairportSync()
 				}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
-				}
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
 
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !Alarm1.CurrentlyRunning {
-							breaktime = true
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm1.CurrentlyRunning {
+								breaktime = true
+								break
+							}
+						}
+						if breaktime {
+
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
 							break
+						} else if OverTenMinutes(Alarm1.Alarmtime) {
+							Alarm1.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
 						}
-					}
-					if breaktime {
 
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						breaktime = false
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
+					}
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm1.CurrentlyRunning {
+								breaktime = true
+								break
 							}
 						}
-						break
-					} else if OverTenMinutes(Alarm1.Alarmtime) {
-						Alarm1.CurrentlyRunning = false
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
+						if breaktime {
 
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm1.Alarmtime) {
+							Alarm1.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
+						}
+
+					}
 				}
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
@@ -306,41 +362,79 @@ func main() {
 				if shairportInstalled {
 					utils.KillShairportSync()
 				}
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
-				}
-
-				for {
-					time.Sleep(time.Second * 1)
-					if !Alarm1.CurrentlyRunning {
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm1.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
 							}
-						}
-						break
-					} else if OverTenMinutes(Alarm1.Alarmtime) {
-						Alarm1.CurrentlyRunning = false
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
 							}
+							break
+						} else if OverTenMinutes(Alarm1.Alarmtime) {
+							Alarm1.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
 						}
-						break
+					}
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm1.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm1.Alarmtime) {
+							Alarm1.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						}
 					}
 				}
 
@@ -380,55 +474,109 @@ func main() {
 					utils.KillShairportSync()
 				}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
-				}
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !Alarm2.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						breaktime = false
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					} else if OverTenMinutes(Alarm2.Alarmtime) {
-						Alarm2.CurrentlyRunning = false
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
 					}
 
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm2.CurrentlyRunning {
+								breaktime = true
+								break
+							}
+						}
+						if breaktime {
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm2.Alarmtime) {
+							Alarm2.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
+						}
+
+					}
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm2.CurrentlyRunning {
+								breaktime = true
+								break
+							}
+						}
+						if breaktime {
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm2.Alarmtime) {
+							Alarm2.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
+						}
+
+					}
 				}
 
 			} else if Alarm2.Sound && !Alarm2.Vibration {
@@ -437,42 +585,84 @@ func main() {
 					utils.KillShairportSync()
 				}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
-				}
-				for {
-					time.Sleep(time.Second * 1)
-					if !Alarm2.CurrentlyRunning {
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm2.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
 							}
-						}
-						break
-					} else if OverTenMinutes(Alarm2.Alarmtime) {
-						Alarm2.CurrentlyRunning = false
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
 							}
+							break
+						} else if OverTenMinutes(Alarm2.Alarmtime) {
+							Alarm2.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
 						}
-						break
+					}
+
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm2.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm2.Alarmtime) {
+							Alarm2.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						}
 					}
 				}
+
 			} else if !Alarm2.Sound && Alarm2.Vibration {
 				for {
 					gpio.VibOn()
@@ -509,55 +699,110 @@ func main() {
 					utils.KillShairportSync()
 				}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
-				}
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !Alarm3.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						breaktime = false
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					} else if OverTenMinutes(Alarm3.Alarmtime) {
-						Alarm3.CurrentlyRunning = false
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
 					}
 
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm3.CurrentlyRunning {
+								breaktime = true
+								break
+							}
+						}
+						if breaktime {
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm3.Alarmtime) {
+							Alarm3.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
+						}
+
+					}
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm3.CurrentlyRunning {
+								breaktime = true
+								break
+							}
+						}
+						if breaktime {
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm3.Alarmtime) {
+							Alarm3.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
+						}
+
+					}
 				}
 
 			} else if Alarm3.Sound && !Alarm3.Vibration {
@@ -566,43 +811,86 @@ func main() {
 					utils.KillShairportSync()
 				}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm3.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm3.Alarmtime) {
+							Alarm3.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						}
+					}
+
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm3.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm3.Alarmtime) {
+							Alarm3.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						}
+					}
+
 				}
 
-				for {
-					time.Sleep(time.Second * 1)
-					if !Alarm3.CurrentlyRunning {
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					} else if OverTenMinutes(Alarm3.Alarmtime) {
-						Alarm3.CurrentlyRunning = false
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					}
-				}
 			} else if !Alarm3.Sound && Alarm3.Vibration {
 				for {
 					gpio.VibOn()
@@ -639,54 +927,110 @@ func main() {
 					utils.KillShairportSync()
 				}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
-				}
-
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !Alarm4.CurrentlyRunning {
-							breaktime = true
-							break
-						}
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
 					}
-					if breaktime {
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						breaktime = false
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
+
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm4.CurrentlyRunning {
+								breaktime = true
+								break
 							}
 						}
-						break
-					} else if OverTenMinutes(Alarm4.Alarmtime) {
-						Alarm4.CurrentlyRunning = false
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
+						if breaktime {
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm4.Alarmtime) {
+							Alarm4.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
 						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
+
+					}
+
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+
+					for {
+						gpio.VibOn()
+						for i := 1; i <= 50; i++ {
+							time.Sleep(time.Millisecond * 50)
+							if !Alarm4.CurrentlyRunning {
+								breaktime = true
+								break
 							}
 						}
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
+						if breaktime {
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							breaktime = false
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm4.Alarmtime) {
+							Alarm4.CurrentlyRunning = false
+							gpio.VibOff()
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else {
+							gpio.VibOff()
+							time.Sleep(duration)
+						}
+
 					}
 
 				}
@@ -697,42 +1041,86 @@ func main() {
 					utils.KillShairportSync()
 				}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
-				errrrror := playsound.Start()
-				if errrrror != nil {
-					fmt.Println("ERRRRRROR")
-				}
-				for {
-					time.Sleep(time.Second * 1)
-					if !Alarm4.CurrentlyRunning {
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
-					} else if OverTenMinutes(Alarm4.Alarmtime) {
-						Alarm4.CurrentlyRunning = false
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println("ERRRRRROR")
-						}
-						if shairportInstalled {
-							shairportdaemon := exec.Command("shairport-sync", "-d")
-							shairportdaemonerror := shairportdaemon.Run()
-							if shairportdaemonerror != nil {
-								fmt.Println("Could not start shairport-sync daemon")
-							}
-						}
-						break
+				if CustomSoundCard {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
 					}
+
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm4.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm4.Alarmtime) {
+							Alarm4.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						}
+					}
+
+				} else {
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
+					errrrror := playsound.Start()
+					if errrrror != nil {
+						fmt.Println("ERRRRRROR")
+					}
+
+					for {
+						time.Sleep(time.Second * 1)
+						if !Alarm4.CurrentlyRunning {
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						} else if OverTenMinutes(Alarm4.Alarmtime) {
+							Alarm4.CurrentlyRunning = false
+							errrrrorkill := playsound.Process.Kill()
+							if errrrrorkill != nil {
+								fmt.Println("ERRRRRROR")
+							}
+							if shairportInstalled {
+								shairportdaemon := exec.Command("shairport-sync", "-d")
+								shairportdaemonerror := shairportdaemon.Run()
+								if shairportdaemonerror != nil {
+									fmt.Println("Could not start shairport-sync daemon")
+								}
+							}
+							break
+						}
+					}
+
 				}
+
 			} else if !Alarm4.Sound && Alarm4.Vibration {
 				for {
 					gpio.VibOn()
