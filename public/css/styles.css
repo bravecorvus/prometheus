@@ -213,6 +213,7 @@ a:hover{
 }
 
 section, footer, header, aside, nav{
+    text-align: center !important;
     display: block;
 }
 
@@ -253,13 +254,11 @@ nav a:first-child{
 
 nav a:last-child{
     border-radius:0 2px 2px 0;
-    text-align: center !important;
 }
 
 nav.home .home,
 nav.settings .settings,
 nav.about .about{
-    text-align: center !important;
     color: !important;
 }
 
