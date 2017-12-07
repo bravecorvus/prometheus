@@ -200,7 +200,7 @@ hr {
     padding:0;
 }
 
-body{
+#home, #settings, #about{
     font:15px/1.3;
     color: #5e5b64;
 }
@@ -258,12 +258,6 @@ nav.home .home,
 nav.settings .settings,
 nav.about .about{
     color:#969696 !important;
-}
-
-p{
-    font-size:22px;
-    font-weight:bold;
-    color:#7d9098;
 }
 
 p b{
