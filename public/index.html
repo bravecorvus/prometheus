@@ -349,9 +349,9 @@
                     $.get('../json/customsoundcard')
                         .done( data => {
                             if (data.replace(/\n/g, '') == "true") {
-                                this.enableemail = true;
+                                this.customsoundcard = true;
                             } else {
-                                this.enableemail = false;
+                                this.customsoundcard = false;
                             }
                     });
 
