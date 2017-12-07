@@ -221,6 +221,7 @@ section, footer, header, aside, nav{
 --------------------------*/
 
 nav{
+    text-align: center;
     display:inline-block;
     margin:60px auto 45px;
     background-color:#000000;
@@ -255,7 +256,7 @@ nav a:last-child{
 nav.home .home,
 nav.settings .settings,
 nav.about .about{
-    color:#969696 !important;
+    color: !important;
 }
 
 p b{
