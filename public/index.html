@@ -34,6 +34,11 @@
             <br>
             <br>
             <br>
+
+
+            <input :value="enableemail" v-if="enableemail==true" @click="submitenableemail()" type="checkbox" /checked>
+
+            <div id="homecontent" v-if="active=='home'">
             <div id="main" >
 
                 <div id="leftside">
@@ -105,9 +110,12 @@
                     </div><!--alarm.name-->
 
                 </div><!--rightside-->
+
+            </div><!--homecontent-->
             </div><!--main-->
 
-            <br>
+            <div v-else-if="active=='settings'" id="settingscontent">
+
             <div id="afterclock">
 
                 <div id="afterclockleft">
@@ -168,6 +176,13 @@
 
                 </div> <!--id="afterclockright"-->
             </div><!--afterclock-->
+
+        </div><!--settingscontent-->
+
+        <div v-else-if="active=='about'" id="aboutcontent">
+            <img src="">
+        </div><!--aboutcontent-->
+
         </div><!--app-->
 
         <script>
