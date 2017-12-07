@@ -248,10 +248,12 @@ nav a{
 
 nav a:first-child{
     border-radius:2px 0 0 2px;
+    text-align: center !important;
 }
 
 nav a:last-child{
     border-radius:0 2px 2px 0;
+    text-align: center !important;
 }
 
 nav.home .home,
