@@ -243,6 +243,7 @@ func WriteEmail(arg string) {
 
 }
 
+// Checks to see if there is a running instance of shairport-sync
 func CheckShairportRunning() bool {
 	var b bytes.Buffer
 	var str string
@@ -263,6 +264,7 @@ func CheckShairportRunning() bool {
 	}
 }
 
+// Function that kills a running instance of shairport-sync if it is running
 func KillShairportSync() {
 	if CheckShairportRunning() {
 		var b bytes.Buffer
@@ -275,7 +277,6 @@ func KillShairportSync() {
 			log.Fatalln(err)
 		}
 		str = b.String()
-		fmt.Println("kill id", strings.TrimSpace(str))
 		killshairport := exec.Command("kill", strings.TrimSpace(str))
 		killshairporterror := killshairport.Run()
 		if killshairporterror != nil {
@@ -284,6 +285,7 @@ func KillShairportSync() {
 	}
 }
 
+// Function which checks whether shairport-sync is installed on the system
 func CheckShairportSyncInstalled() bool {
 	cmd := exec.Command("which", "shairport-sync")
 	var stdout bytes.Buffer
@@ -299,6 +301,7 @@ func CheckShairportSyncInstalled() bool {
 	}
 }
 
+// Function that writes persistent data about whether or not to use the custom cvlc commands (if you are using a custom soundcard, you probably do not want to use alsa instead of the default pulse audio)
 func WriteCustomSoundCard(arg string) {
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/customsoundcard", content, 0644)
@@ -306,5 +309,4 @@ func WriteCustomSoundCard(arg string) {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/customsoundcard")
 		os.Exit(1)
 	}
-
 }

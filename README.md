@@ -15,7 +15,7 @@
 | ------------- | ----------------------------------------------------------------------------------------- |
 | [assets/](assets/)  | Content related the the aesthetic presentation of this project such as images  |
 | [assets/hberg32/](assets/hberg32)  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project  |
-| [archive/expressnode-python3](archive/expressnode-python3)  | Where all the original implementation based on [Python3](https://www.python.org/) and [Node](https://nodejs.org/en/) is stored |
+| [archive/expressnode-python3](archive/expressnode-python3)  | Where all the original implementation based on [Python3](https://www.python.org/) and [Node](https://nodejs.org/en/) is stored. Depreciated and super unstable so I recommend you just leave this implementation be.|
 
 Prometheus is the clock that does everything. The 3 main things I want to integrate in this project are:
 

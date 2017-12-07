@@ -25,39 +25,27 @@ import (
 )
 
 var (
-	//Create 4 Alarm objects using structs.Alarm{} struct
-	Alarm1             = structs.Alarm{}
-	Alarm2             = structs.Alarm{}
-	Alarm3             = structs.Alarm{}
-	Alarm4             = structs.Alarm{}
-	foundNixie         bool
-	EnableEmail        bool
-	Email              string
+	//Alarm object from the structs.Alarm{} struct
+	Alarm1 = structs.Alarm{}
+	//Alarm object from the structs.Alarm{} struct
+	Alarm2 = structs.Alarm{}
+	//Alarm object from the structs.Alarm{} struct
+	Alarm3 = structs.Alarm{}
+	//Alarm object from the structs.Alarm{} struct
+	Alarm4 = structs.Alarm{}
+	// Bool to check if the Nixie Clock was found.
+	foundNixie bool
+	// Bool to keep track of whether the user wants to receive emails when the Pi's IP changes.
+	// (If using DDNS, this is not necessary as the DDNS client will automatically update the relevant IP, and it will always be reachable with the same command)
+	EnableEmail bool
+	// The email address to send the IP change notification email to
+	Email string
+	// Bool to keep track of whether shairport-sync is installed
 	shairportInstalled bool
-	shairportStarted   bool
-	Soundname          string
-	CustomSoundCard    bool
+	// Alarm sound filename
+	Soundname       string
+	CustomSoundCard bool
 )
-
-//Create 4 Alarm objects using structs.Alarm{} struct
-// var Alarm1 = structs.Alarm{}
-// var Alarm2 = structs.Alarm{}
-// var Alarm3 = structs.Alarm{}
-// var Alarm4 = structs.Alarm{}
-
-// Variable to see whether the program was able to find the nixie clock. Used to see if the function to write time to Serial USB needs to be run.
-// var foundNixie bool
-//
-// var EnableEmail bool
-// var Email string
-
-// Used to tell program whether or not shairport-sync program is installed or not
-// If it is installed, then the shairport-sync daemon has to be killed every time we want to play an alarm sound.
-// var shairportInstalled bool
-// var shairportStarted bool
-
-//Declare the name of the alarm sound stored in ./public/assets/sound_name.extension
-// var Soundname string
 
 //General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
 func Errhandler(err error) {
@@ -146,7 +134,6 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 // 3. Grab the name of the current sound file via an "ls" shell command, and save it to the global variable Sound, and then write that information into ./public/json/trackinfo
 // 4. Get the email of user to be used in the CheckIPChange() function
 // 5. Get the persistent data of whether or not the user wants Prometheus to send emails when the IP changes. (Note, this is probably alot easier done through a dynamic DNS service which runs a background program to constanty check the IP of the Pi, updates a domain name server, and then you can access that as a link such as myclockname.ddns.net:3000
-
 func init() {
 	//Save the JSON alarms configurations into the mold
 	jsondata := structs.GetRawJson(utils.Pwd() + "/public/json/alarms.json")
@@ -175,8 +162,10 @@ func init() {
 
 // Main function
 // Runs the cron job (checking once a minute at exactly the point when second is 00) to check if the current time matches the user supplied alarm time configuration, and then runs the alarm if an enabled alarm matches the time
+// Runs a separate cron job (once every second) to send the current time as a string to the Nixie Clock through serial USB
 // Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
 func main() {
+
 	// Ensure any previous incarnations of shairport-sync gets killed.
 	// if no previous process exists, KillShairportSync() automatically handles this.
 	utils.KillShairportSync()
@@ -210,6 +199,7 @@ func main() {
 	currenttime := t.Format("15:04")
 	c := cron.New()
 
+	// Send relevant time clock over serial USB
 	c.AddFunc("@every 1s", func() {
 		if foundNixie {
 			b := []byte(nixie.CurrentTimeAsString())

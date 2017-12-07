@@ -15,7 +15,7 @@ If you want documentation, check out the [godocs](https://godoc.org/github.com/g
 - [nixie](https://godoc.org/github.com/gilgameshskytrooper/prometheus/nixie) contains the code used to interact with the [Arduino nixie clock](https://gra-afch.com/product-category/shield-nixie-clock-for-arduino/). Specifically, the code implemented in [prometheus main package](https://github.com/gilgameshskytrooper/prometheus/blob/master/prometheus.go) sends the current time (using the Go time library) to the Arduino via serial USB.
 - [public](public/) contains all the static assets such as index.html, css, and javascript. The front-end functionality heavily utilizes [Vue.js](https://vuejs.org/) and I highly recommend it to anyone who is interested in a front-end framework.
 
-## Installation
+## Software Installation
 
 ### Install Released Binary
 
@@ -27,12 +27,20 @@ First, you need VLC which prometheus uses to play sound files.
 sudo apt install vlc-nox
 ```
 
+However, since you are using the command `cvlc` from `rc.local`, you will also need to enable root to be able to execute it (since by default, VLC does not allow the root use to start the app)
+```
+sudo apt install bless
+sudo bless $(which cvlc)
+sed -i 's/geteuid/getppid/' $(which cvlc)
+```
+
+
 Then grab the latest executable.
 
 ```
-wget https://github.com/gilgameshskytrooper/prometheus/releases/download/v2.0.3/prometheus.v2.0.3.zip
-unzip prometheus.v2.0.3.zip
-rm prometheus.v2.0.3.zip
+wget https://github.com/gilgameshskytrooper/prometheus/releases/download/v2.1.0/prometheus.v2.1.0.zip
+unzip prometheus.v2.1.0.zip
+rm prometheus.v2.1.0.zip
 ```
 
 ***the above link should be accurate, but check the [releases page](https://github.com/gilgameshskytrooper/prometheus/releases) to ensure that you are getting the most recent version***
@@ -97,18 +105,25 @@ go build
 ```
 
 
-Add program to rc.local so it gets automatically run every time you restart your Pi.
+To start the program at boot, you need add the following line to `/etc/rc.local`
 ```
-/home/pi/prometheus/prometheus &
+cd $GOPATH/src/github.com/gilgameshskytrooper/prometheus/prometheus &
 ```
 
-Then, you just have to build the program. Then connect the relevant wires and you are good to go (More of that on our [Wiki](https://github.com/gilgameshskytrooper/Prometheus/wiki/Hardware-Set-Up))
+Then you will need to ensure root can execute the `cvlc` command (since by default, VLC does not allow the root use to start the app).
+```
+sudo apt install bless
+sudo bless $(which cvlc)
+sed -i 's/geteuid/getppid/' $(which cvlc)
+```
 
 
 ## Sound
-To get good sound, you will need to output the sound through a external sound card. Both USB solutions and the built in TRS connector are terrible in sound. However, if this is sufficient for your needs, you can skip this section.
+To get good sound, you will need to output the sound through a external sound card. The built-in TRS connector are terrible in sound. However, if this is sufficient for your needs, you can skip this section.
 
-I don't remember the specific steps to get Pi to output sound through the USB, but I believe you just need to create a file via
+You need to set up `~/.asoundrc` to read your card.
+
+For USB, it might look like the following.
 
 ```
 vi ~/.asoundrc
@@ -123,6 +138,21 @@ ctl.!default {
     card 1
 }
 ```
+
+For a custom sound card, it might look like the following:
+
+```
+pcm.!default {
+	type hw card 0
+}
+ctl.!default {
+	type hw card 0
+}
+```
+
+## [Hardware Installation](Quickstart.md#HardwareStuff)
+
+Note, if you opt to use a custom card, just change the setting in the bottom right hand corner of the front-end user interface.
 
 ## Initial Start
 At program start, you will receive an automatic email notifying you of an IP change since this is a stored value, at [public/json/ip](public/json/ip). Once your IP gets stored, then it will only notify you when it changes. Change whether or not you want Prometheus to send you emails regarding changes to your IP in the front-end interface as well as the email you want to receive notifications on.

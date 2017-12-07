@@ -1,6 +1,6 @@
 # I Just Want to Get This Up and Running
 
-If this is you, then this section will describe the minimum number of steps to get this up and running (I suggest against this since my setup is pretty specific to my needs.
+If this is you, then this section will describe the minimum number of steps to get this up and running (I suggest against this since my setup is pretty specific to my needs. The program has been tested extensively on Raspberry Pi 3B, but it might work on other Pi, or Pi-alike devices (either as is, or potentially with some modifications).
 
 ## Software Stuff
 
@@ -18,7 +18,7 @@ rm prometheus.v2.0.3.zip
 $sudo apt install vlc-nox
 ```
 
-2. If you want the program to run on boot, add the executable command in `rc.local`
+3. If you want the program to run on boot, add the executable command in `rc.local`
 
 ```
 $vi rc.local
@@ -28,7 +28,14 @@ $vi rc.local
 [PATH_TO_PROMETHEUS]/prometheus &
 ```
 
-If you want a more manual solution, I would suggest opening a tmux window (so that the program persists even when you exit ssh) or opening a VNC session and running it in a terminal in the GUI. (If you run the program in regular terminal, it will close the moment you exit ssh)
+4. Then, you need to make sure root can execute cvlc (since VLC disables root by default)
+```
+sudo apt install bless
+sudo bless $(which cvlc)
+sed -i 's/geteuid/getppid/' $(which cvlc)
+```
+
+If you want a more manual solution, I would suggest running the program in a tmux window (so that the program persists even when you exit ssh) or opening a VNC session and running it in a terminal in the GUI. (If you run the program in regular terminal, it will close the program when you close the ssh connection)
 
 ## Hardware Stuff
 This part is specific to the hardware you will connect, but here I will share the setup assuming you are using the same setup as me. (e.g. you already own a bed vibrator that runs 12V @ 0.5A and center pin positive, you have a separate power source that is 12V @1+A, and a sound system)
@@ -60,7 +67,7 @@ Enable 1, 2 Driver Channels      [1   u   16]  Chip Power (5V)
                   Driver Input 2 [7       10] Driver Input 3
                Motor Power (12V) [8        9] Enable 3, 4 Driver Channels
 ```
-
+**The "u" in the center top signifies the divit you see on the chip to differentiate top from bottom**
 source: [TexasInstruments](http://www.ti.com/lit/ds/symlink/l293.pdf)
 
 Where the u at the top center represents the divet in the chip to show which side is up. We only need to use one side of the chip.
@@ -84,12 +91,19 @@ However, since we are not running a stepper motor, and we only want "center pin 
 Input 1 = True | Input 2 = False | then Enable 1, 2 = True.
 ```
 
-Furthermore, after looking at many tutorials, I could not figure out why my circuit was not working, and I realized that I had to ground 12 and 13  as well as 4 and 5 since the Chip's 5V also needed to ground somewhere.
+The main program was programmed with the these 3 GPIO logical pins in mind:
+
+![schematic](assets/l293layout.jpg)
+If you want to use different pins, you will have to [build from source](Prometheus.md#BuildFromSource) after you change the used pins in [utils.go](utils/utils.go)
 
 ### Sound
-To get good sound, you will need to output the sound through a external sound card. Both USB solutions and the built in TRS connector are terrible in sound. I am personally using the Hifiberry Digi Pro board. However, if this is sufficient for your needs, you can skip this section.
 
-I don't remember the specific steps to get Pi to output sound through the USB, but I believe you just need to create a file via
+To get good sound, you will need to output the sound through a external sound card. The built-in TRS connector are terrible in sound. However, if this is sufficient for your needs, you can skip this section.
+**Note, USB sound is OKAY, but since Raspberry USB and LAN share the same lane, this might be a bottleneck if you plan to stream music (like I am doing using [shairport-sync](https://github.com/mikebrady/shairport-sync))**
+
+You need to set up `~/.asoundrc` to read your card.
+
+For USB, it might look like the following.
 
 ```
 vi ~/.asoundrc
@@ -105,7 +119,18 @@ ctl.!default {
 }
 ```
 
-[:wq to Save and exit]
+For a custom sound card, it might look like the following:
+
+```
+pcm.!default {
+	type hw card 0
+}
+ctl.!default {
+	type hw card 0
+}
+```
+
+Note, if you opt to use a custom card, just change the setting in the bottom right hand corner of the front-end user interface. (If you are not using the exact set-up I'm using, then you will probably have to [build from source](Prometheus.md#BuildFromSource) after you go into the [prometheus.go](https://github.com/gilgameshskytrooper/prometheus/blob/master/prometheus.go) program and change the `cvlc` commands by hand with the relevant flags to execute and then.
 
 ### Access The Alarm Clock
 
@@ -124,8 +149,5 @@ Copy down the address that is listed as wlan0 inet addr. This address is how you
 Now, as long as you are same network (Or, if you are lucky enough to get your Pi a static IP, then you will be able to access it from anywhere you have network access), you can access the Web Interface through the site 111.11.111.111:3000 (replacing 111.11.111.111 with the value of IP).
 
 A built in part of the Prometheus program sends you an email whenever the IP of the Pi changes. You can turn off this feature in the front end interface, or change the email address you want to receive email on.
-
-
-
 
 ## Have Fun!
