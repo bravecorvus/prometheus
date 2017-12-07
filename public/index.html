@@ -143,10 +143,10 @@
 
                 <div id="afterclockright">
                     <br>
-                    <br>
                     <h3><em>Enable IP Change Email Notifications</em></h3>
                     <br>
                     <br>
+
                     <label class="switch">
                         <input :value="enableemail" v-if="enableemail==true" @click="submitenableemail()" type="checkbox" /checked>
                         <input :value="enableemail" v-else @click="submitenableemail()" type="checkbox">
@@ -189,7 +189,7 @@
         </div><!--settingscontent-->
 
         <div v-else-if="active=='about'" id="aboutcontent">
-            <img src="">
+            <!-- <img src=""> -->
         </div><!--aboutcontent-->
 
         </div><!--app-->
