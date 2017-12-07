@@ -201,8 +201,8 @@ hr {
 }
 
 #home, #settings, #about{
-    font:15px/1.3;
-    color: #5e5b64;
+    font:15px/1.3 !important;
+    color: #5e5b64 !important;
 }
 
 a, a:visited {
