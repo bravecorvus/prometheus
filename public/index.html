@@ -15,18 +15,17 @@
 
         <div id="app"> <!--Vue.js-->
 
-        <div id="pagetitle">
-            <p id="atomicclock">Prometheus Clock</p>
-            <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
-            <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
-        </div>
-
-
             <nav v-bind:class="active" v-on:click.prevent>
                 <a href="#" class="home" id="home" v-on:click="makeActive('home')">Home</a>
                 <a href="#" class="settings" id="settings" v-on:click="makeActive('settings')">Settings</a>
                 <a href="#" class="about" id="about" v-on:click="makeActive('about')">About</a>
             </nav>
+
+            <div id="pagetitle">
+                <p id="atomicclock">Prometheus Clock</p>
+                <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
+                <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
+            </div>
 
             <br>
             <br>
