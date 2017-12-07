@@ -303,7 +303,7 @@ func WriteCustomSoundCard(arg string) {
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/customsoundcard", content, 0644)
 	if err != nil {
-		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/customsoundcard"
+		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/customsoundcard")
 		os.Exit(1)
 	}
 
