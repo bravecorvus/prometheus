@@ -336,6 +336,9 @@
 
                 created() {
 
+                    var elem = document.getElementById(this.active);
+                    elem.setAttribute("style","color: #ffffff !important; text-decoration: underline");
+
                     $.ajaxSetup({ cache: false });
 
                     $.getJSON('../json/alarms.json')
