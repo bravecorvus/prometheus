@@ -94,7 +94,7 @@ Input 1 = True | Input 2 = False | then Enable 1, 2 = True.
 The main program was programmed with the these 3 GPIO logical pins in mind:
 
 ![schematic](assets/l293layout.jpg)
-If you want to use different pins, you will have to [build from source](Prometheus.md#BuildFromSource) after you change the used pins in [utils.go](utils/utils.go)
+If you want to use different pins, you will have to [build from source](Prometheus.md#build-from-source) after you change the used pins in [utils.go](utils/utils.go)
 
 ### Sound
 
@@ -130,7 +130,7 @@ ctl.!default {
 }
 ```
 
-Note, if you opt to use a custom card, just change the setting in the bottom right hand corner of the front-end user interface. (If you are not using the exact set-up I'm using, then you will probably have to [build from source](Prometheus.md#BuildFromSource) after you go into the [prometheus.go](https://github.com/gilgameshskytrooper/prometheus/blob/master/prometheus.go) program and change the `cvlc` commands by hand with the relevant flags to execute and then.
+Note, if you opt to use a custom card, just change the setting in the bottom right hand corner of the front-end user interface. (If you are not using the exact set-up I'm using, then you will probably have to [build from source](Prometheus.md#build-from-source) after you go into the [prometheus.go](https://github.com/gilgameshskytrooper/prometheus/blob/master/prometheus.go) program and change the `cvlc` commands by hand with the relevant flags to execute and then.
 
 ### Access The Alarm Clock
 

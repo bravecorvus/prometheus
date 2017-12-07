@@ -7,7 +7,9 @@
 This is a guide I put together in order to get my Raspberry Pi to work on my school's eduroam network.
 
 Just to make things easier,
-    sudo su
+ ```
+sudo su
+ ```
 (most of these commands will need root permissions)
 
 The default cat_installer shell script file did not install the correct profiles and I needed to execute this file, use the outputs, and manually configure the configuration files. I am compiling this information for anyone who is having trouble connecting a single-board computer to the St. Olaf Eduroam Network specifically, or your eduroam network.
@@ -23,7 +25,9 @@ https://www.stolaf.edu/files/it/eduroam/eduroam-linux-SOC.sh
 
 Go into that folder, and give the file execution permissions
 
-    chmod 777 eduroam-linux-SOC.sh
+```
+chmod 777 eduroam-linux-SOC.sh
+```
 
 ### Execute the Script (This will fail, but do not worry)
 
@@ -38,15 +42,19 @@ Make sure you click yes on the options asking if you want the script to generate
 
 Now the failed runthrough of the script generated the wpa_supplicant profile that we will need later.
 
-    cd /root/.cat_installer/
+```
+cd /root/.cat_installer/
+```
 
 You will see 2 files in there: ca.pem and cat_installer.conf. Copy these files into a directory of your choice that you will remember later. Basically, even the next step of successfully installing the eduroam profile will not allow you to connect to the internet since the script fails to change some key configuration files.
 
 Create a new directory in root called .cat_installer, and copy the ca.pem key file in there.
 
-    cd /root
-    mkdir .cat_installer
-    cp /path-to-ca.pem /root/.cat_installer/ca.pem
+```
+cd /root
+mkdir .cat_installer
+cp /path-to-ca.pem /root/.cat_installer/ca.pem
+```
 
 
 Next, we will do the successful installation of the network profile for eduroam
@@ -59,20 +67,24 @@ Next, we will do the successful installation of the network profile for eduroam
 
 Before doing anything, install the following utilities in your linux distribution (it will be used in the Shell ):
 
-    apt-get install dbus
-    apt-get install re
-    apt-get install uuid
-    apt-get install network-manager
+```
+apt-get install dbus
+apt-get install re
+apt-get install uuid
+apt-get install network-manager
+```
 
 ### Modify NetworkManager.conf So it is the Default Controller for Wifi
 
-   nano /etc/NetworkManager/NetworkManager.conf
+```
+nano /etc/NetworkManager/NetworkManager.conf
 
-   [main]
-   plugins=ifupdown.keyfile
+[main]
+plugins=ifupdown.keyfile
 
-   [ifupdown]
-   managed=true
+[ifupdown]
+managed=true
+```
 
 Where is sas "managed=false", replace with "managed=true"
 
@@ -88,13 +100,17 @@ Now open cat_installer.conf (that you backed up as the last step of the failed c
 
 open /etc/wpa_supplicant/wpa_supplicant.conf in an editor of your choice.
 
-    nano /etc/wpa_supplicant/wpa_supplicant.conf
+```
+nano /etc/wpa_supplicant/wpa_supplicant.conf
+```
 
 Leaving the top part as is
 
-    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-    update_config=1
-    country=US
+```
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+```
 
 remove the rest of the various network configurations
 
@@ -102,22 +118,24 @@ copy and paste the information stored in cat_installer.conf into the wpa_supplic
 
 Your final code should look something like this:
 
-    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-    update_config=1
-    country=US
+```
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
 
-    network={
-            ssid="eduroam"
-            key_mgmt=WPA-EAP
-            pairwise=CCMP
-            group=CCMP TKIP
-            eap=PEAP
-            identity="username@stolaf.edu"
-            password="PassWord"
-            ca_cert="/root/.cat_installer/ca.pem"
-            domain_suffix_match="ad.stolaf.edu"
-            phase2="auth=MSCHAPV2"
-    }
+network={
+        ssid="eduroam"
+        key_mgmt=WPA-EAP
+        pairwise=CCMP
+        group=CCMP TKIP
+        eap=PEAP
+        identity="username@stolaf.edu"
+        password="PassWord"
+        ca_cert="/root/.cat_installer/ca.pem"
+        domain_suffix_match="ad.stolaf.edu"
+        phase2="auth=MSCHAPV2"
+}
+```
 
 And save the information.
 
@@ -125,7 +143,9 @@ And save the information.
 
 Next, open /etc/network/interfaces on your favorite code editor.
 
-    nano /etc/network/interfaces
+```
+nano /etc/network/interfaces
+```
 
 Now this part is necessary because we will be telling the current network handler NetworkManager, to get all the configuration information from the wpa_supplicant.config file we just patched to work for eduroam.
 
@@ -134,29 +154,36 @@ Now go through and comment out every line of the text by putting a "#" in front 
 
 At the bottom, paste the following code:
 
-    auto wlan0
-    allow-hotplug wlan0
-    iface wlan0 inet dhcp
-            wpa-ssid eduroam
-            pre-up wpa_supplicant -B -Dwext -i wlan0 -c/etc/w$
-            post-down killall -q wpa_supplicant
+```
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet dhcp
+        wpa-ssid eduroam
+        pre-up wpa_supplicant -B -Dwext -i wlan0 -c/etc/w$
+        post-down killall -q wpa_supplicant
+```
 
 ## Restart Machine
 
 Finally, restart the machine. At this point, you should see your machine as connected to eduroam
 
 If you are still stuck with no luck with connecting to eduroam, here is when the trial and error comes in. Basically, you will be editing 3 files:
-    /etc/network/interfaces
-    /etc/NetworkManager/NetworkManager.conf
-    /etc/wpa_supplicant/wpa_supplicant.conf
+
+```
+/etc/network/interfaces
+/etc/NetworkManager/NetworkManager.conf
+/etc/wpa_supplicant/wpa_supplicant.conf
+```
 
 So open them up using your favorite editor, then also have a spare Terminal open on the root user.
 
 Basically, using the picture I have down below, edit the various file settings. (Note: You should always create backup copies of any files before you edit them so you can replace the new one if it really screws up your settings)
 
 Every time you edit a file and save it, you will run the following command
-    systemctl daemon-reload
-    /etc/init.d/networking restart
+```
+systemctl daemon-reload
+/etc/init.d/networking restart
+```
 
 ## Fixing System Time
 

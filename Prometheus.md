@@ -150,7 +150,7 @@ ctl.!default {
 }
 ```
 
-## [Hardware Installation](Quickstart.md#HardwareStuff)
+## [Hardware Installation](Quickstart.md#hardware-stuff)
 
 Note, if you opt to use a custom card, just change the setting in the bottom right hand corner of the front-end user interface.
 
