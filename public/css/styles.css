@@ -214,7 +214,7 @@ a:hover{
 }
 
 section, footer, header, aside, nav{
-    margin: auto;
+    margin: auto !important;
     text-align: center !important;
     display: block;
 }
@@ -224,7 +224,7 @@ section, footer, header, aside, nav{
 --------------------------*/
 
 nav{
-    margin: auto;
+    margin: auto !important;
     text-align: center !important;
     display:inline-block;
     margin:60px auto 45px;
