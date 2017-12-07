@@ -147,11 +147,20 @@
                     <h3><em>Enable IP Change Email Notifications</em></h3>
                     <br>
                     <br>
-                    <label class="switch" style="float: left;">
+                    <label class="switch">
                         <input :value="enableemail" v-if="enableemail==true" @click="submitenableemail()" type="checkbox" /checked>
                         <input :value="enableemail" v-else @click="submitenableemail()" type="checkbox">
                         <div class="slider round"></div>
                     </label>
+
+
+                        <!-- <label class="switch"> -->
+                        <!-- <input :value="alarmsright[index].sound" v-if="alarmsright[index].sound=='on'" @click="submitsoundright(index)" type="checkbox" /checked> -->
+                        <!-- <input :value="alarmsright[index].sound" v-else @click="submitsoundright(index)" type="checkbox"> -->
+                        <!-- <div class="slider round"></div> -->
+                        <!-- </label> -->
+
+
 
                     <div v-if="enableemail==true" style="float: right; margin-left: 10px;">
                         <button @click="submitemail()" style="float: right;">Submit New Email</button>
