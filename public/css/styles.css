@@ -230,6 +230,7 @@ nav{
 }
 
 nav a{
+    text-align: center !important;
     display:inline-block;
     padding: 18px 30px;
     color:#fff !important;
@@ -256,6 +257,7 @@ nav a:last-child{
 nav.home .home,
 nav.settings .settings,
 nav.about .about{
+    text-align: center !important;
     color: !important;
 }
 
