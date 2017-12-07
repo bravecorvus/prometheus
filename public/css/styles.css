@@ -195,7 +195,7 @@ hr {
   color: white;
 }
 
-    *{
+*{
     margin:0;
     padding:0;
 }
@@ -255,9 +255,8 @@ nav a:last-child{
 }
 
 nav.home .home,
-nav.projects .projects,
-nav.services .services,
-nav.contact .contact{
+nav.settings .settings,
+nav.about .about{
     color:#969696 !important;
 }
 
