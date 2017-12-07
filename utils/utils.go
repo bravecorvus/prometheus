@@ -285,7 +285,6 @@ func KillShairportSync() {
 }
 
 func CheckShairportSyncInstalled() bool {
-	fmt.Println("beginning of CheckShairportSyncInstalled")
 	cmd := exec.Command("which", "shairport-sync")
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
@@ -293,10 +292,19 @@ func CheckShairportSyncInstalled() bool {
 	if err != nil {
 		fmt.Println("which shairport-sync command failed")
 	}
-	fmt.Println("which shairport-sync", strings.TrimSpace(stdout.String()))
 	if strings.TrimSpace(stdout.String()) == "" {
 		return false
 	} else {
 		return true
 	}
+}
+
+func WriteCustomSoundCard(arg string) {
+	content := []byte(arg)
+	err := ioutil.WriteFile(Pwd()+"/public/json/customsoundcard", content, 0644)
+	if err != nil {
+		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/customsoundcard")
+		os.Exit(1)
+	}
+
 }

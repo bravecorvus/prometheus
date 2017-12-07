@@ -143,6 +143,16 @@
                     </div><!--v-else-->
 
                     <br>
+                    <br>
+                    <br>
+                    <h3><em>Use Custom Sound Card</em></h3>
+                    <label class="switch">
+                        <input :value="customsoundcard" v-if="customsoundcard==true" @click="submitcustomsoundcard()" type="checkbox" /checked>
+                        <input :value="customsoundcard" v-else @click="submitcustomsoundcard()" type="checkbox">
+                        <div class="slider round"></div>
+                    </label>
+
+
 
                 </div> <!--id="afterclockright"-->
             </div><!--afterclock-->
@@ -157,6 +167,7 @@
                     trackinfo: [],
                     email: [],
                     enableemail: [],
+                    customsoundcard: [],
                 },
 
                 methods: {
@@ -276,6 +287,23 @@
                         );
                     },
 
+                    submitcustomsoundcard() {
+                        if (this.customsoundcard == true) {
+                            this.customsoundcard = false;
+                        } else {
+                            this.customsoundcard = true;
+                        }
+                        $.ajax(
+                            {
+                                url: "/customsoundcard",
+                                type: 'post',
+                                data: {
+                                    value: this.customsoundcard,
+                                }
+                            }
+                        );
+                    },
+
                     submitemail() {
                         $.ajax(
                             {
@@ -316,6 +344,15 @@
                     $.get('../json/trackinfo')
                         .done( data => {
                             this.trackinfo = String(data).replace(/\n/g, '');
+                    });
+
+                    $.get('../json/customsoundcard')
+                        .done( data => {
+                            if (data.replace(/\n/g, '') == "true") {
+                                this.enableemail = true;
+                            } else {
+                                this.enableemail = false;
+                            }
                     });
 
                 }

@@ -1284,6 +1284,22 @@ func main() {
 		}
 	})
 
+	http.HandleFunc("/customsoundcard", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
+		}
+		value := r.FormValue("value")
+		if value == "true" {
+			EnableEmail = true
+			utils.WriteCustomSoundCard("true")
+		} else {
+			EnableEmail = false
+			utils.WriteCustomSoundCard("false")
+		}
+	})
+
 	http.HandleFunc("/newemail", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
