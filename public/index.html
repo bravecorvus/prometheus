@@ -182,6 +182,7 @@
                 methods: {
 
                     makeActive: function(item){
+                        var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #ffffff !important; text-decoration: none");
                         this.active = item;
                         var elem = document.getElementById(this.active);
