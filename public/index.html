@@ -202,12 +202,14 @@
                     enableemail: [],
                     customsoundcard: [],
                     active: 'home',
+                    color: [],
                     colorcontent: null,
                 },
 
                 methods: {
 
                     makeActive: function(item){
+
                         var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #969696 !important; text-decoration: none");
                         this.active = item;
@@ -221,6 +223,7 @@
                                 CP.each(function($) {
                                         $.enter(); // this will show all of the color picker panel
                                 });
+                                picker.set(this.color);
                                 var target = document.querySelector('input[type="color"]');
                                 var picker = new CP(target); target.onclick = function(e) {e.preventDefault();
                                 picker.on("change", function(color) {this.target.value = "#" + color;});}
@@ -405,6 +408,11 @@
                     $.get('../json/trackinfo')
                         .done( data => {
                             this.trackinfo = String(data).replace(/\n/g, '');
+                    });
+
+                    $.get('../json/color')
+                        .done( data => {
+                            this.color = String(data).replace(/\n/g, '');
                     });
 
                     $.get('../json/customsoundcard')
