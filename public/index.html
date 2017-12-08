@@ -213,15 +213,6 @@
 
                 methods: {
 
-
-                    toggleColor() {
-                        if (this.active == 'settings') {
-                            document.getElementById("color").style.display = "";
-                        } else {
-                            document.getElementById("color").style.display = "none";
-                        }
-                    },
-
                     makeActive: function(item){
 
                         var elem = document.getElementById(this.active);
@@ -229,7 +220,11 @@
                         this.active = item;
                         var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
-                        toggleColor();
+                        if (this.active == 'settings') {
+                            document.getElementById("color").style.display = "";
+                        } else {
+                            document.getElementById("color").style.display = "none";
+                        }
 
                     },
 
