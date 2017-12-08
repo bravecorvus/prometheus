@@ -211,6 +211,7 @@
                         this.active = item;
                         var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #ffffff !important; text-decoration: underline");
+
                         if (this.active == "settings") {
                             this.colorcontent = `
                                 <p><input type="color"></p>
@@ -222,7 +223,7 @@
                                 e.preventDefault();
                             }
                             picker.on("change", function(color) {
-                                this.target.value = '#' + color;
+                                this.target.value = "#" + color;
                             });
                         } else {
                             this.colorcontent = ``
