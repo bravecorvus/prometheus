@@ -172,6 +172,15 @@
                     </label>
 
 
+                    <link href="colorpicker/color-picker.min.css" rel="stylesheet">
+                    <p><input type="text"></p>
+                    <script src="colorpicker/color-picker.min.js"></script>
+                    <script>
+                    var picker = new CP(document.querySelector('input[type="text"]'));
+                    picker.on("change", function(color) {
+                        this.target.value = '#' + color;
+                    });
+                    </script>
 
                 </div> <!--id="afterclockright"-->
             </div><!--afterclock-->
