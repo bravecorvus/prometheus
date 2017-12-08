@@ -217,10 +217,11 @@
                         if (this.active == "settings") {
                             this.colorcontent = `<input type="color"></input>`;
 
-                            alert('ayyy');
-                            var target = document.querySelector('input[type="color"]');
-                            var picker = new CP(target); target.onclick = function(e) {e.preventDefault();
-                            picker.on("change", function(color) {this.target.value = "#" + color;});}
+                            this.$nextTick(function () {
+                                var target = document.querySelector('input[type="color"]');
+                                var picker = new CP(target); target.onclick = function(e) {e.preventDefault();
+                                picker.on("change", function(color) {this.target.value = "#" + color;});}
+                            });
                         } else {
                             this.colorcontent = ``
                         }
