@@ -192,7 +192,7 @@
         <script src="colorpicker/color-picker.min.js"></script>
         <script>
 
-            var picker = new CP(document.querySelector('input'), false);
+            var picker = new CP(document.querySelector('input[type="color"]'), false);
 
             picker.on("change", function(color) {
                 this.target.value = '#' + color;
