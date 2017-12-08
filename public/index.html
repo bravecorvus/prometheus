@@ -222,11 +222,12 @@
 
                             this.$nextTick(function () {
                                 var target = document.querySelector('input[type="color"]');
-                                if (this.colorsgenerated == true) {
+                                if (this.colorsgenerated == false) {
                                     var picker = new CP(target);
                                     CP.each(function($) {
                                             $.enter(); // this will show all of the color picker panel
                                     });
+                                    this.colorsgenerated = true;
                                 } else {
                                     var picker = CP(target);
                                 }
