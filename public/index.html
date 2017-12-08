@@ -216,6 +216,7 @@
                             this.colorcontent = `
                                 <input type="color">
                             `;
+                            vm.$forceUpdate();
                             var target = document.querySelector('input[type="color"]'),
                                 picker = new CP(target);
 
