@@ -226,8 +226,8 @@
                                 var picker = new CP(target);
                                 target.onclick = function(e) {
                                     e.preventDefault();
-                                    picker.on("change", function(color) {this.target.value = "#" + color;});
                                     picker.set('rgb(255, 0, 0)');
+                                    picker.on("change", function(color) {this.target.value = "#" + color;});
                                 }
                             });
                         } else {
