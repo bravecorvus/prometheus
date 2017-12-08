@@ -186,7 +186,7 @@
             <!-- <img src=""> -->
         </div><!--aboutcontent-->
 
-        <div id="colordiv" style="float: left;">
+        <div id="colordiv" style="float: left; padding-left: 10% !important;">
             <br>
             <br>
             <br>
@@ -202,15 +202,13 @@
                 <input :value="enableled" v-else @click="submitenableled()" type="checkbox">
                 <div class="slider round"></div>
             </label>
-
-            <form v-if="enableled==true">
-            <h4>Change LED colors<h4>
-                <button @click="submitcolors()">Submit New Color</button>
-                <!-- <input v-model="colors" type="text" id="color" > -->
-            </form>
         </div> <!--id="colordiv"-->
 
-        <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10% !important;">
+        <div id="color" style="float: left;">
+            <h4>Change LED colors<h4>
+            <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10% !important;">
+            <button @click="submitcolors()">Submit New Color</button>
+        </div> <!--id="color"-->
 
         </div><!--app-->
 
