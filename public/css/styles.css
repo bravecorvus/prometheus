@@ -17,7 +17,7 @@ body {
     border-color: transparent;
     font-family: Quicksand;
     color: white;
-    background-color: black;
+    background-color: black !important;
 }
 
 form {
@@ -33,21 +33,21 @@ fieldset {
 }
 
 #main {
-  border-color: black;
+  border-color: black !important;
   width: 100%;
   margin: 0px auto;
   outline: none;
   border: none;
 }
 #leftside {
-  border-color: black;
+  border-color: black !important;
   float: left;
   padding-left: 20%;
   // width: 500px;
   margin: 0 auto;
 }
 #rightside {
-  border-color: black;
+  border-color: black; !important
   float: right;
   padding-right: 20%;
   // width: 500px;
@@ -55,7 +55,7 @@ fieldset {
 }
 
 #afterclock {
-  border-color: black;
+  border-color: black !important;
   width: 100%;
   margin: 0px auto; 
 }
@@ -73,7 +73,7 @@ fieldset {
 .time {
   font-family: Quicksand;
   color: white;
-  background-color: black;
+  background-color: black !important;
   font-size: 18px;
   width: 150;
   height: 60;
@@ -82,7 +82,7 @@ fieldset {
 .text {
   font-family: Quicksand;
   color: white;
-  background-color: black;
+  background-color: black !important;
   width: 200;
   height: 60;
 }
