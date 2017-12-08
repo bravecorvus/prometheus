@@ -15,9 +15,10 @@
 
 body {
     border-color: transparent;
+    background: black;
     font-family: Quicksand;
     color: white;
-    background: black !important;
+    background-color: black;
 }
 
 form {
@@ -274,3 +275,10 @@ p b{
     font-size:18px;
 }
 
+#picker {
+    width: 200px; height: 200px;
+}
+
+#slide {
+    width: 30px; height: 200px
+}
