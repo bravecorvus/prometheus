@@ -204,9 +204,11 @@
             </label>
         </div> <!--id="colordiv"-->
 
-        <h4 id="colorh4" style="float: left; padding-left: 10%;">Change LED Color</h4>
-        <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10%;">
-        <button id="colorbutton" @click="submitcolors()" style="float: left; padding-left: 10%;">Submit New Color</button>
+        <div id="hidethis">
+            <h4 id="colorh4" style="float: left; padding-left: 10%;">Change LED Color</h4>
+            <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10%;">
+            <button id="colorbutton" @click="submitcolors()" style="float: left; padding-left: 10%;">Submit New Color</button>
+        </div> <!--id="hidethis"-->
 
         </div><!--app-->
 
@@ -252,16 +254,19 @@
                                 document.getElementById("color").style.display = "";
                                 document.getElementById("colorh4").style.display = "";
                                 document.getElementById("colorbutton").style.display = "";
+                                document.getElementById("hidethis").style.display = "";
                             } else {
                                 document.getElementById("color").style.display = "none !important";
                                 document.getElementById("colorh4").style.display = "none !important";
                                 document.getElementById("colorbutton").style.display = "none !important";
+                                document.getElementById("hidethis").style.display = "none !important";
                             }
                         } else {
                             document.getElementById("colordiv").style.display = "none !important";
                             document.getElementById("color").style.display = "none !important";
                             document.getElementById("colorh4").style.display = "none !important";
                             document.getElementById("colorbutton").style.display = "none !important";
+                            document.getElementById("hidethis").style.display = "none !important";
                         }
 
                     },
@@ -451,6 +456,7 @@
                     document.getElementById("color").style.display = "none !important";
                     document.getElementById("colorh4").style.display = "none !important";
                     document.getElementById("colorbutton").style.display = "none !important";
+                    document.getElementById("hidethis").style.display = "none !important";
 
                     $.ajaxSetup({ cache: false });
 
