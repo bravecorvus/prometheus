@@ -217,7 +217,9 @@
                         elem.setAttribute("style","color: #ffffff !important; text-decoration: underline");
 
                         if (this.active == "settings") {
+
                             this.colorcontent = `<input type="color" style="display: none;"></input>`;
+
                             this.$nextTick(function () {
                                 var target = document.querySelector('input[type="color"]');
                                 var picker = new CP(target);
@@ -229,6 +231,13 @@
                                     e.preventDefault();
                                     picker.on("change", function(color) {this.target.value = "#" + color;});
                                 }
+                                $(":body").addEventListener('click', function() {
+                                    if (this.active == "settings")  {
+                                        CP.each(function($) {
+                                                $.enter(); // this will show all of the color picker panel
+                                        });
+                                    }
+                                }, false);
                             });
                         } else {
                             this.colorcontent = ``
