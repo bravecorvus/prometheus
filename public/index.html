@@ -3,7 +3,7 @@
 
     <head>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-            <script src="colorpicker/color-picker.min.js"></script>
+        <script src="colorpicker/color-picker.min.js"></script>
         <link href="colorpicker/color-picker.min.css" rel="stylesheet">
         <script src="/js/jquery-3.1.1.min.js"></script>
         <script type="text/javascript" src="nixie/nixie.js"></script>
@@ -140,10 +140,16 @@
                     <p>Current Track: {{this.trackinfo}}</p>
                     <br>
 
-<div>
-<div class="color-picker static" style=""><div class="color-picker-control"><span class="color-picker-h"><i style="top: 147px;"></i></span><span class="color-picker-sv" style="background-color: rgb(255, 0, 0);"><i style="right: 12px; top: 86px;"></i></span></div></div>
-<section id="color-picker"></section>
-
+<div class="color-picker" style="top: 69px; left: 8px;">
+    <div class="color-picker-control">
+        <span class="color-picker-h">
+            <i style="top: 147px;"></i>
+        </span>
+        <span class="color-picker-sv" style="background-color: rgb(255, 0, 0);">
+            <i style="right: 55px; top: 85px;"></i>
+        </span>
+    </div>
+</div>
 
                     <script>
                     var container = document.querySelector('#color-picker'),
@@ -155,8 +161,6 @@
                     picker.on("change", function(color) {
                         console.log(color);
                     });
-
-
 
                     </script>
 
