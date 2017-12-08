@@ -204,10 +204,9 @@
             </label>
         </div> <!--id="colordiv"-->
 
-        <div class="cololor" style="float: left;">
-            <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10% !important;">
-            <button @click="submitcolors()">Submit New Color</button>
-        </div> <!--class="cololor"-->
+        <h4 id="colorh4">Change LED Color</h4>
+        <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10% !important;">
+        <button id="colorbutton" @click="submitcolors()">Submit New Color</button>
 
         </div><!--app-->
 
@@ -238,6 +237,8 @@
 
                 methods: {
 
+
+
                     makeActive: function(item){
 
                         var elem = document.getElementById(this.active);
@@ -249,12 +250,18 @@
                             document.getElementById("colordiv").style.display = "";
                             if (this.enableled == true) {
                                 document.getElementById("color").style.display = "";
+                                document.getElementById("colorh4").style.display = "";
+                                document.getElementById("colorbutton").style.display = "";
                             } else {
                                 document.getElementById("color").style.display = "none !important";
+                                document.getElementById("colorh4").style.display = "none !important";
+                                document.getElementById("colorbutton").style.display = "none !important";
                             }
                         } else {
                             document.getElementById("colordiv").style.display = "none !important";
                             document.getElementById("color").style.display = "none !important";
+                            document.getElementById("colorh4").style.display = "none !important";
+                            document.getElementById("colorbutton").style.display = "none !important";
                         }
 
                     },
@@ -436,12 +443,15 @@
 
                 },
 
+
                 created() {
 
                     var elem = document.getElementById(this.active);
                     elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
                     document.getElementById("colordiv").style.display = "none";
                     document.getElementById("color").style.display = "none";
+                    document.getElementById("colorh4").style.display = "none";
+                    document.getElementById("colorbutton").style.display = "none";
                     $.ajaxSetup({ cache: false });
 
                     $.getJSON('../json/alarms.json')
