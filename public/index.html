@@ -3,6 +3,7 @@
 
     <head>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
+            <script src="colorpicker/color-picker.min.js"></script>
         <link href="colorpicker/color-picker.min.css" rel="stylesheet">
         <script src="/js/jquery-3.1.1.min.js"></script>
         <script type="text/javascript" src="nixie/nixie.js"></script>
@@ -178,14 +179,13 @@
             </div><!--afterclock-->
 
 
-            <p><input type="color"></p>
 
         </div><!--settingscontent-->
 
         <div v-else-if="active=='about'" id="aboutcontent">
             <!-- <img src=""> -->
         </div><!--aboutcontent-->
-
+        <span v-html="colorcontent"></span>
         </div><!--app-->
 
 
@@ -200,6 +200,7 @@
                     enableemail: [],
                     customsoundcard: [],
                     active: 'home',
+                    colorcontent: 'null',
                 },
 
                 methods: {
@@ -210,6 +211,22 @@
                         this.active = item;
                         var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #ffffff !important; text-decoration: underline");
+                        if (this.active == "settings") {
+                            this.colorcontent = `
+                                <p><input type="color"></p>
+                            `;
+                            var target = document.querySelector('input[type="color"]'),
+                                picker = new CP(target);
+
+                            target.onclick = function(e) {
+                                e.preventDefault();
+                            }
+                            picker.on("change", function(color) {
+                                this.target.value = '#' + color;
+                            });
+                        } else {
+                            this.colorcontent = ``
+                        }
                     },
 
                     submittimeright(arg) {
@@ -402,18 +419,6 @@
 
             })
 
-            $(document).ready(function(){
-                var target = document.querySelector('input[type="color"]'),
-                    picker = new CP(target);
-
-                target.onclick = function(e) {
-                    e.preventDefault();
-                }
-                picker.on("change", function(color) {
-                    this.target.value = '#' + color;
-                });
-            });
-
 
                 var nd = new NixieClock();
                 nd.id = 'nd1';
@@ -493,7 +498,6 @@
 
 
             </script>
-            <script src="colorpicker/color-picker.min.js"></script>
 
         </body>
     </html>
