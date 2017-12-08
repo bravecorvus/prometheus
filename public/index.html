@@ -447,6 +447,13 @@
                 nd.run();
                 nd.setText('-1.234567890');
 
+
+                $(document).on('click','body *',function(){
+                    if (this.active == "settings")  {
+                        this.makeActive();
+                    }
+                });
+
                 $(function(){
 
                     $("#drop-box").click(function(){
@@ -509,11 +516,6 @@
                 });
 
 
-                $(document).on('click','body *',function(){
-                    if (this.active == "settings")  {
-                        this.makeActive();
-                    }
-                });
 
             </script>
 
