@@ -213,6 +213,15 @@
 
                 methods: {
 
+
+                    toggleColor() {
+                        if (this.active == 'settings') {
+                            document.getElementById("color").style.display = "";
+                        } else {
+                            document.getElementById("color").style.display = "none";
+                        }
+                    },
+
                     makeActive: function(item){
 
                         var elem = document.getElementById(this.active);
@@ -224,13 +233,6 @@
 
                     },
 
-                    toggleColor() {
-                        if (this.active == 'settings') {
-                            document.getElementById("color").style.display = "";
-                        } else {
-                            document.getElementById("color").style.display = "none";
-                        }
-                    },
 
                     submittimeright(arg) {
                         $.ajax(
