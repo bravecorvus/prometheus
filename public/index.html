@@ -204,11 +204,9 @@
             </label>
         </div> <!--id="colordiv"-->
 
-        <div id="hidethis">
-            <h4 id="colorh4" style="float: left; padding-left: 10%;">Change LED Color</h4>
-            <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10%;">
-            <button id="colorbutton" @click="submitcolors()" style="float: left; padding-left: 10%;">Submit New Color</button>
-        </div> <!--id="hidethis"-->
+        <h4 id="colorh4" style="float: left; padding-left: 10%;">Change LED Color</h4>
+        <input v-model="colors" type="text" id="color" style="background: black !important; float: left; padding-left: 10%;">
+        <button id="colorbutton" @click="submitcolors()" style="float: left; padding-left: 10%;">Submit New Color</button>
 
         </div><!--app-->
 
@@ -419,6 +417,7 @@
                     submitenableled() {
                         if (this.enableled == true) {
                             this.enableled = false;
+                            document.getElementById("color").style.display = "none";
                         } else {
                             this.enableled = true;
                             document.getElementById("color").style.display = "";
