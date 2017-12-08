@@ -3,11 +3,11 @@
 
     <head>
         <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-        <link href="colorpicker/color-picker.min.css" rel="stylesheet">
         <script src="/js/jquery-3.1.1.min.js"></script>
         <script type="text/javascript" src="nixie/nixie.js"></script>
         <script type="text/javascript" src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/styles.css">
+        <script type="text/javascript" src="colorpicker/colorpicker.min.js"></script>
     </head>
 
     <body>
@@ -18,7 +18,7 @@
 
             <nav v-bind:class="active" v-on:click.prevent style="position: fixed !important; left: 50% !important; margin-top:140px !important; transform: translate(-50%, -50%) !important;">
                 <a href="#" class="home" id="home" v-on:click="makeActive('home')">Home</a>
-                <a href="#" class="settings" id="settings" v-on:click="makeActive('settings')" onclick="loadcolorpicker()">Settings</a>
+                <a href="#" class="settings" id="settings" v-on:click="makeActive('settings')">Settings</a>
                 <a href="#" class="about" id="about" v-on:click="makeActive('about')">About</a>
             </nav>
 
@@ -139,9 +139,17 @@
                     <p>Current Track: {{this.trackinfo}}</p>
                     <br>
 
+            <div id="picker"></div>
+                <div id="slide"></div>
+                <script type="text/javascript">
+                  ColorPicker(
+                    document.getElementById('slide'),
+                    document.getElementById('picker'),
+                    function(hex, hsv, rgb) {
+                      document.body.style.backgroundColor = hex;
+                    });
+                </script>
 
-        <p><input type="text" id="color-switch"></p>
-        <p></p>
 
                 </div><!--afterclockleft-->
 
@@ -221,39 +229,6 @@
                         var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
 
-                        /*if (this.active == "settings") {
-
-                            this.colorcontent = `<input type="color" style="display: none;"></input>`;
-
-                            this.$nextTick(function () {
-                                var target = document.querySelector('input[type="color"]');
-                                if (this.colorsgenerated == false) {
-                                    var picker = new CP(target);
-                                    CP.each(function($) {
-                                            $.enter(); // this will show all of the color picker panel
-                                    });
-                                    this.colorsgenerated = true;
-                                } else {
-                                    var target = picker.target;
-                                    console.log(target);
-                                    CP.each(function($) {
-                                            $.enter(); // this will show all of the color picker panel
-                                    });
-                                }
-
-                                picker.set('rgb(' + String(this.colors[0]) + ', ' + String(this.colors[1]) + ', ' + String(this.colors[2]) + ')');
-
-                                target.onclick = function(e) {
-                                    e.preventDefault();
-                                    picker.on("change", function(color) {this.target.value = "#" + color;});
-                                    console.log(picker.target.value)
-                                }
-                            });
-                        } else {
-                            this.colorcontent = ``
-                        }
-
-                    */
                     },
 
                     submittimeright(arg) {
@@ -539,31 +514,5 @@
 
             </script>
 
-
-
-        <script src="colorpicker/color-picker.min.js"></script>
-
-            <script>
-
-                function loadcolorpicker() {
-                
-                    var picker = new CP(document.querySelector('input[id="color-switch"]'), false);
-
-                    picker.on("change", function(color) {
-                        this.target.value = '#' + color;
-                    });
-
-                    // ...
-                    picker.fit = function() { // do nothing ...
-                        this.picker.style.left = this.picker.style.top = "";
-                    };
-
-                    // add a `static` class to the color picker panel
-                    picker.picker.classList.add('static');
-
-                    picker.enter(document.querySelectorAll('p')[1]);
-                }
-
-            </script>
         </body>
     </html>

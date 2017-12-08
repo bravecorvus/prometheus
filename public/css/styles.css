@@ -274,12 +274,12 @@ p b{
     font-size:18px;
 }
 
-.color-picker.static {
-  display:inline-block;
-  position:static;
+#picker {
+    width: 200px;
+    height: 200px;
 }
-.color-picker.static .color-picker-control {
-  -webkit-box-shadow:none;
-  -moz-box-shadow:none;
-  box-shadow:none;
+
+#slide {
+    width: 30px;
+    height: 200px
 }
