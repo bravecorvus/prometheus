@@ -217,8 +217,9 @@
                                 <input type="color"></input>
                             `;
                             vm.$forceUpdate();
-                            var target = document.querySelector('input[type="color"]'),
-                                picker = new CP(target);
+
+                            var target = document.querySelector('input[type="color"]');
+                            var picker = new CP(target);
 
                             target.onclick = function(e) {
                                 e.preventDefault();
