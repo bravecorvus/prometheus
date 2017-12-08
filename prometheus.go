@@ -1308,6 +1308,7 @@ func main() {
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
+		fmt.Println(value)
 		utils.ColorUpdate(value)
 		hex, err := colors.ParseHEX(value)
 		if err != nil {
