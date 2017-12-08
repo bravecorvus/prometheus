@@ -173,11 +173,32 @@
                     </label>
 
 
-                    <p><input type="color"></p>
-                    <script src="colorpicker/color-picker.min.js"></script>
 
                 </div> <!--id="afterclockright"-->
             </div><!--afterclock-->
+
+
+            <p><input type="color"></p>
+            <script src="colorpicker/color-picker.min.js"></script>
+            <script>
+                var colorel = document.querySelector('input[type="color"]');
+                // show color picker by click (default)
+                var picker = new CP(colorel);
+
+                // show color picker by hover
+                var picker = new CP(colorel, "mouseover");
+
+                // disable color picker by default
+                // to enable it, try `picker.enter()`
+                var picker = new CP(colorel, false);
+                colorel.onclick = function(e) {
+                    e.preventDefault();
+                }
+                picker.on("change", function(color) {
+                    this.target.value = '#' + color;
+                });
+            </script>
+
 
         </div><!--settingscontent-->
 
@@ -477,22 +498,6 @@
                 });
 
 
-                var colorel = document.querySelector('input[type="color"]');
-                // show color picker by click (default)
-                var picker = new CP(colorel);
-
-                // show color picker by hover
-                var picker = new CP(colorel, "mouseover");
-
-                // disable color picker by default
-                // to enable it, try `picker.enter()`
-                var picker = new CP(colorel, false);
-                colorel.onclick = function(e) {
-                    e.preventDefault();
-                }
-                picker.on("change", function(color) {
-                    this.target.value = '#' + color;
-                });
 
             </script>
 
