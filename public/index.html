@@ -412,7 +412,6 @@
                     $.get('../json/colors')
                         .done( data => {
                             this.colors = [Number(String(data).substring(0, 3)), Number(String(data).substring(3, 6)), Number(String(data).substring(6, 9))];
-                            toggleColor()
                     });
 
                     $.get('../json/customsoundcard')
@@ -423,6 +422,7 @@
                                 this.customsoundcard = false;
                             }
                     });
+                    toggleColor()
 
                 },
 
