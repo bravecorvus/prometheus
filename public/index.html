@@ -186,29 +186,32 @@
             <!-- <img src=""> -->
         </div><!--aboutcontent-->
 
-        <div id="colordiv">
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <h3>Change the LED Settings of the Nixie Clock<h3>
-            <br>
-            <h4>Enable or Disable LED<h4>
-            <label class="switch">
-                <input :value="enableled" v-if="enableled==true" @click="submitenableled()" type="checkbox" /checked>
-                <input :value="enableled" v-else @click="submitenableled()" type="checkbox">
-                <div class="slider round"></div>
-            </label>
+        <!-- <div id="colordiv"> -->
+            <!-- <br> -->
+            <!-- <br> -->
+            <!-- <br> -->
+            <!-- <br> -->
+            <!-- <br> -->
+            <!-- <br> -->
+            <!-- <br> -->
+            <!-- <h3>Change the LED Settings of the Nixie Clock<h3> -->
+            <!-- <br> -->
+            <!-- <h4>Enable or Disable LED<h4> -->
+            <!-- <label class="switch"> -->
+                <!-- <input :value="enableled" v-if="enableled==true" @click="submitenableled()" type="checkbox" /checked> -->
+                <!-- <input :value="enableled" v-else @click="submitenableled()" type="checkbox"> -->
+                <!-- <div class="slider round"></div> -->
+            <!-- </label> -->
+<!--  -->
+            <!-- <form v-if="enableled==true"> -->
+            <!-- <h4>Change LED colors<h4> -->
+                <!-- <button @click="submitcolors()">Submit New Color</button> -->
+                <!-- <input type="text" id="color" > -->
+            <!-- </form> -->
+        <!-- </div> [>id="colordiv"<] -->
 
-            <form v-if="enableled==true">
-            <h4>Change LED colors<h4>
-                <button @click="submitcolors()">Submit New Color</button>
-                <input type="text" id="color" >
-            </form>
-        </div> <!--id="colordiv"-->
+
+        <input type="text" id="color" >
 
         </div><!--app-->
 
