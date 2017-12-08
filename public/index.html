@@ -230,7 +230,10 @@
                                     this.colorsgenerated = true;
                                     picker.off("destroy");
                                 } else {
-                                    var picker = CP(target);
+                                    var target = picker.target;
+                                    CP.each(function($) {
+                                            $.enter(); // this will show all of the color picker panel
+                                    });
                                 }
 
                                 picker.set('rgb(' + String(this.colors[0]) + ', ' + String(this.colors[1]) + ', ' + String(this.colors[2]) + ')');
