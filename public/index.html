@@ -418,9 +418,13 @@
                         if (this.enableled == true) {
                             this.enableled = false;
                             document.getElementById("color").style.display = "none";
+                            document.getElementById("colorh4").style.display = "none";
+                            document.getElementById("colorbutton").style.display = "none";
                         } else {
                             this.enableled = true;
                             document.getElementById("color").style.display = "";
+                            document.getElementById("colorh4").style.display = "";
+                            document.getElementById("colorbutton").style.display = "";
                         }
                         $.ajax(
                             {
