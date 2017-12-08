@@ -191,23 +191,6 @@
         <p></p>
 
         <script src="colorpicker/color-picker.min.js"></script>
-        <script>
-
-            var picker = new CP(document.querySelector('input[id="color-switch"]'), false);
-
-            picker.on("change", function(color) {
-                this.target.value = '#' + color;
-            });
-
-            // ...
-            picker.fit = function() { // do nothing ...
-                this.picker.style.left = this.picker.style.top = "";
-            };
-
-            // add a `static` class to the color picker panel
-            picker.picker.classList.add('static');
-
-        </script>
 
         <script>
             var vm = new Vue({
@@ -551,6 +534,24 @@
 
 
             </script>
+
+        <script>
+
+            var picker = new CP(document.querySelector('input[id="color-switch"]'), false);
+
+            picker.on("change", function(color) {
+                this.target.value = '#' + color;
+            });
+
+            // ...
+            picker.fit = function() { // do nothing ...
+                this.picker.style.left = this.picker.style.top = "";
+            };
+
+            // add a `static` class to the color picker panel
+            picker.picker.classList.add('static');
+
+        </script>
 
         </body>
     </html>
