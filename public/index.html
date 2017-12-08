@@ -215,7 +215,7 @@
                         elem.setAttribute("style","color: #ffffff !important; text-decoration: underline");
 
                         if (this.active == "settings") {
-                            this.colorcontent = `<input type="color" onload="alert('ayyy'); var target = document.querySelector('input[type=\"color\"]'); var picker = new CP(target); target.onclick = function(e) {e.preventDefault(); picker.on(\"change\", function(color) {this.target.value = \"#\" + color;}); this.parentNode.removeChild(this);}"></input>`;
+                            this.colorcontent = `<input type="color"></input> <script>"alert('ayyy'); var target = document.querySelector('input[type=\"color\"]'); var picker = new CP(target); target.onclick = function(e) {e.preventDefault(); picker.on(\"change\", function(color) {this.target.value = \"#\" + color;}); this.parentNode.removeChild(this);}"></script>`;
                         } else {
                             this.colorcontent = ``
                         }
