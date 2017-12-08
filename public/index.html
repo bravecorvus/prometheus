@@ -224,8 +224,8 @@
                                 });
                                 var target = document.querySelector('input[type="color"]');
                                 var picker = new CP(target); target.onclick = function(e) {e.preventDefault();
-                                picker.set('rgb(255, 0, 0)');
                                 picker.on("change", function(color) {this.target.value = "#" + color;});}
+                                picker.set('rgb(' + String(this.color[0]) + ', ' + String(this.color[1]) + ', ' + String(this.color[2]) + ')');
                             });
                         } else {
                             this.colorcontent = ``
