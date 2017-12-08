@@ -413,20 +413,19 @@
 
                 },
 
-                mounted() {
-                    this.$nextTick(function() {
-                        var target = document.querySelector('input[type="color"]'),
-                            picker = new CP(target);
-
-                        target.onclick = function(e) {
-                            e.preventDefault();
-                        }
-                        picker.on("change", function(color) {
-                            this.target.value = '#' + color;
-                        });
-                    });
-                }
             })
+
+            $(document).ready(function(){
+                var target = document.querySelector('input[type="color"]'),
+                    picker = new CP(target);
+
+                target.onclick = function(e) {
+                    e.preventDefault();
+                }
+                picker.on("change", function(color) {
+                    this.target.value = '#' + color;
+                });
+            });
 
 
                 var nd = new NixieClock();
