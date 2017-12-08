@@ -190,7 +190,9 @@
 
 
 
-        <input class="form-control" type="text" id="color"/ style="background-color: black !important;">
+        <div id="colordiv">
+            <input class="form-control" type="text" id="color"/>
+        </div><!--id="colordiv"-->
 
 
 
@@ -220,8 +222,18 @@
                         this.active = item;
                         var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
+                        toggleColor();
 
                     },
+
+                    toggleColor() {
+                        if this.active == 'settings' {
+                            document.getElementById("colordiv").style.display = "block"
+                        } else {
+                            document.getElementById("colordiv").style.display = "none"
+                        } else {
+                        }
+                    }
 
                     submittimeright(arg) {
                         $.ajax(
@@ -501,8 +513,6 @@
                 }
 
                 });
-
-
 
             </script>
 
