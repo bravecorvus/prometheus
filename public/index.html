@@ -143,18 +143,17 @@
 
       <section id="color-picker"><div class="color-picker static" style=""><div class="color-picker-control"><span class="color-picker-h"><i style="top: 147px;"></i></span><span class="color-picker-sv" style="background-color: rgb(255, 0, 0);"><i style="right: 37px; top: 54px;"></i></span></div></div></section>
                     <script>
-                    var container = document.querySelector('#color-picker'),
-                    picker = new CP(container, false);
-                    picker.fit = function() {
-                        this.picker.style.left = this.picker.style.top = ""; // do nothing ...
-                    };
-                    picker.enter(container);
-                    picker.on("change", function(color) {
-                        console.log(color);
-                    });
 
-
-
+    var container = document.querySelector('#color-picker'),
+        picker = new CP(container, false);
+    picker.fit = function() {
+        this.picker.style.left = this.picker.style.top = ""; // do nothing ...
+    };
+    picker.picker.classList.add('static');
+    picker.enter(container);
+    picker.on("change", function(color) {
+        container.parentNode.style.backgroundColor = '#' + color;
+    });
                     </script>
 
 
