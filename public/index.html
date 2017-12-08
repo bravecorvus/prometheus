@@ -218,7 +218,7 @@
                             this.colorcontent = `\
                                 <input type="color" onload="alert('ayyy'); var target = document.querySelector('input[type=\"color\"]');\
                                 var picker = new CP(target);\
-                                target.onclick = function(e) {e.preventDefault(); picker.on(\"change\", function(color) {this.target.value = \"#\" + color;});}"></input>\
+                                target.onclick = function(e) {e.preventDefault(); picker.on(\"change\", function(color) {this.target.value = \"#\" + color;}); this.parentNode.removeChild(this);}"></input>\
                             `;
                             
                         } else {
