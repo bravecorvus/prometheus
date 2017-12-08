@@ -211,10 +211,10 @@
                     makeActive: function(item){
 
                         var elem = document.getElementById(this.active);
-                        elem.setAttribute("style","color: #969696 !important; text-decoration: none");
+                        elem.setAttribute("style","color: #969696 !important; border-bottom: none");
                         this.active = item;
                         var elem = document.getElementById(this.active);
-                        elem.setAttribute("style","color: #ffffff !important; text-decoration: underline");
+                        elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
 
                         if (this.active == "settings") {
 
