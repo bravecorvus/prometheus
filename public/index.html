@@ -190,7 +190,9 @@
 
 
 
-        <input class="form-control" type="text" id="color">Change the LED color of the Nixie Clock.</input>
+        <div id="colordiv">
+            <input class="form-control" type="text" id="color">
+        </div> <!--id="colordiv"-->
 
 
 
@@ -221,9 +223,9 @@
                         var elem = document.getElementById(this.active);
                         elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
                         if (this.active == 'settings') {
-                            document.getElementById("color").style.display = "";
+                            document.getElementById("colordiv").style.display = "";
                         } else {
-                            document.getElementById("color").style.display = "none";
+                            document.getElementById("colordiv").style.display = "none";
                         }
 
                     },
@@ -378,7 +380,7 @@
 
                     var elem = document.getElementById(this.active);
                     elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
-                    document.getElementById("color").style.display = "none";
+                    document.getElementById("colordiv").style.display = "none";
                     $.ajaxSetup({ cache: false });
 
                     $.getJSON('../json/alarms.json')
