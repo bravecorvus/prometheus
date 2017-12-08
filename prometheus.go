@@ -1309,7 +1309,7 @@ func main() {
 		}
 		value := r.FormValue("value")
 		utils.ColorUpdate(value)
-		hex, err := colors.ParseHex(value)
+		hex, err := colors.ParseHEX(value)
 		if err != nil {
 			fmt.Println("Error Parsing hex color")
 		}
