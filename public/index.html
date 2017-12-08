@@ -409,11 +409,14 @@
                             this.trackinfo = String(data).replace(/\n/g, '');
                     });
 
+                    <!-- $.getJSON('../json/alarms.json') -->
+                        <!-- .done(data => { -->
+                            <!-- this.alarmsleft = data.slice(0, 2); -->
+                            <!-- this.alarmsright = data.slice(2); -->
+                        <!-- }); -->
                     $.get('../json/color')
                         .done( data => {
-                            this.color[0] = data.[0];
-                            this.color[1] = data.[1];
-                            this.color[2] = data.[2];
+                            this.colors = data;
 
                     });
 
