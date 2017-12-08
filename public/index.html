@@ -18,7 +18,7 @@
 
             <nav v-bind:class="active" v-on:click.prevent style="position: fixed !important; left: 50% !important; margin-top:140px !important; transform: translate(-50%, -50%) !important;">
                 <a href="#" class="home" id="home" v-on:click="makeActive('home')">Home</a>
-                <a href="#" class="settings" id="settings" v-on:click="makeActive('settings')">Settings</a>
+                <a href="#" class="settings" id="settings" v-on:click="makeActive('settings')" onclick="loadcolorpicker()">Settings</a>
                 <a href="#" class="about" id="about" v-on:click="makeActive('about')">About</a>
             </nav>
 
@@ -545,21 +545,24 @@
 
             <script>
 
-                var picker = new CP(document.querySelector('input[id="color-switch"]'), false);
+                function loadcolorpicker() {
+                
+                    var picker = new CP(document.querySelector('input[id="color-switch"]'), false);
 
-                picker.on("change", function(color) {
-                    this.target.value = '#' + color;
-                });
+                    picker.on("change", function(color) {
+                        this.target.value = '#' + color;
+                    });
 
-                // ...
-                picker.fit = function() { // do nothing ...
-                    this.picker.style.left = this.picker.style.top = "";
-                };
+                    // ...
+                    picker.fit = function() { // do nothing ...
+                        this.picker.style.left = this.picker.style.top = "";
+                    };
 
-                // add a `static` class to the color picker panel
-                picker.picker.classList.add('static');
+                    // add a `static` class to the color picker panel
+                    picker.picker.classList.add('static');
 
-                picker.enter(document.querySelectorAll('p')[1]);
+                    picker.enter(document.querySelectorAll('p')[1]);
+                }
 
             </script>
         </body>
