@@ -445,13 +445,13 @@
 
 
                 created() {
-
                     var elem = document.getElementById(this.active);
                     elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
-                    document.getElementById("colordiv").style.display = "none";
-                    document.getElementById("color").style.display = "none";
-                    document.getElementById("colorh4").style.display = "none";
-                    document.getElementById("colorbutton").style.display = "none";
+                    document.getElementById("colordiv").style.display = "none !important";
+                    document.getElementById("color").style.display = "none !important";
+                    document.getElementById("colorh4").style.display = "none !important";
+                    document.getElementById("colorbutton").style.display = "none !important";
+
                     $.ajaxSetup({ cache: false });
 
                     $.getJSON('../json/alarms.json')
