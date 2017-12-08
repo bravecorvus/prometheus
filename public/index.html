@@ -179,19 +179,6 @@
 
 
             <p><input type="color"></p>
-            <script src="colorpicker/color-picker.min.js"></script>
-            <script>
-                var target = document.querySelector('input[type="color"]'),
-                    picker = new CP(target);
-
-                target.onclick = function(e) {
-                    e.preventDefault();
-                }
-                picker.on("change", function(color) {
-                    this.target.value = '#' + color;
-                });
-            </script>
-
 
         </div><!--settingscontent-->
 
@@ -506,6 +493,7 @@
 
 
             </script>
+            <script src="colorpicker/color-picker.min.js"></script>
 
         </body>
     </html>
