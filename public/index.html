@@ -417,8 +417,8 @@
                     $.get('../json/color')
                         .done( data => {
                             this.colors[0] = String(data).substr(0, 4);
-                            this.colors[1] = String(data).substr(3, 6);
-                            this.colors[2] = String(data).substr(5, 7);
+                            this.colors[1] = String(data).substr(0, 4);
+                            this.colors[2] = String(data).substr(0, 4);
 
                     });
 
