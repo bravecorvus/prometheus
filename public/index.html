@@ -217,7 +217,7 @@
 
                         if (this.active == "settings") {
 
-                            this.colorcontent = `<input type="color" style="display: none;" onclick="var target = document.querySelector('input[type=\"color\"]'); var picker = new CP(target); e.preventDefault(); picker.on(\"change\", function(color) {this.target.value = \"#\" + color;});"></input>`;
+                            this.colorcontent = `<input type="color" style="display: none;" onclick="var target = document.querySelector('input[type=\'color\']'); var picker = new CP(target); e.preventDefault(); picker.on(\'change\', function(color) {this.target.value = \'#\' + color;});"></input>`;
             console.log(picker.target.value)
 
                             this.$nextTick(function () {
