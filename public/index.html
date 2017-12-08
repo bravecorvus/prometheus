@@ -152,10 +152,9 @@
                     picker.fit = function() {
                         this.picker.style.left = this.picker.style.top = ""; // do nothing ...
                     };
-                    picker.picker.classList.add('static');
                     picker.enter(container);
                     picker.on("change", function(color) {
-                        container.parentNode.style.backgroundColor = '#' + color;
+                        console.log(color);
                     });
                     </script>
 
