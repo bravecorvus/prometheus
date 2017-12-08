@@ -250,8 +250,10 @@
                         elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
                         if (this.active == 'settings') {
                             document.getElementById("colordiv").style.display = "";
+                            document.getElementById("color").style.display = "";
                         } else {
                             document.getElementById("colordiv").style.display = "none";
+                            document.getElementById("color").style.display = "none";
                         }
 
                     },
@@ -437,6 +439,7 @@
                     var elem = document.getElementById(this.active);
                     elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
                     document.getElementById("colordiv").style.display = "none";
+                    document.getElementById("color").style.display = "none";
                     $.ajaxSetup({ cache: false });
 
                     $.getJSON('../json/alarms.json')
