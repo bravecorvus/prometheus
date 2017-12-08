@@ -20,7 +20,7 @@ import (
 	"github.com/gilgameshskytrooper/prometheus/structs"
 	"github.com/gilgameshskytrooper/prometheus/utils"
 	"github.com/jacobsa/go-serial/serial"
-	"gopkg.in/go-playground/colors.v1"
+	colors "gopkg.in/go-playground/colors.v1"
 
 	"github.com/robfig/cron"
 )
