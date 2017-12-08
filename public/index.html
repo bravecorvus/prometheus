@@ -140,30 +140,6 @@
                     <br>
 
 
-                    <p><input type="text"></p>
-                    <p></p>
-
-                    <script src="colorpicker/color-picker.min.js"></script>
-                    <script>
-
-                        var picker = new CP(document.querySelector('input'), false);
-
-                        picker.on("change", function(color) {
-                            this.target.value = '#' + color;
-                        });
-
-                        // ...
-                        picker.fit = function() { // do nothing ...
-                            this.picker.style.left = this.picker.style.top = "";
-                        };
-
-                        // add a `static` class to the color picker panel
-                        picker.picker.classList.add('static');
-
-                        // show the color picker panel in the second `<p>` element
-                        picker.enter(document.querySelectorAll('p')[1]);
-
-                    </script>
 
 
                 </div><!--afterclockleft-->
@@ -213,6 +189,30 @@
         </div><!--aboutcontent-->
 
 
+                    <p><input type="text"></p>
+                    <p></p>
+
+                    <script src="colorpicker/color-picker.min.js"></script>
+                    <script>
+
+                        var picker = new CP(document.querySelector('input'), false);
+
+                        picker.on("change", function(color) {
+                            this.target.value = '#' + color;
+                        });
+
+                        // ...
+                        picker.fit = function() { // do nothing ...
+                            this.picker.style.left = this.picker.style.top = "";
+                        };
+
+                        // add a `static` class to the color picker panel
+                        picker.picker.classList.add('static');
+
+                        // show the color picker panel in the second `<p>` element
+                        picker.enter(document.querySelectorAll('p')[1]);
+
+                    </script>
         </div><!--app-->
 
 
