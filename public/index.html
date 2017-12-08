@@ -190,11 +190,22 @@
             <br>
             <br>
             <br>
-            <form>
-                <h3>Change the LED Settings of the Nixie Clock<h3>
-                <input class="form-control" type="text" id="color">
+            <h3>Change the LED Settings of the Nixie Clock<h3>
+            <br>
+            <h4>Enable or Disable LED<h4>
+            <label class="switch">
+                <input :value="enableled" v-if="enableled==true" @click="submitenableled()" type="checkbox" /checked>
+                <input :value="enableled" v-else @click="submitenableled()" type="checkbox">
+                <div class="slider round"></div>
+            </label>
+
+            <form v-if="enableled==true">
+            <h4>Change LED colors<h4>
+                <button @click="submitcolors()">Submit New Color</button>
+                <input v-model="colors" type="text" id="color" >
             </form>
         </div> <!--id="colordiv"-->
+
         </div><!--app-->
 
 
@@ -216,8 +227,11 @@
                     customsoundcard: [],
                     active: 'home',
                     colors: [],
-                    /*colorcontent: null,*/
+                    enableled: [],
                 },
+
+
+
 
                 methods: {
 
@@ -380,6 +394,36 @@
                             }
                         );
                     },
+
+                    submitenableled() {
+                        if (this.enableled == true) {
+                            this.enableled = false;
+                        } else {
+                            this.enableled = true;
+                        }
+                        $.ajax(
+                            {
+                                url: "/submitenableled",
+                                type: 'post',
+                                data: {
+                                    value: this.enableled,
+                                }
+                            }
+                        );
+                    },
+
+                    submitcolors() {
+                        $.ajax(
+                            {
+                                url: "/submitcolors",
+                                type: 'post',
+                                data: {
+                                    value: this.colors, 
+                                }
+                            }
+                        );
+                    },
+
                 },
 
                 created() {
@@ -416,7 +460,7 @@
 
                     $.get('../json/colors')
                         .done( data => {
-                            this.colors = [Number(String(data).substring(0, 3)), Number(String(data).substring(3, 6)), Number(String(data).substring(6, 9))];
+                            this.colors = String(data).replace(/\n/g, '');
                     });
 
                     $.get('../json/customsoundcard')
@@ -427,6 +471,17 @@
                                 this.customsoundcard = false;
                             }
                     });
+
+                    $.get('../json/enableled')
+                        .done( data => {
+                            if (data.replace(/\n/g, '') == "true") {
+                                this.enableled = true;
+                            } else {
+                                this.enableled = false;
+                            }
+                    });
+
+
 
                 },
 
