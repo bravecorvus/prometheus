@@ -180,8 +180,6 @@
                 </div> <!--id="afterclockright"-->
             </div><!--afterclock-->
 
-
-
         </div><!--settingscontent-->
 
         <div v-else-if="active=='about'" id="aboutcontent">
@@ -234,6 +232,7 @@
                                 target.onclick = function(e) {
                                     e.preventDefault();
                                     picker.on("change", function(color) {this.target.value = "#" + color;});
+                                    console.log(picker.target.value)
                                 }
                             });
                         } else {
