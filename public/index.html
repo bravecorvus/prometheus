@@ -411,7 +411,10 @@
 
                     $.get('../json/color')
                         .done( data => {
-                            this.color = String(data).replace(/\n/g, '');
+                            this.color[0] = data.[0];
+                            this.color[1] = data.[1];
+                            this.color[2] = data.[2];
+
                     });
 
                     $.get('../json/customsoundcard')
