@@ -144,13 +144,6 @@
                         <div class="color-picker static" style="">
                             <div class="color-picker-control">
 
-                                <span class="color-picker-h">
-                                    <i style="top: 147px;"></i>
-                                </span>
-
-                                <span class="color-picker-sv" style="background-color: rgb(255, 0, 0);">
-                                    <i style="right: 37px; top: 54px;"></i>
-                                </span>
 
                             </div>
                         </div>
@@ -158,7 +151,7 @@
 
                     <script>
                     var container = document.querySelector('#color-picker'),
-                        picker = new CP(container, false);
+                    picker = new CP(container, false);
                     picker.fit = function() {
                         this.picker.style.left = this.picker.style.top = ""; // do nothing ...
                     };
