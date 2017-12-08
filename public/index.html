@@ -216,19 +216,9 @@
 
                         if (this.active == "settings") {
                             this.colorcontent = `\
-                                <input type="color"></input>\
-                                <script>\
-                                    var target = document.querySelector('input[type="color"]');/
-                                    var picker = new CP(target);\
-
-                                    target.onclick = function(e) {\
-                                        e.preventDefault();\
-                                    }\
-                                    picker.on("change", function(color) {\
-                                        this.target.value = "#" + color;\
-                                    });\
-                                </script>\
+                                <input type="color" onload="var target = document.querySelector('input[type=\"color\"]'); var picker = new CP(target); target.onclick = function(e) {e.preventDefault(); picker.on(\"change\", function(color) {this.target.value = \"#\" + color;});}"></input>\
                             `;
+                            
                         } else {
                             this.colorcontent = ``
                         }
