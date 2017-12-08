@@ -416,7 +416,7 @@
                         <!-- }); -->
                     $.get('../json/color')
                         .done( data => {
-                            this.colors = [data.substring(0,4), data.substring(3, 6), data.substring(5, 8)];
+                            this.colors = [String(data).substring(0,4), String(data).substring(3, 6), String(data).substring(5, 8)];
                     });
 
                     $.get('../json/customsoundcard')
