@@ -16,7 +16,7 @@
 
 body {
     border-color: transparent;
-    background: black;
+    background: black !important;
     font-family: Quicksand;
     color: white;
     background-color: black;
