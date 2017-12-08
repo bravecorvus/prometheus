@@ -20,6 +20,7 @@ import (
 	"github.com/gilgameshskytrooper/prometheus/structs"
 	"github.com/gilgameshskytrooper/prometheus/utils"
 	"github.com/jacobsa/go-serial/serial"
+	"gopkg.in/go-playground/colors.v1"
 
 	"github.com/robfig/cron"
 )
@@ -1298,6 +1299,37 @@ func main() {
 		}
 		value := r.FormValue("value")
 		utils.WriteEmail(value)
+	})
+
+	http.HandleFunc("/submitcolors", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
+		}
+		value := r.FormValue("value")
+		utils.ColorUpdate(value)
+		hex, err := colors.ParseHex(arg)
+		if err != nil {
+			fmt.Println("Error Parsing hex color")
+		}
+		fmt.Println(hex.ToRGB())
+	})
+
+	http.HandleFunc("/submitenableled", func(w http.ResponseWriter, r *http.Request) {
+		erawr := r.ParseForm()
+		if erawr != nil {
+			fmt.Println("ERROR")
+			os.Exit(1)
+		}
+		value := r.FormValue("value")
+		if value == "true" {
+			EnableEmail = true
+			utils.WriteEnableLed("true")
+		} else {
+			EnableEmail = false
+			utils.WriteEnableLed("false")
+		}
 	})
 
 	//Pass on the AJAX post /upload handler to the uploadHandler() function

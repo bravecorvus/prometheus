@@ -310,3 +310,21 @@ func WriteCustomSoundCard(arg string) {
 		os.Exit(1)
 	}
 }
+
+func ColorUpdate(arg string) {
+	content := []byte(arg)
+	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
+	if err != nil {
+		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableled")
+		os.Exit(1)
+	}
+}
+
+func WriteEnableLed(arg string) {
+	content := []byte(arg)
+	err := ioutil.WriteFile(Pwd()+"/public/json/enableled", content, 0644)
+	if err != nil {
+		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableled")
+		os.Exit(1)
+	}
+}
