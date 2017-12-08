@@ -141,16 +141,26 @@
                     <br>
 
 
-      <section id="color-picker"><div class="color-picker static" style=""><div class="color-picker-control"><span class="color-picker-h"><i style="top: 147px;"></i></span><span class="color-picker-sv" style="background-color: rgb(255, 0, 0);"><i style="right: 37px; top: 54px;"></i></span></div></div></section>
+
                     <script>
 
-                        var container = document.querySelector('#color-picker'),
-                            picker = new CP(container, false);
-                        picker.picker.classList.add('static');
-                        picker.enter(container);
+                        var picker = new CP(document.querySelector('input'), false);
+
                         picker.on("change", function(color) {
-                            container.parentNode.style.backgroundColor = '#' + color;
+                            this.target.value = '#' + color;
                         });
+
+                        // ...
+                        picker.fit = function() { // do nothing ...
+                            this.picker.style.left = this.picker.style.top = "";
+                        };
+
+                        // add a `static` class to the color picker panel
+                        picker.picker.classList.add('static');
+
+                        // show the color picker panel in the second `<p>` element
+                        picker.enter(document.querySelectorAll('p')[1]);
+
                     </script>
 
 
