@@ -139,9 +139,6 @@
                     <p>Current Track: {{this.trackinfo}}</p>
                     <br>
 
-
-
-
                 </div><!--afterclockleft-->
 
                 <div id="afterclockright">
@@ -189,30 +186,31 @@
         </div><!--aboutcontent-->
 
 
-                    <p><input type="text"></p>
-                    <p></p>
+        <p><input type="text"></p>
+        <p></p>
 
-                    <script src="colorpicker/color-picker.min.js"></script>
-                    <script>
+        <script src="colorpicker/color-picker.min.js"></script>
+        <script>
 
-                        var picker = new CP(document.querySelector('input'), false);
+            var picker = new CP(document.querySelector('input'), false);
 
-                        picker.on("change", function(color) {
-                            this.target.value = '#' + color;
-                        });
+            picker.on("change", function(color) {
+                this.target.value = '#' + color;
+            });
 
-                        // ...
-                        picker.fit = function() { // do nothing ...
-                            this.picker.style.left = this.picker.style.top = "";
-                        };
+            // ...
+            picker.fit = function() { // do nothing ...
+                this.picker.style.left = this.picker.style.top = "";
+            };
 
-                        // add a `static` class to the color picker panel
-                        picker.picker.classList.add('static');
+            // add a `static` class to the color picker panel
+            picker.picker.classList.add('static');
 
-                        // show the color picker panel in the second `<p>` element
-                        picker.enter(document.querySelectorAll('p')[1]);
+            // show the color picker panel in the second `<p>` element
+            picker.enter(document.querySelectorAll('p')[1]);
 
-                    </script>
+        </script>
+
         </div><!--app-->
 
 
