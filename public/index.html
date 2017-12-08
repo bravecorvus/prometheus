@@ -250,7 +250,11 @@
                         elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
                         if (this.active == 'settings') {
                             document.getElementById("colordiv").style.display = "";
-                            document.getElementById("color").style.display = "";
+                            if (this.enableled == true) {
+                                document.getElementById("color").style.display = "";
+                            } else {
+                                document.getElementById("color").style.display = "none !important";
+                            }
                         } else {
                             document.getElementById("colordiv").style.display = "none !important";
                             document.getElementById("color").style.display = "none !important";
