@@ -509,11 +509,11 @@
                 });
 
 
-                $(document).addEventListener('click', function() {
+                $(document).on('click','body *',function(){
                     if (this.active == "settings")  {
                         this.makeActive();
                     }
-                }, false);
+                });
 
             </script>
 
