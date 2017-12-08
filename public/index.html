@@ -206,12 +206,11 @@
             <form v-if="enableled==true">
             <h4>Change LED colors<h4>
                 <button @click="submitcolors()">Submit New Color</button>
-                <input type="text" id="color" >
+                <!-- <input v-model="colors" type="text" id="color" > -->
             </form>
         </div> <!--id="colordiv"-->
 
-
-        <!-- <input type="text" id="color" > -->
+        <input v-model="colors" type="text" id="color" >
 
         </div><!--app-->
 
