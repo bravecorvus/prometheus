@@ -186,13 +186,13 @@
         </div><!--aboutcontent-->
 
 
-        <p><input type="color"></p>
+        <p><input type="text" id="color-switch"></p>
         <p></p>
 
         <script src="colorpicker/color-picker.min.js"></script>
         <script>
 
-            var picker = new CP(document.querySelector('input[type="color"]'), false);
+            var picker = new CP(document.querySelector('input[id="color-switch"]'), false);
 
             picker.on("change", function(color) {
                 this.target.value = '#' + color;
