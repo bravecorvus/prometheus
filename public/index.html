@@ -219,14 +219,14 @@
                         if (this.active == "settings") {
                             this.colorcontent = `<input type="color" style="display: none;"></input>`;
                             this.$nextTick(function () {
+                                var target = document.querySelector('input[type="color"]');
+                                var picker = new CP(target);
                                 CP.each(function($) {
                                         $.enter(); // this will show all of the color picker panel
                                 });
-                                var target = document.querySelector('input[type="color"]');
-                                var picker = new CP(target);
+                                picker.set('rgb(255, 0, 0)');
                                 target.onclick = function(e) {
                                     e.preventDefault();
-                                    picker.set('rgb(255, 0, 0)');
                                     picker.on("change", function(color) {this.target.value = "#" + color;});
                                 }
                             });
