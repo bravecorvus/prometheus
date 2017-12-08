@@ -228,6 +228,7 @@
                                             $.enter(); // this will show all of the color picker panel
                                     });
                                     this.colorsgenerated = true;
+                                    picker.off("destroy");
                                 } else {
                                     var picker = CP(target);
                                 }
