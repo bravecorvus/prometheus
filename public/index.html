@@ -411,7 +411,7 @@
 
                     $.get('../json/colors')
                         .done( data => {
-                            this.colors = [parseInt(String(data).substring(0, 3)), parseInt(String(data).substring(3, 6)), parseInt(String(data).substring(6, 9))];
+                            this.colors = [Number(String(data).substring(0, 3)), Number(String(data).substring(3, 6)), Number(String(data).substring(6, 9))];
                     });
 
                     $.get('../json/customsoundcard')
