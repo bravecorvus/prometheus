@@ -187,6 +187,12 @@
                     // disable color picker by default
                     // to enable it, try `picker.enter()`
                     var picker = new CP(colorel, false);
+                    colorel.onclick = function(e) {
+                        e.preventDefault();
+                    }
+                    picker.on("change", function(color) {
+                        this.target.value = '#' + color;
+                    });
                     </script>
 
                 </div> <!--id="afterclockright"-->
