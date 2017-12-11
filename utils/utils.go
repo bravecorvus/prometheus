@@ -319,9 +319,9 @@ func ColorUpdate(arg string) (string, string, string) {
 		fmt.Println("ERROR failed to create a color object based on hex color")
 	}
 	rgb := hex.ToRGB()
-	fmt.Println("Red", rgb.R)
-	fmt.Println("Green", rgb.G)
-	fmt.Println("Blue", rgb.B)
+	fmt.Println("Red", string(rgb.R))
+	fmt.Println("Green", string(rgb.G))
+	fmt.Println("Blue", string(rgb.B))
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
 	if err != nil {
