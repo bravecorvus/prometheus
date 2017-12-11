@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -319,9 +320,9 @@ func ColorUpdate(arg string) (string, string, string) {
 		fmt.Println("ERROR failed to create a color object based on hex color")
 	}
 	rgb := hex.ToRGB()
-	fmt.Println("Red", string(rgb.R))
-	fmt.Println("Green", string(rgb.G))
-	fmt.Println("Blue", string(rgb.B))
+	fmt.Println("Red", strconv.Itoa(int(rgb.R)))
+	fmt.Println("Green", strconv.Itoa(int(rgb.G)))
+	fmt.Println("Blue", strconv.Itoa(int(rgb.B)))
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
 	if err != nil {
