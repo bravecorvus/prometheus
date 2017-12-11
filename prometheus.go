@@ -263,6 +263,9 @@ func main() {
 			Alarm1.CurrentlyRunning = true
 
 			if Alarm1.Sound && Alarm1.Vibration {
+				Red = "255"
+				Green = "000"
+				Blue = "000"
 
 				if shairportInstalled {
 					utils.KillShairportSync()
@@ -299,6 +302,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm1.Alarmtime) {
 							Alarm1.CurrentlyRunning = false
@@ -314,6 +318,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else {
 							gpio.VibOff()
@@ -351,6 +356,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm1.Alarmtime) {
 							Alarm1.CurrentlyRunning = false
@@ -366,6 +372,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else {
 							gpio.VibOff()
@@ -376,7 +383,9 @@ func main() {
 				}
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
-
+				Red = "255"
+				Green = "000"
+				Blue = "000"
 				if shairportInstalled {
 					utils.KillShairportSync()
 				}
@@ -400,7 +409,10 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else if OverTenMinutes(Alarm1.Alarmtime) {
 							Alarm1.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
@@ -414,10 +426,14 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						}
 					}
 				} else {
+
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
@@ -437,6 +453,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm1.Alarmtime) {
 							Alarm1.CurrentlyRunning = false
@@ -451,12 +468,18 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						}
 					}
 				}
 
 			} else if !Alarm1.Sound && Alarm1.Vibration {
+
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -469,10 +492,14 @@ func main() {
 					if breaktime {
 						gpio.VibOff()
 						breaktime = false
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
 						break
+
 					} else if OverTenMinutes(Alarm1.Alarmtime) {
 						Alarm1.CurrentlyRunning = false
 						gpio.VibOff()
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
+						break
 					} else {
 						gpio.VibOff()
 						time.Sleep(duration)
@@ -483,6 +510,11 @@ func main() {
 			}
 
 		} else if Alarm2.Alarmtime == currenttime {
+
+			Red = "255"
+			Green = "000"
+			Blue = "000"
+
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			Alarm2.CurrentlyRunning = true
@@ -493,6 +525,7 @@ func main() {
 				}
 
 				if CustomSoundCard {
+
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
@@ -505,6 +538,7 @@ func main() {
 							time.Sleep(time.Millisecond * 50)
 							if !Alarm2.CurrentlyRunning {
 								breaktime = true
+								Red, Green, Blue, EnableLed = utils.ColorInitialize()
 								break
 							}
 						}
@@ -522,6 +556,8 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
+
 							break
 						} else if OverTenMinutes(Alarm2.Alarmtime) {
 							Alarm2.CurrentlyRunning = false
@@ -537,7 +573,10 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else {
 							gpio.VibOff()
 							time.Sleep(duration)
@@ -545,6 +584,7 @@ func main() {
 
 					}
 				} else {
+
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
@@ -573,7 +613,9 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else if OverTenMinutes(Alarm2.Alarmtime) {
 							Alarm2.CurrentlyRunning = false
 							gpio.VibOff()
@@ -588,7 +630,9 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else {
 							gpio.VibOff()
 							time.Sleep(duration)
@@ -599,11 +643,16 @@ func main() {
 
 			} else if Alarm2.Sound && !Alarm2.Vibration {
 
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				if shairportInstalled {
 					utils.KillShairportSync()
 				}
 
 				if CustomSoundCard {
+
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
@@ -624,7 +673,10 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else if OverTenMinutes(Alarm2.Alarmtime) {
 							Alarm2.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
@@ -638,17 +690,20 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						}
 					}
 
 				} else {
+
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
 					}
 					for {
+
 						time.Sleep(time.Second * 1)
 						if !Alarm2.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
@@ -662,6 +717,8 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm2.Alarmtime) {
 							Alarm2.CurrentlyRunning = false
@@ -676,12 +733,19 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						}
 					}
 				}
 
 			} else if !Alarm2.Sound && Alarm2.Vibration {
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -694,10 +758,14 @@ func main() {
 					if breaktime {
 						gpio.VibOff()
 						breaktime = false
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
 						break
+
 					} else if OverTenMinutes(Alarm2.Alarmtime) {
 						Alarm2.CurrentlyRunning = false
 						gpio.VibOff()
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
+						break
 					} else {
 						gpio.VibOff()
 						time.Sleep(duration)
@@ -705,6 +773,7 @@ func main() {
 				}
 			} else {
 				Alarm2.CurrentlyRunning = false
+				Red, Green, Blue, EnableLed = utils.ColorInitialize()
 			}
 
 		} else if Alarm3.Alarmtime == currenttime {
@@ -712,6 +781,10 @@ func main() {
 			go utils.RestartNetwork()
 			Alarm3.CurrentlyRunning = true
 			if Alarm3.Sound && Alarm3.Vibration {
+
+				Red = "255"
+				Green = "000"
+				Blue = "000"
 
 				if shairportInstalled {
 					utils.KillShairportSync()
@@ -747,6 +820,8 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm3.Alarmtime) {
 							Alarm3.CurrentlyRunning = false
@@ -762,6 +837,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else {
 							gpio.VibOff()
@@ -799,6 +875,8 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm3.Alarmtime) {
 							Alarm3.CurrentlyRunning = false
@@ -814,7 +892,9 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else {
 							gpio.VibOff()
 							time.Sleep(duration)
@@ -825,6 +905,10 @@ func main() {
 
 			} else if Alarm3.Sound && !Alarm3.Vibration {
 
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				if shairportInstalled {
 					utils.KillShairportSync()
 				}
@@ -850,6 +934,8 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
+
 							break
 						} else if OverTenMinutes(Alarm3.Alarmtime) {
 							Alarm3.CurrentlyRunning = false
@@ -864,6 +950,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						}
 					}
@@ -889,7 +976,9 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else if OverTenMinutes(Alarm3.Alarmtime) {
 							Alarm3.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
@@ -904,12 +993,17 @@ func main() {
 								}
 							}
 							break
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 						}
 					}
 
 				}
 
 			} else if !Alarm3.Sound && Alarm3.Vibration {
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -922,10 +1016,17 @@ func main() {
 					if breaktime {
 						gpio.VibOff()
 						breaktime = false
+						Red = "255"
+						Green = "000"
+						Blue = "000"
 						break
 					} else if OverTenMinutes(Alarm3.Alarmtime) {
 						Alarm3.CurrentlyRunning = false
 						gpio.VibOff()
+						Red = "255"
+						Green = "000"
+						Blue = "000"
+						break
 					} else {
 						gpio.VibOff()
 						time.Sleep(duration)
@@ -941,6 +1042,10 @@ func main() {
 			Alarm4.CurrentlyRunning = true
 			if Alarm4.Sound && Alarm4.Vibration {
 
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				if shairportInstalled {
 					utils.KillShairportSync()
 				}
@@ -975,7 +1080,9 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else if OverTenMinutes(Alarm4.Alarmtime) {
 							Alarm4.CurrentlyRunning = false
 							gpio.VibOff()
@@ -990,6 +1097,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else {
 							gpio.VibOff()
@@ -1028,6 +1136,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm4.Alarmtime) {
 							Alarm4.CurrentlyRunning = false
@@ -1043,6 +1152,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else {
 							gpio.VibOff()
@@ -1055,6 +1165,10 @@ func main() {
 
 			} else if Alarm4.Sound && !Alarm4.Vibration {
 
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				if shairportInstalled {
 					utils.KillShairportSync()
 				}
@@ -1080,7 +1194,9 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
+
 						} else if OverTenMinutes(Alarm4.Alarmtime) {
 							Alarm4.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
@@ -1094,6 +1210,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						}
 					}
@@ -1119,6 +1236,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						} else if OverTenMinutes(Alarm4.Alarmtime) {
 							Alarm4.CurrentlyRunning = false
@@ -1133,6 +1251,7 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						}
 					}
@@ -1146,6 +1265,7 @@ func main() {
 						time.Sleep(time.Millisecond * 50)
 						if !Alarm4.CurrentlyRunning {
 							breaktime = true
+							Red, Green, Blue, EnableLed = utils.ColorInitialize()
 							break
 						}
 					}
@@ -1156,6 +1276,8 @@ func main() {
 					} else if OverTenMinutes(Alarm4.Alarmtime) {
 						Alarm4.CurrentlyRunning = false
 						gpio.VibOff()
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
+						break
 					} else {
 						gpio.VibOff()
 						time.Sleep(duration)
