@@ -16,10 +16,8 @@ import (
 	"time"
 
 	"github.com/gilgameshskytrooper/prometheus/gpio"
-	"github.com/gilgameshskytrooper/prometheus/nixie"
 	"github.com/gilgameshskytrooper/prometheus/structs"
 	"github.com/gilgameshskytrooper/prometheus/utils"
-	"github.com/jacobsa/go-serial/serial"
 
 	"github.com/robfig/cron"
 )
@@ -174,30 +172,30 @@ func main() {
 
 	// Ensure any previous incarnations of shairport-sync gets killed.
 	// if no previous process exists, KillShairportSync() automatically handles this.
-	utils.KillShairportSync()
-	shairportInstalled = utils.CheckShairportSyncInstalled()
-	if shairportInstalled {
-		shairportstart := exec.Command("shairport-sync", "-d")
-		shairportstarterror := shairportstart.Run()
-		if shairportstarterror != nil {
-			fmt.Println("Could not start shairport-sync daemon")
-		}
-	}
-	options := serial.OpenOptions{
-		PortName:        nixie.FindArduino(),
-		BaudRate:        115200,
-		DataBits:        8,
-		StopBits:        1,
-		MinimumReadSize: 4,
-	}
+	// utils.KillShairportSync()
+	// shairportInstalled = utils.CheckShairportSyncInstalled()
+	// if shairportInstalled {
+	// shairportstart := exec.Command("shairport-sync", "-d")
+	// shairportstarterror := shairportstart.Run()
+	// if shairportstarterror != nil {
+	// fmt.Println("Could not start shairport-sync daemon")
+	// }
+	// }
+	// options := serial.OpenOptions{
+	// PortName:        nixie.FindArduino(),
+	// BaudRate:        115200,
+	// DataBits:        8,
+	// StopBits:        1,
+	// MinimumReadSize: 4,
+	// }
 	// Open the port.
-	port, err := serial.Open(options)
-	if err != nil {
-		foundNixie = false
-	}
+	// port, err := serial.Open(options)
+	// if err != nil {
+	// foundNixie = false
+	// }
 
 	// Make sure to close it later.
-	defer port.Close()
+	// defer port.Close()
 
 	// Initialize all 4 instances of alarm clocks
 	// Create function that updates clock once a minute (used to see if any times match up)
@@ -206,44 +204,44 @@ func main() {
 	c := cron.New()
 
 	// Send relevant time clock over serial USB
-	c.AddFunc("@every 1s", func() {
-
-		if EnableLed {
-
-			if foundNixie {
-				b := []byte(nixie.CurrentTimeAsString() + Red + Green + Blue)
-				_, err := port.Write(b)
-				if err != nil {
-					log.Fatalf("port.Write: %v", err)
-				}
-			} else {
-				options.PortName = nixie.FindArduino()
-				if options.PortName != "" {
-					foundNixie = true
-				} else {
-					foundNixie = false
-				}
-			}
-
-		} else {
-
-			if foundNixie {
-				b := []byte(nixie.CurrentTimeAsString())
-				_, err := port.Write(b)
-				if err != nil {
-					log.Fatalf("port.Write: %v", err)
-				}
-			} else {
-				options.PortName = nixie.FindArduino()
-				if options.PortName != "" {
-					foundNixie = true
-				} else {
-					foundNixie = false
-				}
-			}
-		}
-
-	})
+	// c.AddFunc("@every 1s", func() {
+	//
+	// if EnableLed {
+	//
+	// if foundNixie {
+	// b := []byte(nixie.CurrentTimeAsString() + Red + Green + Blue)
+	// _, err := port.Write(b)
+	// if err != nil {
+	// log.Fatalf("port.Write: %v", err)
+	// }
+	// } else {
+	// options.PortName = nixie.FindArduino()
+	// if options.PortName != "" {
+	// foundNixie = true
+	// } else {
+	// foundNixie = false
+	// }
+	// }
+	//
+	// } else {
+	//
+	// if foundNixie {
+	// b := []byte(nixie.CurrentTimeAsString())
+	// _, err := port.Write(b)
+	// if err != nil {
+	// log.Fatalf("port.Write: %v", err)
+	// }
+	// } else {
+	// options.PortName = nixie.FindArduino()
+	// if options.PortName != "" {
+	// foundNixie = true
+	// } else {
+	// foundNixie = false
+	// }
+	// }
+	// }
+	//
+	// })
 
 	//Run the following once a minute
 	//Check all 4 alarms to see if the current time matches any configurations
