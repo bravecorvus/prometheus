@@ -319,11 +319,10 @@ func ColorUpdate(arg string) (string, string, string) {
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
 	if err != nil {
-		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/colors")
+		fmt.Println("Error writing back colors file for " + Pwd() + "/public/json/colors")
 	}
-	fmt.Println("Pre conversion RGB = ", rgb.R, rgb.G, rgb.B)
-	var stringred, stringgreen, stringblue string
 
+	var stringred, stringgreen, stringblue string
 	if int(rgb.R) < 10 {
 		stringred = "00" + strconv.Itoa(int(rgb.R))
 	} else if int(rgb.R) < 100 && int(rgb.R) > 9 {
@@ -347,7 +346,6 @@ func ColorUpdate(arg string) (string, string, string) {
 	} else {
 		stringblue = strconv.Itoa(int(rgb.B))
 	}
-	fmt.Println(stringred, stringgreen, stringblue)
 	return stringred, stringgreen, stringblue
 }
 
@@ -363,7 +361,32 @@ func ColorInitialize() (string, string, string) {
 		fmt.Println("ERROR failed to create a color object based on hex color")
 	}
 	rgb := hex.ToRGB()
-	return strconv.Itoa(int(rgb.R)), strconv.Itoa(int(rgb.G)), strconv.Itoa(int(rgb.B))
+
+	var stringred, stringgreen, stringblue string
+	if int(rgb.R) < 10 {
+		stringred = "00" + strconv.Itoa(int(rgb.R))
+	} else if int(rgb.R) < 100 && int(rgb.R) > 9 {
+		stringred = "0" + strconv.Itoa(int(rgb.R))
+	} else {
+		stringred = strconv.Itoa(int(rgb.R))
+	}
+
+	if int(rgb.G) < 10 {
+		stringgreen = "00" + strconv.Itoa(int(rgb.G))
+	} else if int(rgb.G) < 100 && int(rgb.G) > 9 {
+		stringgreen = "0" + strconv.Itoa(int(rgb.G))
+	} else {
+		stringgreen = strconv.Itoa(int(rgb.G))
+	}
+
+	if int(rgb.B) < 10 {
+		stringblue = "00" + strconv.Itoa(int(rgb.B))
+	} else if int(rgb.B) < 100 && int(rgb.B) > 9 {
+		stringblue = "0" + strconv.Itoa(int(rgb.B))
+	} else {
+		stringblue = strconv.Itoa(int(rgb.B))
+	}
+	return stringred, stringgreen, stringblue
 }
 
 func WriteEnableLed(arg string) {
