@@ -223,6 +223,22 @@ func main() {
 					foundNixie = false
 				}
 			}
+
+		} else {
+
+			if foundNixie {
+				b := []byte(nixie.CurrentTimeAsString())
+				_, err := port.Write(b)
+				if err != nil {
+					log.Fatalf("port.Write: %v", err)
+				}
+			} else {
+				options.PortName = nixie.FindArduino()
+				if options.PortName != "" {
+					foundNixie = true
+				} else {
+					foundNixie = false
+				}
 		}
 
 	})

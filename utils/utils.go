@@ -393,7 +393,7 @@ func ColorInitialize() (string, string, string, bool) {
 	}
 	lines2 := strings.Split(string(content2), "\n")
 	var returnbool bool
-	if lines[0] == "True" {
+	if lines2[0] == "True" {
 		returnbool = true
 	} else {
 		returnbool = false
