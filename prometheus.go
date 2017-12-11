@@ -45,6 +45,7 @@ var (
 	// Alarm sound filename
 	Soundname        string
 	CustomSoundCard  bool
+	Used to tell what colors the user wants the LED to be on the clock
 	Red, Green, Blue string
 )
 
@@ -159,6 +160,7 @@ func init() {
 	Email = utils.GetEmail()
 	EnableEmail = utils.GetEnableEmail()
 	CustomSoundCard = utils.UseCustomSoundCard()
+	Red, Green, Blue = utils.ColorInitialize()
 }
 
 // Main function

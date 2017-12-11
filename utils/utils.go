@@ -191,7 +191,6 @@ func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Al
 	err := ioutil.WriteFile(filepath, content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back JSON alarm file for " + filepath)
-		os.Exit(1)
 	}
 }
 
@@ -230,7 +229,6 @@ func WriteEnableEmail(arg string) {
 	err := ioutil.WriteFile(Pwd()+"/public/json/enableemail", content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableemail")
-		os.Exit(1)
 	}
 
 }
@@ -241,7 +239,6 @@ func WriteEmail(arg string) {
 	err := ioutil.WriteFile(Pwd()+"/public/json/email", content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableemail")
-		os.Exit(1)
 	}
 
 }
@@ -310,7 +307,6 @@ func WriteCustomSoundCard(arg string) {
 	err := ioutil.WriteFile(Pwd()+"/public/json/customsoundcard", content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/customsoundcard")
-		os.Exit(1)
 	}
 }
 
@@ -320,16 +316,53 @@ func ColorUpdate(arg string) (string, string, string) {
 		fmt.Println("ERROR failed to create a color object based on hex color")
 	}
 	rgb := hex.ToRGB()
-	fmt.Println("Red", strconv.Itoa(int(rgb.R)))
-	fmt.Println("Green", strconv.Itoa(int(rgb.G)))
-	fmt.Println("Blue", strconv.Itoa(int(rgb.B)))
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableled")
-		os.Exit(1)
 	}
-	return "255", "000", "000"
+	var stringred, stringgreen, stringblue string
+
+	if int(rgb.R) < 10 {
+		stringred = "00" + strconv.Itoa(int(rgb.R))
+	} else if int(rgb.R) < 100 && int(rgb.R) > 9 {
+		stringred = "0" + strconv.Itoa(int(rgb.R))
+	} else {
+		stringred = strconv.Itoa(int(rgb.R))
+	}
+
+	if int(rgb.G) < 10 {
+		stringgreen = "00" + strconv.Itoa(int(rgb.G))
+	} else if int(rgb.G) < 100 && int(rgb.G) > 9 {
+		stringgreen = "0" + strconv.Itoa(int(rgb.G))
+	} else {
+		stringgreen = strconv.Itoa(int(rgb.R))
+	}
+
+	if int(rgb.B) < 10 {
+		stringblue = "00" + strconv.Itoa(int(rgb.B))
+	} else if int(rgb.B) < 100 && int(rgb.B) > 9 {
+		stringblue = "0" + strconv.Itoa(int(rgb.B))
+	} else {
+		stringblue = strconv.Itoa(int(rgb.R))
+	}
+	fmt.Println(stringred, stringgreen, stringblue)
+	return stringred, stringgreen, stringblue
+}
+
+func ColorInitialize() (string, string, string) {
+
+	content, err := ioutil.ReadFile(Pwd() + "/public/json/colors")
+	if err != nil {
+		fmt.Println("ERROR ColorInitialize() read JSON file")
+	}
+	lines := strings.Split(string(content), "\n")
+	hex, hexerr := colors.ParseHEX(lines[0])
+	if hexerr != nil {
+		fmt.Println("ERROR failed to create a color object based on hex color")
+	}
+	rgb := hex.ToRGB()
+	return strconv.Itoa(int(rgb.R)), strconv.Itoa(int(rgb.G)), strconv.Itoa(int(rgb.B))
 }
 
 func WriteEnableLed(arg string) {
@@ -337,6 +370,5 @@ func WriteEnableLed(arg string) {
 	err := ioutil.WriteFile(Pwd()+"/public/json/enableled", content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableled")
-		os.Exit(1)
 	}
 }
