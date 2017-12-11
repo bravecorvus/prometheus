@@ -319,8 +319,9 @@ func ColorUpdate(arg string) (string, string, string) {
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
 	if err != nil {
-		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableled")
+		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/colors")
 	}
+	fmt.Println("Pre conversion RGB = " rgb.R, rgb.G, rgb.B)
 	var stringred, stringgreen, stringblue string
 
 	if int(rgb.R) < 10 {

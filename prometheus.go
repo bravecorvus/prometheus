@@ -1315,9 +1315,6 @@ func main() {
 		value := r.FormValue("value")
 		fmt.Println(value)
 		Red, Green, Blue = utils.ColorUpdate(value)
-		if err != nil {
-			fmt.Println("Error Parsing hex color")
-		}
 	})
 
 	http.HandleFunc("/submitenableled", func(w http.ResponseWriter, r *http.Request) {
