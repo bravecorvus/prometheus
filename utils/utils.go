@@ -337,7 +337,7 @@ func ColorUpdate(arg string) (string, string, string) {
 	} else if int(rgb.G) < 100 && int(rgb.G) > 9 {
 		stringgreen = "0" + strconv.Itoa(int(rgb.G))
 	} else {
-		stringgreen = strconv.Itoa(int(rgb.R))
+		stringgreen = strconv.Itoa(int(rgb.G))
 	}
 
 	if int(rgb.B) < 10 {
@@ -345,7 +345,7 @@ func ColorUpdate(arg string) (string, string, string) {
 	} else if int(rgb.B) < 100 && int(rgb.B) > 9 {
 		stringblue = "0" + strconv.Itoa(int(rgb.B))
 	} else {
-		stringblue = strconv.Itoa(int(rgb.R))
+		stringblue = strconv.Itoa(int(rgb.B))
 	}
 	fmt.Println(stringred, stringgreen, stringblue)
 	return stringred, stringgreen, stringblue
