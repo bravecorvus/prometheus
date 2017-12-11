@@ -622,7 +622,9 @@
             $('#color').colorpicker({
 				format: 'hex',
                 useAlpha: false
-			});
+            }).onDisable({
+                this.enable;
+            });
 
             window.onscroll = function() {navbarhandler()};
 			function navbarhandler() {
