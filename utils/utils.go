@@ -15,6 +15,8 @@ import (
 	"strings"
 	"time"
 
+	"gopkg.in/go-playground/colors.v1"
+
 	"github.com/gilgameshskytrooper/prometheus/structs"
 )
 
@@ -312,13 +314,18 @@ func WriteCustomSoundCard(arg string) {
 }
 
 func ColorUpdate(arg string) (string, string, string) {
-
+	hex, hexerr := colors.ParseHEX(arg)
+	if hexerr != nil {
+		fmt.Println("ERROR failed to create a color object based on hex color")
+	}
+	fmt.Println(colors.ToRGB())
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
 	if err != nil {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableled")
 		os.Exit(1)
 	}
+	return "255", "000", "000"
 }
 
 func WriteEnableLed(arg string) {
