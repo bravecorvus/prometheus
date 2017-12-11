@@ -163,7 +163,7 @@ func init() {
 	Email = utils.GetEmail()
 	EnableEmail = utils.GetEnableEmail()
 	CustomSoundCard = utils.UseCustomSoundCard()
-	Red, Green, Blue = utils.ColorInitialize()
+	Red, Green, Blue, EnableLed = utils.ColorInitialize()
 }
 
 // Main function
@@ -207,18 +207,21 @@ func main() {
 
 	// Send relevant time clock over serial USB
 	c.AddFunc("@every 1s", func() {
-		if foundNixie {
-			b := []byte(nixie.CurrentTimeAsString())
-			_, err := port.Write(b)
-			if err != nil {
-				log.Fatalf("port.Write: %v", err)
-			}
-		} else {
-			options.PortName = nixie.FindArduino()
-			if options.PortName != "" {
-				foundNixie = true
+		if EnableLed {
+
+			if foundNixie {
+				b := []byte(nixie.CurrentTimeAsString() + Red + Green + Blue)
+				_, err := port.Write(b)
+				if err != nil {
+					log.Fatalf("port.Write: %v", err)
+				}
 			} else {
-				foundNixie = false
+				options.PortName = nixie.FindArduino()
+				if options.PortName != "" {
+					foundNixie = true
+				} else {
+					foundNixie = false
+				}
 			}
 		}
 

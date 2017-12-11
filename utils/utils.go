@@ -349,14 +349,14 @@ func ColorUpdate(arg string) (string, string, string) {
 	return stringred, stringgreen, stringblue
 }
 
-func ColorInitialize() (string, string, string) {
+func ColorInitialize() (string, string, string, bool) {
 
-	content, err := ioutil.ReadFile(Pwd() + "/public/json/colors")
-	if err != nil {
-		fmt.Println("ERROR ColorInitialize() read JSON file")
+	content1, err1 := ioutil.ReadFile(Pwd() + "/public/json/colors")
+	if err1 != nil {
+		fmt.Println("ERROR ColorInitialize() read colors JSON file")
 	}
-	lines := strings.Split(string(content), "\n")
-	hex, hexerr := colors.ParseHEX(lines[0])
+	lines1 := strings.Split(string(content1), "\n")
+	hex, hexerr := colors.ParseHEX(lines1[0])
 	if hexerr != nil {
 		fmt.Println("ERROR failed to create a color object based on hex color")
 	}
@@ -386,7 +386,19 @@ func ColorInitialize() (string, string, string) {
 	} else {
 		stringblue = strconv.Itoa(int(rgb.B))
 	}
-	return stringred, stringgreen, stringblue
+
+	content2, err2 := ioutil.ReadFile(Pwd() + "/public/json/enableled")
+	if err2 != nil {
+		fmt.Println("ERROR ColorInitialize() read enableled file")
+	}
+	lines2 := strings.Split(string(content2), "\n")
+	var returnbool bool
+	if lines[0] == "True" {
+		returnbool = true
+	} else {
+		returnbool = false
+	}
+	return stringred, stringgreen, stringblue, returnbool
 }
 
 func WriteEnableLed(arg string) {
