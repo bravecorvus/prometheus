@@ -207,6 +207,7 @@ func main() {
 
 	// Send relevant time clock over serial USB
 	c.AddFunc("@every 1s", func() {
+
 		if EnableLed {
 
 			if foundNixie {
@@ -239,6 +240,7 @@ func main() {
 				} else {
 					foundNixie = false
 				}
+			}
 		}
 
 	})
