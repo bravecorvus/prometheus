@@ -208,9 +208,7 @@ func main() {
 	// Send relevant time clock over serial USB
 	c.AddFunc("@every 1s", func() {
 
-		fmt.Println("EnableLed", EnableLed)
 		if EnableLed {
-
 			if foundNixie {
 				b := []byte(nixie.CurrentTimeAsString() + Red + Green + Blue)
 				_, err := port.Write(b)
