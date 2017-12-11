@@ -65,10 +65,12 @@ fieldset {
 
 #afterclockleft {
   float: left;
+  padding-left: 5%;
 }
 
 #afterclockright {
   float: right;
+  padding-right: 5%;
 }
 
 .time {
