@@ -43,9 +43,12 @@ var (
 	// Bool to keep track of whether shairport-sync is installed
 	shairportInstalled bool
 	// Alarm sound filename
-	Soundname        string
-	CustomSoundCard  bool
-	Used to tell what colors the user wants the LED to be on the clock
+	Soundname string
+	// Used to see if user wants to use the cvlc command for use on a custom sound card, or the regular cvlc command
+	CustomSoundCard bool
+	// Used to see if user wants to enable LED's or not
+	EnableLed bool
+	// Used to tell what colors the user wants the LED to be on the clock
 	Red, Green, Blue string
 )
 
@@ -1325,10 +1328,10 @@ func main() {
 		}
 		value := r.FormValue("value")
 		if value == "true" {
-			EnableEmail = true
+			EnableLed = true
 			utils.WriteEnableLed("true")
 		} else {
-			EnableEmail = false
+			EnableLed = false
 			utils.WriteEnableLed("false")
 		}
 	})
