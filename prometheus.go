@@ -1334,7 +1334,6 @@ func main() {
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
-		fmt.Println(value)
 		Red, Green, Blue = utils.ColorUpdate(value)
 	})
 
