@@ -1,4 +1,4 @@
-<!--Andrew Lee 2016-->
+<!--Andrew Lee 2017-->
 <html>
 
     <head>
@@ -15,7 +15,7 @@
 
         <div id="app"> <!--Vue.js-->
 
-            <nav v-bind:class="active" v-on:click.prevent style="position: fixed !important; left: 50% !important; margin-top:140px !important; transform: translate(-50%, -50%) !important;">
+            <nav class="nav-down" v-bind:class="active" v-on:click.prevent>
                 <a href="#" class="home" id="home" v-on:click="makeActive('home')">Home</a>
                 <a href="#" class="settings" id="settings" v-on:click="makeActive('settings')">Settings</a>
                 <a href="#" class="about" id="about" v-on:click="makeActive('about')">About</a>
@@ -262,19 +262,16 @@
                                 document.getElementById("color").style.display = "";
                                 document.getElementById("colorh4").style.display = "";
                                 document.getElementById("colorbutton").style.display = "";
-                                document.getElementById("hidethis").style.display = "";
                             } else {
                                 document.getElementById("color").style.display = "none";
                                 document.getElementById("colorh4").style.display = "none";
                                 document.getElementById("colorbutton").style.display = "none";
-                                document.getElementById("hidethis").style.display = "none";
                             }
                         } else {
                             document.getElementById("colordiv").style.display = "none";
                             document.getElementById("color").style.display = "none";
                             document.getElementById("colorh4").style.display = "none";
                             document.getElementById("colorbutton").style.display = "none";
-                            document.getElementById("hidethis").style.display = "none";
                         }
 
                     },
@@ -447,7 +444,8 @@
                         );
                     },
 
-                    submitcolors() {
+                    submitcolors(arg) {
+                        this.colors = document.getElementById("color").value;
                         $.ajax(
                             {
                                 url: "/submitcolors",
@@ -458,6 +456,10 @@
                             }
                         );
                     },
+
+                    changecolors() {
+                        this.colors = document.getElementById("color").value;
+                    }
 
                 },
 
@@ -519,8 +521,6 @@
                                 this.enableled = false;
                             }
                     });
-
-
 
                 },
 
@@ -618,7 +618,20 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>  
         <script>
-            $('#color').colorpicker({});
+
+            $('#color').colorpicker({
+				format: 'hex'
+			});
+
+            window.onscroll = function() {navbarhandler()};
+			function navbarhandler() {
+				if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                    $('nav').removeClass('nav-down').addClass('nav-up');
+				} else {
+					$('nav').removeClass('nav-up').addClass('nav-down');
+				}
+			}
+
         </script>
-        </body>
-    </html>
+    </body>
+</html>

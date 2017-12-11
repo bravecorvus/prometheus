@@ -311,7 +311,8 @@ func WriteCustomSoundCard(arg string) {
 	}
 }
 
-func ColorUpdate(arg string) {
+func ColorUpdate(arg string) (string, string, string) {
+
 	content := []byte(arg)
 	err := ioutil.WriteFile(Pwd()+"/public/json/colors", content, 0644)
 	if err != nil {

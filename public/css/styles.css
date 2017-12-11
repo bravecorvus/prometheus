@@ -234,6 +234,14 @@ nav{
     background-color:#000000;
     box-shadow:0 1px 1px #ccc;
     border-radius:2px;
+    top: 0;
+    transition: top 0.2s ease-in-out;
+    position: fixed;
+    left: 25% !important;
+    right: 25% !important;
+    margin-top: 140px !important;
+    translate(-50%, -50%);
+    height: 40px;
 }
 
 nav a{
@@ -247,7 +255,6 @@ nav a{
     line-height:1;
     text-transform: uppercase;
     background-color:transparent;
-
     -webkit-transition:background-color 0.25s;
     -moz-transition:background-color 0.25s;
     transition:background-color 0.25s;
@@ -284,3 +291,15 @@ p b{
 #slide {
     width: 30px; height: 200px
 }
+
+.nav-down {
+    top: 0px !important;
+}
+
+.nav-up {
+    top: -300 !important;
+    border-bottom: none !important;
+}
+
+.colorpicker-alpha {display:none !important;}
+.colorpicker{ min-width:128px !important;}
