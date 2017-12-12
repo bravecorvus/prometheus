@@ -174,7 +174,6 @@ func main() {
 
 	// Ensure any previous incarnations of shairport-sync gets killed.
 	// if no previous process exists, KillShairportSync() automatically handles this.
-	utils.KillShairportSync()
 	shairportInstalled = utils.CheckShairportSyncInstalled()
 	if shairportInstalled {
 		shairportstart := exec.Command("shairport-sync", "-d")
@@ -990,8 +989,8 @@ func main() {
 									fmt.Println("Could not start shairport-sync daemon")
 								}
 							}
-							break
 							Red, Green, Blue, EnableLed = utils.ColorInitialize()
+							break
 						}
 					}
 
@@ -1014,16 +1013,12 @@ func main() {
 					if breaktime {
 						gpio.VibOff()
 						breaktime = false
-						Red = "255"
-						Green = "000"
-						Blue = "000"
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
 						break
 					} else if OverTenMinutes(Alarm3.Alarmtime) {
 						Alarm3.CurrentlyRunning = false
 						gpio.VibOff()
-						Red = "255"
-						Green = "000"
-						Blue = "000"
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
 						break
 					} else {
 						gpio.VibOff()
@@ -1257,6 +1252,10 @@ func main() {
 				}
 
 			} else if !Alarm4.Sound && Alarm4.Vibration {
+				Red = "255"
+				Green = "000"
+				Blue = "000"
+
 				for {
 					gpio.VibOn()
 					for i := 1; i <= 50; i++ {
@@ -1270,6 +1269,7 @@ func main() {
 					if breaktime {
 						gpio.VibOff()
 						breaktime = false
+						Red, Green, Blue, EnableLed = utils.ColorInitialize()
 						break
 					} else if OverTenMinutes(Alarm4.Alarmtime) {
 						Alarm4.CurrentlyRunning = false
@@ -1286,6 +1286,7 @@ func main() {
 			}
 		}
 	})
+
 	c.Start()
 
 	// Server index.html under ./public/index.html
