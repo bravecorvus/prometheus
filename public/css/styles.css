@@ -73,7 +73,7 @@ fieldset {
 }
 
 .time {
-  font-family: Quicksand;
+  font-family: Quicksand !important;
   color: white;
   background-color: black;
   font-size: 18px;
@@ -82,7 +82,7 @@ fieldset {
 }
 
 .text {
-  font-family: Quicksand;
+  font-family: Quicksand !important;
   color: white;
   background-color: black;
   width: 200;
@@ -203,6 +203,7 @@ hr {
 
 #home, #settings, #about{
     text-align: center !important;
+    font-family: Quicksand !important;
     font:15px/1.3 !important;
     color: #5e5b64 !important;
 }
