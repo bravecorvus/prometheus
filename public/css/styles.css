@@ -18,7 +18,7 @@ body {
     border-color: transparent;
     color: white !important;
     background: black !important;
-    font-family: Quicksand;
+    font-family: Quicksand important!
     color: white;
     background-color: black;
 }
