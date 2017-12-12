@@ -195,6 +195,7 @@ func main() {
 		foundNixie = false
 	}
 
+	fmt.Println("YOLO")
 	// Make sure to close it later.
 	defer port.Close()
 
