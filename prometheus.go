@@ -270,7 +270,7 @@ func main() {
 				}
 
 				if CustomSoundCard {
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -388,7 +388,7 @@ func main() {
 					utils.KillShairportSync()
 				}
 				if CustomSoundCard {
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -524,7 +524,7 @@ func main() {
 
 				if CustomSoundCard {
 
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -651,7 +651,7 @@ func main() {
 
 				if CustomSoundCard {
 
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -789,7 +789,7 @@ func main() {
 				}
 
 				if CustomSoundCard {
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -912,7 +912,7 @@ func main() {
 				}
 
 				if CustomSoundCard {
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -1045,7 +1045,7 @@ func main() {
 				}
 
 				if CustomSoundCard {
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -1168,7 +1168,7 @@ func main() {
 				}
 
 				if CustomSoundCard {
-					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-aout=alsa", "--alsa-audio-device=default")
+					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
