@@ -261,6 +261,7 @@ func main() {
 			Alarm1.CurrentlyRunning = true
 
 			if Alarm1.Sound && Alarm1.Vibration {
+
 				Red = "255"
 				Green = "000"
 				Blue = "000"
@@ -381,6 +382,7 @@ func main() {
 				}
 
 			} else if Alarm1.Sound && !Alarm1.Vibration {
+
 				Red = "255"
 				Green = "000"
 				Blue = "000"
@@ -509,14 +511,14 @@ func main() {
 
 		} else if Alarm2.Alarmtime == currenttime {
 
-			Red = "255"
-			Green = "000"
-			Blue = "000"
-
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			Alarm2.CurrentlyRunning = true
+
 			if Alarm2.Sound && Alarm2.Vibration {
+				Red = "255"
+				Green = "000"
+				Blue = "000"
 
 				if shairportInstalled {
 					utils.KillShairportSync()
@@ -555,8 +557,8 @@ func main() {
 								}
 							}
 							Red, Green, Blue, EnableLed = utils.ColorInitialize()
-
 							break
+
 						} else if OverTenMinutes(Alarm2.Alarmtime) {
 							Alarm2.CurrentlyRunning = false
 							gpio.VibOff()
@@ -771,13 +773,13 @@ func main() {
 				}
 			} else {
 				Alarm2.CurrentlyRunning = false
-				Red, Green, Blue, EnableLed = utils.ColorInitialize()
 			}
 
 		} else if Alarm3.Alarmtime == currenttime {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			Alarm3.CurrentlyRunning = true
+
 			if Alarm3.Sound && Alarm3.Vibration {
 
 				Red = "255"
@@ -998,6 +1000,7 @@ func main() {
 				}
 
 			} else if !Alarm3.Sound && Alarm3.Vibration {
+
 				Red = "255"
 				Green = "000"
 				Blue = "000"
@@ -1034,6 +1037,7 @@ func main() {
 			// Check if there is network connectivity (if not, then restart network interfaces)
 			go utils.RestartNetwork()
 			Alarm4.CurrentlyRunning = true
+
 			if Alarm4.Sound && Alarm4.Vibration {
 
 				Red = "255"
@@ -1253,6 +1257,7 @@ func main() {
 				}
 
 			} else if !Alarm4.Sound && Alarm4.Vibration {
+
 				Red = "255"
 				Green = "000"
 				Blue = "000"
