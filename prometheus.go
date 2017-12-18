@@ -210,6 +210,7 @@ func main() {
 
 		if EnableLed {
 			if foundNixie {
+				fmt.Println(nixie.CurrentTimeAsString() + Red + Green + Blue)
 				b := []byte(nixie.CurrentTimeAsString() + Red + Green + Blue)
 				_, err := port.Write(b)
 				if err != nil {
