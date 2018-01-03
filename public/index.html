@@ -252,23 +252,22 @@
                         elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
                         if (this.active == 'settings') {
                             document.getElementById("colordiv").style.display = "";
+                            document.getElementById("afterclock").style.display = "";
                             if (this.enableled == true) {
                                 document.getElementById("color").style.display = "";
                                 document.getElementById("colorh4").style.display = "";
                                 document.getElementById("colorbutton").style.display = "";
-                                document.getElementById("afterclock").style.display = "";
                             } else {
                                 document.getElementById("color").style.display = "none";
                                 document.getElementById("colorh4").style.display = "none";
                                 document.getElementById("colorbutton").style.display = "none";
-                                document.getElementById("afterclock").style.display = "none";
                             }
                         } else {
+                            document.getElementById("afterclock").style.display = "none";
                             document.getElementById("colordiv").style.display = "none";
                             document.getElementById("color").style.display = "none";
                             document.getElementById("colorh4").style.display = "none";
                             document.getElementById("colorbutton").style.display = "none";
-                            document.getElementById("afterclock").style.display = "none";
                         }
 
                     },
@@ -424,7 +423,7 @@
                             document.getElementById("color").style.display = "none";
                             document.getElementById("colorh4").style.display = "none";
                             document.getElementById("colorbutton").style.display = "none";
-                            document.getElementById("afterclock").style.display = "";
+                            document.getElementById("afterclock").style.display = "none";
                         } else {
                             this.enableled = true;
                             document.getElementById("color").style.display = "";
