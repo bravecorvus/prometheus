@@ -38,9 +38,9 @@ sed -i 's/geteuid/getppid/' $(which cvlc)
 Then grab the latest executable.
 
 ```
-wget https://github.com/gilgameshskytrooper/prometheus/releases/download/v2.1.0/prometheus.v2.1.0.zip
-unzip prometheus.v2.1.0.zip
-rm prometheus.v2.1.0.zip
+wget https://github.com/gilgameshskytrooper/prometheus/releases/download/v2.2.0/prometheus.v2.2.0.zip
+unzip prometheus.v2.2.0.zip
+rm prometheus.v2.2.0.zip
 ```
 
 ***the above link should be accurate, but check the [releases page](https://github.com/gilgameshskytrooper/prometheus/releases) to ensure that you are getting the most recent version***
