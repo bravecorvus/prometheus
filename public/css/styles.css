@@ -59,17 +59,17 @@ fieldset {
 #afterclock {
   border-color: black;
   width: 100%;
-  margin: 0px auto; 
+  /* margin: 0px auto;  */
 }
 
 #afterclockleft {
   float: left;
-  padding-left: 5%;
+  /* padding-left: 5%; */
 }
 
 #afterclockright {
   float: right;
-  padding-right: 5%;
+  /* padding-right: 5%; */
 }
 
 .time {
