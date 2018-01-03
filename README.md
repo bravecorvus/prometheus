@@ -70,4 +70,10 @@ Feel free to contact me at [leeas@stolaf.edu](mailto:leeas@stolaf.edu) if you ha
 
 Also, AFCH from [GRA & AFCH](https://github.com/afch) who produces the nixie clock kit I bought was also monumental in helping me modify his Arduino Sketch and to add serial USB communication functionality between the Pi and the Clock.
 
+The default sound included in the [public/assets](public/assets) folder is the song [I'm in Love With U Tonight](http://freemusicarchive.org/music/Break_The_Bans/Youth/05_Im_in_love_with_you_tonight) which is released under the Creative Commons license. I would like to thank Kukkovka Hell Studios and Alex Fry, Vadim Bogorodksi, Andrew Bones, and Yaroslav Tregubov for their work.
+
+I am utilizing the  [Quicksand](http://www.typophile.com/node/50437) and [Ostrich Sans](https://www.fontsquirrel.com/fonts/ostrich-sans) fonts for this project. I would like to thank [Andrew Paglinawan](https://www.fontsquirrel.com/fonts/list/foundry/andrew-paglinawan) and [Tyler Finck](https://www.fontsquirrel.com/fonts/list/foundry/tyler-finck) for their beautiful work.
+
+Furthermore, I would like to thank Čestmír Hýbl for his work in creating the [JavaScript based Nixie Clock](http://cestmir.freeside.sk/projects/dhtml-nixie-display/) used in the front-end of this project.
+
 ![Desk](assets/desk.jpg)
