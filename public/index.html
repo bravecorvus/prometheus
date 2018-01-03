@@ -111,7 +111,12 @@
             </div><!--homecontent-->
             </div><!--main-->
 
-            <div v-else-if="active=='settings'" id="settingscontent">
+
+        <div v-else-if="active=='about'" id="aboutcontent">
+            <img src="img/home.jpg" style="left: 50%; margin-right: -50%;"/>
+        </div><!--aboutcontent-->
+
+
 
             <div id="afterclock">
 
@@ -180,11 +185,6 @@
                 </div> <!--id="afterclockright"-->
             </div><!--afterclock-->
 
-        </div><!--settingscontent-->
-
-        <div v-else-if="active=='about'" id="aboutcontent">
-            <img src="img/home.jpg" style="left: 50%; margin-right: -50%;"/>
-        </div><!--aboutcontent-->
 
         <div id="colordiv" style="float: left !important; padding-left: 5% !important; padding-top: 20%; margin-left: -33% !important;">
             <br>
@@ -256,16 +256,19 @@
                                 document.getElementById("color").style.display = "";
                                 document.getElementById("colorh4").style.display = "";
                                 document.getElementById("colorbutton").style.display = "";
+                                document.getElementById("afterclock").style.display = "";
                             } else {
                                 document.getElementById("color").style.display = "none";
                                 document.getElementById("colorh4").style.display = "none";
                                 document.getElementById("colorbutton").style.display = "none";
+                                document.getElementById("afterclock").style.display = "none";
                             }
                         } else {
                             document.getElementById("colordiv").style.display = "none";
                             document.getElementById("color").style.display = "none";
                             document.getElementById("colorh4").style.display = "none";
                             document.getElementById("colorbutton").style.display = "none";
+                            document.getElementById("afterclock").style.display = "none";
                         }
 
                     },
@@ -421,11 +424,13 @@
                             document.getElementById("color").style.display = "none";
                             document.getElementById("colorh4").style.display = "none";
                             document.getElementById("colorbutton").style.display = "none";
+                            document.getElementById("afterclock").style.display = "";
                         } else {
                             this.enableled = true;
                             document.getElementById("color").style.display = "";
                             document.getElementById("colorh4").style.display = "";
                             document.getElementById("colorbutton").style.display = "";
+                            document.getElementById("afterclock").style.display = "";
                         }
                         $.ajax(
                             {
@@ -466,6 +471,8 @@
                     document.getElementById("color").style.display = "none";
                     document.getElementById("colorh4").style.display = "none";
                     document.getElementById("colorbutton").style.display = "none";
+                    document.getElementById("colorbutton").style.display = "none";
+                    document.getElementById("afterclock").style.display = "none";
 
                     $.ajaxSetup({ cache: false });
 
