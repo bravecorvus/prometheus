@@ -18,3 +18,5 @@ public/json/\._time\.txt
 main
 prometheus
 Macbook
+server.crt
+server.key
