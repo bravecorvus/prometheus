@@ -408,3 +408,15 @@ func WriteEnableLed(arg string) {
 		fmt.Println("Error writing back enableemail file for " + Pwd() + "/public/json/enableled")
 	}
 }
+
+func Exists(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
