@@ -203,6 +203,7 @@ func main() {
 	if Options.PortName != "" {
 		Port, err := serial.Open(Options)
 		if err != nil {
+			fmt.Println("Port ERR")
 			foundNixie = false
 		}
 		defer Port.Close()
