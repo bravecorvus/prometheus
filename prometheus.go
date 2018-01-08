@@ -198,13 +198,12 @@ func main() {
 	// }
 
 	// Open the serial USB port to communicate with the clock.
-	fmt.Println("YOLO")
-
 	if Options.PortName != "" {
 		Port, err := serial.Open(Options)
 		if err != nil {
-			fmt.Println("Port ERR")
 			foundNixie = false
+		} else {
+			foundNixie = true
 		}
 		defer Port.Close()
 	}
