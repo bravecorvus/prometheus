@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/gilgameshskytrooper/prometheus/gpio"
@@ -198,18 +199,19 @@ func main() {
 	// }
 
 	// Open the serial USB port to communicate with the clock.
-	// if Options.PortName != "" {
-	Port, err := serial.Open(Options)
-	if err != nil {
-		foundNixie = false
+	var Port io.ReadWriteCloser
+	if Options.PortName != "" {
+		Port, err := serial.Open(Options)
+		if err != nil {
+			foundNixie = false
+		} else {
+			foundNixie = true
+		}
+		defer Port.Close()
 	} else {
-		foundNixie = true
+		Port, _ := os.OpenFile("tempfile", syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 0600)
+		defer Port.Close()
 	}
-	defer Port.Close()
-	// } else {
-	// Port, _ := os.OpenFile("tempfile", syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 0600)
-	// defer Port.Close()
-	// }
 
 	// Make sure to close it later.
 
