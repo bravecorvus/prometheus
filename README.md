@@ -2,7 +2,7 @@
 
 ### By Andrew Lee
 
-![Prometheus Clock Cover](assets/IMG_1782.JPG)
+![Prometheus Clock Cover](assets/prom.jpg)
 
 Prometheus is the clock that does everything. The 3 main things I want to integrate in this project are:
 
@@ -42,6 +42,7 @@ You can read more [here](https://github.com/gilgameshskytrooper/Prometheus/wiki/
 ### Remote Control Alarm Program
 
 ![Demo](assets/PrometheusUI.png)
+![Demo](assets/Settings.png)
 
 The UI portion of this project consists of a Golang web server running on the Raspberry Pi which can be accessed on any internet capable browser. The web server serves up the intial [index.html](public/index.html) page at the site root (e.g. 111.111.111:3000 where 111.111.111 is the wlan0 IP of the Raspberry Pi). Through heavy use of [Vue.js](http://vuejs.org/), this page acts as a SPA (single page application). It makes heavy use of the AJAX post requests for the switch buttons, file uploads, and time form submit. It populates the values of the alarm times, sound, and vibration buttons with the values stored in [alarms.json](public/json/alarms.json) which holds the configuration data for the 4 alarms. When the user submits the form, the Golang web server handles the request as a put request, reads the data, changes the internally stored values for the 4 alarms, and writes back the values into [alarms.json](public/json/alarms.json). The only button on the page that requires a hard refresh is the snooze button at the top because the web server needs to compute the value of +10 minutes on the currenly running alarm.
 
