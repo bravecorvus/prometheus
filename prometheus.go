@@ -51,6 +51,7 @@ var (
 	// Used to tell what colors the user wants the LED to be on the clock
 	Red, Green, Blue string
 	Options          = serial.OpenOptions{}
+	Port             io.ReadWriteCloser
 )
 
 //General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
@@ -198,13 +199,16 @@ func main() {
 
 	// Open the serial USB port to communicate with the clock.
 	fmt.Println("YOLO")
-	port, err := serial.Open(Options)
-	if err != nil {
-		foundNixie = false
+
+	if Options.PortName != "" {
+		Port, err := serial.Open(Options)
+		if err != nil {
+			foundNixie = false
+		}
+		defer Port.Close()
 	}
 
 	// Make sure to close it later.
-	defer port.Close()
 
 	// Initialize all 4 instances of alarm clocks
 	// Create function that updates clock once a minute (used to see if any times match up)
@@ -219,9 +223,9 @@ func main() {
 		if EnableLed {
 			if foundNixie {
 				b := []byte(nixie.CurrentTimeAsString() + Red + Green + Blue)
-				_, err := port.Write(b)
+				_, err := Port.Write(b)
 				if err != nil {
-					log.Fatalf("port.Write: %v", err)
+					log.Fatalf("Port.Write: %v", err)
 				}
 			} else {
 				Options.PortName = nixie.FindArduino()
@@ -236,9 +240,9 @@ func main() {
 
 			if foundNixie {
 				b := []byte(nixie.CurrentTimeAsString())
-				_, err := port.Write(b)
+				_, err := Port.Write(b)
 				if err != nil {
-					log.Fatalf("port.Write: %v", err)
+					log.Fatalf("Port.Write: %v", err)
 				}
 			} else {
 				Options.PortName = nixie.FindArduino()
