@@ -199,8 +199,7 @@ func main() {
 	// }
 
 	// Open the serial USB port to communicate with the clock.
-
-	Port, _ := os.OpenFile("tempfile", syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 755)
+	var Port io.ReadWriteCloser
 	if Options.PortName != "" {
 		Port, err := serial.Open(Options)
 		if err != nil {
@@ -208,6 +207,9 @@ func main() {
 		} else {
 			foundNixie = true
 		}
+		defer Port.Close()
+	} else {
+		Port, _ := os.OpenFile("tempfile", syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 0600)
 		defer Port.Close()
 	}
 
