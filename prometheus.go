@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/gilgameshskytrooper/prometheus/gpio"
@@ -51,7 +52,7 @@ var (
 	// Used to tell what colors the user wants the LED to be on the clock
 	Red, Green, Blue string
 	Options          = serial.OpenOptions{}
-	Port             io.ReadWriteCloser
+	// Port             io.ReadWriteCloser
 )
 
 //General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
@@ -198,6 +199,8 @@ func main() {
 	// }
 
 	// Open the serial USB port to communicate with the clock.
+	Port, _ := os.OpenFile("tempfile", syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 0600)
+
 	if Options.PortName != "" {
 		Port, err := serial.Open(Options)
 		if err != nil {
