@@ -199,8 +199,8 @@ func main() {
 	// }
 
 	// Open the serial USB port to communicate with the clock.
-	Port, _ := os.OpenFile("tempfile", syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 0600)
 
+	Port, _ := os.OpenFile("tempfile", syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 755)
 	if Options.PortName != "" {
 		Port, err := serial.Open(Options)
 		if err != nil {
