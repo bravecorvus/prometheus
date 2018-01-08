@@ -1,3 +1,4 @@
+// nixie is the package that provides helper functions used to interact with the nixie clock.
 package nixie
 
 import (
