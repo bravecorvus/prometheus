@@ -1,5 +1,5 @@
-// Main program logic
-// Relies on utils, structs, and gpio libraries.
+// The main program logic that runs both the alarm logic and the web server hosting the front-end user interface for users to control the Prometheus. The main function is split into two parts: First is the part that runs two cron jobs: the first runs once every second to try to send the time + LED string to the nixie clock and the second once every minute to check if the current time matches a user supplied alarm (also running the releavnt alarm actions vibrate and or output sound based on the user set parameters). Then the second half deals with providing the web server functionality. The fileserver serves a plain HTML file whose client side scripting uses Vue.js, Bootstrap, and jQuery to read from the JSON files stored at ./public/json/...json to display the information. In this way, the program avoids having to implement a database. The rest of the code provides HTTP POST endpoints when the user submits information. For most of these, the logic involves unmarshaling the HTTP headers, extracting the information, updating the program variables, and writing back the changes to the JSON files (so that the changes survive a program crash, and when the user reloads the UI, it will read from the updated settings.)
+
 package main
 
 import (
@@ -50,6 +50,7 @@ var (
 	EnableLed bool
 	// Used to tell what colors the user wants the LED to be on the clock
 	Red, Green, Blue string
+	Options          = serial.OpenOptions{}
 )
 
 //General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
@@ -164,6 +165,11 @@ func init() {
 	EnableEmail = utils.GetEnableEmail()
 	CustomSoundCard = utils.UseCustomSoundCard()
 	Red, Green, Blue, EnableLed = utils.ColorInitialize()
+	Options.PortName = nixie.FindArduino()
+	Options.BaudRate = 115200
+	Options.DataBits = 8
+	Options.StopBits = 1
+	Options.MinimumReadSize = 4
 }
 
 // Main function
@@ -182,15 +188,16 @@ func main() {
 			fmt.Println("Could not start shairport-sync daemon")
 		}
 	}
-	options := serial.OpenOptions{
-		PortName:        nixie.FindArduino(),
-		BaudRate:        115200,
-		DataBits:        8,
-		StopBits:        1,
-		MinimumReadSize: 4,
-	}
-	// Open the port.
-	port, err := serial.Open(options)
+	// Options = serial.OpenOptions{
+	// PortName:        nixie.FindArduino(),
+	// BaudRate:        115200,
+	// DataBits:        8,
+	// StopBits:        1,
+	// MinimumReadSize: 4,
+	// }
+
+	// Open the serial USB port to communicate with the clock.
+	port, err := serial.Open(Options)
 	if err != nil {
 		foundNixie = false
 	}
@@ -216,8 +223,8 @@ func main() {
 					log.Fatalf("port.Write: %v", err)
 				}
 			} else {
-				options.PortName = nixie.FindArduino()
-				if options.PortName != "" {
+				Options.PortName = nixie.FindArduino()
+				if Options.PortName != "" {
 					foundNixie = true
 				} else {
 					foundNixie = false
@@ -233,8 +240,8 @@ func main() {
 					log.Fatalf("port.Write: %v", err)
 				}
 			} else {
-				options.PortName = nixie.FindArduino()
-				if options.PortName != "" {
+				Options.PortName = nixie.FindArduino()
+				if Options.PortName != "" {
 					foundNixie = true
 				} else {
 					foundNixie = false
