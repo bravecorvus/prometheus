@@ -567,7 +567,6 @@ byte CheckButtonsState()
 }
 
 
-/* ledCounter is necessary because of the fact that this clock's internal timing mechanism is bad, and that it gets reset once a minute. Hence, sometimes, its not reading exactly 60 serial inputs every minute (could be 59, or 58). Hence, the ledCounter makes sure that on the minutes that the clock only reads < 60 inputs from the Pi, it will retain the LED's color until 3 seconds have passed for a little bit */
 int ledCounter = 0;
 
 String updateDisplayString()
@@ -598,13 +597,17 @@ String updateDisplayString()
     int green = IncomingData.substring(9, 12).toInt();
     int blue = IncomingData.substring(12, 15).toInt();
 
-    if (red != RedLight && green != GreenLight && blue != BlueLight && ledCounter > 3) {
+    if (red == RedLight && green == GreenLight && blue == BlueLight) {
+        LEDsLock = true;
+    } else {
+      if (ledCounter < 3) {
+        ledCounter = ledCounter + 1;
+      } else {
         analogWrite(RedLedPin, red);
         analogWrite(GreenLedPin, green);
         analogWrite(BlueLedPin, blue);
         ledCounter = 0;
-    } else {
-      ledCounter++;
+      }
     }
 
     /* Convert values for 12 hour time */
