@@ -92,7 +92,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	//Delete the old alarm sound via shell command process rm public/assets/sound_name.extension
 	rmerror := exec.Command("rm", utils.Pwd()+"/public/assets/"+Soundname).Run()
 	if rmerror != nil {
-		fmt.Println(os.Stderr, rmerror)
+		fmt.Println(rmerror.Error())
 	}
 	file, header, err := r.FormFile("audio")
 	//Set the Soundname attribute to the new soundname
@@ -287,7 +287,9 @@ func main() {
 				}
 
 				if CustomSoundCard {
+					fmt.Println("CustomSoundCard = true")
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
+					fmt.Println("Custom command cvlc " + utils.Pwd() + "/public/assets/" + Soundname + " -A=alsa --alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -306,6 +308,7 @@ func main() {
 
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
+							fmt.Println("Stop playing music")
 							if errrrrorkill != nil {
 								fmt.Println("ERRRRRROR")
 							}
