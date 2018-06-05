@@ -287,7 +287,9 @@ func main() {
 				}
 
 				if CustomSoundCard {
+					fmt.Println("CustomSoundCard = true")
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
+					fmt.Println("Custom command cvlc " + utils.Pwd() + "/public/assets/" + Soundname + " -A=alsa --alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
 						fmt.Println("ERRRRRROR")
@@ -306,6 +308,7 @@ func main() {
 
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
+							fmt.Println("Stop playing music")
 							if errrrrorkill != nil {
 								fmt.Println("ERRRRRROR")
 							}
