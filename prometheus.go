@@ -121,7 +121,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if err := utils.Execute(&b,
 		exec.Command("ls", utils.Pwd()+"/public/assets"),
 	); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 
 	// If a new file got uploaded, make sure this gets reflected in the program var Soundname and also write out the new name into ./public/json/trackinfo
@@ -153,7 +153,7 @@ func init() {
 	if err := utils.Execute(&b,
 		exec.Command("ls", utils.Pwd()+"/public/assets"),
 	); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 
 	Soundname = strings.TrimSpace(b.String())
@@ -229,7 +229,7 @@ func main() {
 				b := []byte(nixie.CurrentTimeAsString() + Red + Green + Blue)
 				_, err := Port.Write(b)
 				if err != nil {
-					log.Fatalf("Port.Write: %v", err)
+					fmt.Println(err.Error())
 				}
 			} else {
 				Options.PortName = nixie.FindArduino()
@@ -246,7 +246,7 @@ func main() {
 				b := []byte(nixie.CurrentTimeAsString())
 				_, err := Port.Write(b)
 				if err != nil {
-					log.Fatalf("Port.Write: %v", err)
+					fmt.Println(err.Error())
 				}
 			} else {
 				Options.PortName = nixie.FindArduino()
@@ -1501,10 +1501,10 @@ func main() {
 	http.HandleFunc("/upload", uploadHandler)
 	log.Println("Listening...")
 	if utils.Exists(utils.Pwd()+"/server.crt") && utils.Exists(utils.Pwd()+"/server.key") {
-		log.Fatal(http.ListenAndServeTLS(":3000", utils.Pwd()+"/server.crt", utils.Pwd()+"/server.key", nil))
+		fmt.Println(http.ListenAndServeTLS(":3000", utils.Pwd()+"/server.crt", utils.Pwd()+"/server.key", nil))
 	} else {
 		fmt.Println("If you want the program to utilize TLS (i.e. host an encrypted HTTPS front end, please do the following in command line in the same directory as the bigdisk executable to first create a private self-signed rsa key, then a public key (x509) key based on the private key:\n\topenssl genrsa -out server.key 2048\n\topenssl req -new -x509 -sha256 -key server.key -out server.crt -days 3650\nThen make sure you finish filling in the details asked in command line.\n\nFor now, unencrypted http will be used.")
-		log.Fatal(http.ListenAndServe(":3000", nil))
+		fmt.Println(http.ListenAndServe(":3000", nil))
 	}
 
 }

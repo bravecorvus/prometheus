@@ -51,7 +51,7 @@ var (
 //General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
 func Errhandler(err error) {
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println(err.Error())
 	}
 }
 
@@ -86,7 +86,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	//Delete the old alarm sound via shell command process rm public/assets/sound_name.extension
 	rmerror := exec.Command("rm", utils.Pwd()+"/public/assets/"+Soundname).Run()
 	if rmerror != nil {
-		fmt.Println(os.Stderr, rmerror)
+		fmt.Println(rmerror.Error())
 	}
 	file, header, err := r.FormFile("audio")
 	//Set the Soundname attribute to the new soundname
@@ -102,12 +102,12 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	out, err1 := os.Create(utils.Pwd() + "/public/assets/" + header.Filename)
 
 	if err1 != nil {
-		fmt.Fprintf(w, "Unable to upload the file")
+		fmt.Println(err1.Error())
 	}
 	defer out.Close()
 	_, err2 := io.Copy(out, file)
 	if err2 != nil {
-		fmt.Fprintln(w, err)
+		fmt.Println(err2.Error())
 	}
 	fmt.Fprintf(w, "File uploaded successfully :")
 
@@ -115,7 +115,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	if err := utils.Execute(&b,
 		exec.Command("ls", utils.Pwd()+"/public/assets"),
 	); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err.Error())
 	}
 
 	// If a new file got uploaded, make sure this gets reflected in the program var Soundname and also write out the new name into ./public/json/trackinfo
@@ -123,7 +123,7 @@ func uploadHandler(w http.ResponseWriter, r *http.Request) {
 	d1 := []byte(Soundname)
 	errrrrrrrrr := ioutil.WriteFile(utils.Pwd()+"/public/json/trackinfo", d1, 0644)
 	if errrrrrrrrr != nil {
-		fmt.Println(errrrrrrrrr)
+		fmt.Println(errrrrrrrrr.Error())
 	}
 
 	fmt.Fprintf(w, header.Filename)
@@ -147,14 +147,14 @@ func init() {
 	if err := utils.Execute(&b,
 		exec.Command("ls", utils.Pwd()+"/public/assets"),
 	); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err.Error())
 	}
 
 	Soundname = strings.TrimSpace(b.String())
 	d1 := []byte(Soundname)
 	errrrrrrrrr := ioutil.WriteFile(utils.Pwd()+"/public/json/trackinfo", d1, 0644)
 	if errrrrrrrrr != nil {
-		fmt.Println(errrrrrrrrr)
+		fmt.Println(errrrrrrrrr.Error)
 	}
 	Email = utils.GetEmail()
 	EnableEmail = utils.GetEnableEmail()

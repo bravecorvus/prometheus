@@ -11,7 +11,7 @@ import (
 //Sends the signal to turn on the bed vibrator by sending a High (true) signal to GPIO 17
 func VibOn() {
 	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	defer rpio.Close()
@@ -29,7 +29,7 @@ func VibOn() {
 //Sends the signal to turn off the bed vibrator by sending a Low (false) signal to GPIO 17
 func VibOff() {
 	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	defer rpio.Close()

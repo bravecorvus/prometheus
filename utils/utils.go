@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -68,7 +67,7 @@ func Execute(output_buffer *bytes.Buffer, stack ...*exec.Cmd) (err error) {
 	stack[i].Stderr = &error_buffer
 
 	if err := Call(stack, pipe_stack); err != nil {
-		log.Fatalln(string(error_buffer.Bytes()), err)
+		fmt.Println(string(error_buffer.Bytes()), err)
 	}
 	return err
 }
@@ -83,7 +82,7 @@ func ExampleExecute() {
 		exec.Command("command2", "flag1"),
 		exec.Command("command3"),
 	); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	str = b.String()
 	regex, err := regexp.Compile("\n")
@@ -104,7 +103,7 @@ func GetIP() string {
 		exec.Command("grep", "inet"),
 		exec.Command("awk", "NR==1{print $2}"),
 	); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
 	}
 	str = b.String()
 	regex, err := regexp.Compile("\n")
@@ -199,7 +198,7 @@ func WriteBackJson(Alarm1 structs.Alarm, Alarm2 structs.Alarm, Alarm3 structs.Al
 func Pwd() string {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	return dir
 }
@@ -252,7 +251,7 @@ func CheckShairportRunning() bool {
 		exec.Command("grep", "shairport"),
 		exec.Command("awk", "NR==1{print $NF}"),
 	); err != nil {
-		log.Fatalln(err)
+		fmt.Println(err.Error())
 	}
 	str = b.String()
 	// doing ps grep | grep shairport | awk 'NR==1{print $NF}' will give the first process with the name shairport-sync
@@ -274,7 +273,7 @@ func KillShairportSync() {
 			exec.Command("grep", "shairport"),
 			exec.Command("awk", "NR==1{print $2}"),
 		); err != nil {
-			log.Fatalln(err)
+			fmt.Println(err)
 		}
 		str = b.String()
 		killshairport := exec.Command("kill", strings.TrimSpace(str))
