@@ -57,7 +57,7 @@ var (
 //General error handler: I guess it wasn't used nearly as much as should to warrant it's existance, but its here nonetheless
 func Errhandler(err error) {
 	if err != nil {
-		fmt.Println("ERROR")
+		fmt.Println(err.Error())
 	}
 }
 
@@ -290,7 +290,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -307,7 +307,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -324,7 +324,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -345,7 +345,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 					for {
 						gpio.VibOn()
@@ -361,7 +361,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -378,7 +378,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -409,14 +409,14 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 					for {
 						time.Sleep(time.Second * 1)
 						if !Alarm1.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -433,7 +433,7 @@ func main() {
 							Alarm1.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -453,14 +453,14 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 					for {
 						time.Sleep(time.Second * 1)
 						if !Alarm1.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -475,7 +475,7 @@ func main() {
 							Alarm1.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -545,7 +545,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -562,7 +562,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -580,7 +580,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -604,7 +604,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 					for {
 						gpio.VibOn()
@@ -619,7 +619,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -637,7 +637,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -672,7 +672,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -680,7 +680,7 @@ func main() {
 						if !Alarm2.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -697,7 +697,7 @@ func main() {
 							Alarm2.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -716,7 +716,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 					for {
 
@@ -724,7 +724,7 @@ func main() {
 						if !Alarm2.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill)
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -740,7 +740,7 @@ func main() {
 							Alarm2.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill)
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -810,7 +810,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -826,7 +826,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -844,7 +844,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -865,7 +865,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -881,7 +881,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -899,7 +899,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -933,7 +933,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -941,7 +941,7 @@ func main() {
 						if !Alarm3.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -957,7 +957,7 @@ func main() {
 							Alarm3.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -975,7 +975,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -983,7 +983,7 @@ func main() {
 						if !Alarm3.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -999,7 +999,7 @@ func main() {
 							Alarm3.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -1068,7 +1068,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -1084,7 +1084,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -1102,7 +1102,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -1124,7 +1124,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -1140,7 +1140,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							breaktime = false
 							if shairportInstalled {
@@ -1157,7 +1157,7 @@ func main() {
 							gpio.VibOff()
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -1191,7 +1191,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname, "-A=alsa", "--alsa-audio-device=default")
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -1199,7 +1199,7 @@ func main() {
 						if !Alarm4.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -1215,7 +1215,7 @@ func main() {
 							Alarm4.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -1233,7 +1233,7 @@ func main() {
 					var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+Soundname)
 					errrrror := playsound.Start()
 					if errrrror != nil {
-						fmt.Println("ERRRRRROR")
+						fmt.Println(errrrror.Error())
 					}
 
 					for {
@@ -1241,7 +1241,7 @@ func main() {
 						if !Alarm4.CurrentlyRunning {
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -1256,7 +1256,7 @@ func main() {
 							Alarm4.CurrentlyRunning = false
 							errrrrorkill := playsound.Process.Kill()
 							if errrrrorkill != nil {
-								fmt.Println("ERRRRRROR")
+								fmt.Println(errrrrorkill.Error())
 							}
 							if shairportInstalled {
 								shairportdaemon := exec.Command("shairport-sync", "-d")
@@ -1319,7 +1319,7 @@ func main() {
 	http.HandleFunc("/time", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr.Error())
 			os.Exit(1)
 		}
 		name := r.FormValue("name")
@@ -1345,7 +1345,7 @@ func main() {
 	http.HandleFunc("/sound", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr.Error())
 			os.Exit(1)
 		}
 		name := r.FormValue("name")
@@ -1378,7 +1378,7 @@ func main() {
 	http.HandleFunc("/vibration", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr.Error())
 			os.Exit(1)
 		}
 		name := r.FormValue("name")
@@ -1432,7 +1432,7 @@ func main() {
 	http.HandleFunc("/enableemail", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr.Error())
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
@@ -1448,7 +1448,7 @@ func main() {
 	http.HandleFunc("/customsoundcard", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr.Error())
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
@@ -1464,7 +1464,7 @@ func main() {
 	http.HandleFunc("/newemail", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr)
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
@@ -1474,7 +1474,7 @@ func main() {
 	http.HandleFunc("/submitcolors", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr.Error())
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
@@ -1484,7 +1484,7 @@ func main() {
 	http.HandleFunc("/submitenableled", func(w http.ResponseWriter, r *http.Request) {
 		erawr := r.ParseForm()
 		if erawr != nil {
-			fmt.Println("ERROR")
+			fmt.Println(erawr.Error())
 			os.Exit(1)
 		}
 		value := r.FormValue("value")
