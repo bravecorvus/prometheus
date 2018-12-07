@@ -64,7 +64,7 @@ Because my school happens to disable ssh and VNC connections for users on the gu
 [Setting Up RPi to work with Eduroam](SetUpEduroamOnPi.md)
 
 ## Contact
-Feel free to contact me at [leeas@stolaf.edu](mailto:leeas@stolaf.edu) if you have any suggestions, or want to contribute to this project.
+Feel free to contact me at [me@gilgameshskytrooper.io](mailto:me@gilgameshskytrooper.io) if you have any suggestions, or want to contribute to this project.
 
 ## Special Thanks
 [hberg32](https://hackaday.io/hberg32) was super helpful in helping this project become what it is today. I would not even know where to start to build such an alarm clock without his guidance.
