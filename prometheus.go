@@ -178,6 +178,8 @@ func init() {
 // Runs a separate cron job (once every second) to send the current time as a string to the Nixie Clock through serial USB
 // Also, main contains all the http HandleFunc's to deal with GET '/', POST '/time', POST '/sound', POST '/vibration', POST '/snooze', POST '/enableemail', POST '/newemail'
 func main() {
+	// Sleep since we need to wait for the Nixie clock to go online before starting to send it the time
+	time.Sleep(20 * time.Second)
 
 	// Ensure any previous incarnations of shairport-sync gets killed.
 	// if no previous process exists, KillShairportSync() automatically handles this.

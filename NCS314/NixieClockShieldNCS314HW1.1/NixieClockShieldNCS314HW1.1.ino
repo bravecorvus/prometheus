@@ -225,7 +225,7 @@ void setup()
   //
   //digitalWrite(DHVpin, HIGH); // on MAX1771 Driver  Hight Voltage(DHV) 110-220V
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  /* doTest(); */
+  doTest();
   //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   if (LEDsLock==1)
     {
@@ -691,29 +691,10 @@ String updateDisplayString()
 
 void doTest()
 {
-  Serial.print(F("Firmware version: "));
-  Serial.println(FirmwareVersion.substring(1,2)+"."+FirmwareVersion.substring(2,4));
-  Serial.println(F("Start Test"));
+
   int adc=analogRead(A3);
   float Uinput=4.6*(5.0*adc)/1024.0+0.7;
-  Serial.print(F("U input="));
-  Serial.print(Uinput);
-  
-  /* p=song; */
-  /* parseSong(p); */
-   
-  analogWrite(RedLedPin,255);
-  delay(1000);
-  analogWrite(RedLedPin,0);
-  analogWrite(GreenLedPin,255);
-  delay(1000);
-  analogWrite(GreenLedPin,0);
-  analogWrite(BlueLedPin,255);
-  delay(1000); 
-  //while(1);
-  
   String testStringArray[12]={"000000","111111","222222","333333","444444","555555","666666","777777","888888","999999","",""};
-
   if (Uinput<10) testStringArray[10]="000"+String(int(Uinput*100)); else testStringArray[10]="00"+String(int(Uinput*100));
   testStringArray[11]=FirmwareVersion;
 
@@ -794,8 +775,6 @@ void doTest()
   }
    delayMicroseconds(2000);
   }; 
-
-  Serial.println(F("Stop Test"));
   
 }
 
