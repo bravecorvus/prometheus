@@ -53,7 +53,7 @@ When the requested the [root](https://prometheus.gilgameshskytrooper.io), it wil
 Vue.js is used to obtain and parse these values from the client side browser when the page is loaded (and incorporated into the Vue instance's data to to populate the page). Other features of Vue such as two way data binding is used inconjunction with AJAX asynchronous POST to ensure the page doesn't have to reload unless necessary.
 
 
-### [Main Alarm Logic](/prometheus.go)
+### [Main Alarm Logic](./main.go)
 Using a 3rd party library, Golang is also able to control the hardware interfaces (bed vibrator and speakers). The main logic for when to start running an alarm is a cron task that runs once a minute: if an alarm time configuration matches the current time, then run the relevant waking methods (i.e. vibration/sound). Furthermore, it functions as a web server that serves the front-end UI described above so that users can access the alarm controls from any web capable device.
 
 More specific implementation information is written [here](Prometheus.md).

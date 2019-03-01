@@ -130,7 +130,7 @@ ctl.!default {
 }
 ```
 
-Note, if you opt to use a custom card, just change the setting in the bottom right hand corner of the front-end user interface. (If you are not using the exact set-up I'm using, then you will probably have to [build from source](Prometheus.md#build-from-source) after you go into the [prometheus.go](https://github.com/gilgameshskytrooper/prometheus/blob/master/prometheus.go) program and change the `cvlc` commands by hand with the relevant flags to execute and then.
+Note, if you opt to use a custom card, just change the setting in the bottom right hand corner of the front-end user interface. (If you are not using the exact set-up I'm using, then you will probably have to [build from source](Prometheus.md#build-from-source) after you go into the [main.go](https://github.com/gilgameshskytrooper/prometheus/blob/master/main.go) program and change the `cvlc` commands by hand with the relevant flags to execute and then.
 
 ### Access The Alarm Clock
 
