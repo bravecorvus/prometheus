@@ -17,7 +17,7 @@ import (
 
 	"gopkg.in/go-playground/colors.v1"
 
-	"github.com/gilgameshskytrooper/prometheus/structs"
+	"prometheus/structs"
 )
 
 //Taking in the IP as a string as the argument, write the IP address to ./public/json/ip to use when the program is restarted
@@ -417,4 +417,30 @@ func Exists(path string) bool {
 		return false
 	}
 	return true
+}
+
+//Function to check whether the alarm has been running for more than 10 minutes
+func OverTenMinutes(alarmtime string) bool {
+	year, month, day := time.Now().Date()
+	var hour int
+	var minutes int
+	if string([]rune(alarmtime)[0]) == "0" {
+		hour, _ = strconv.Atoi(string([]rune(alarmtime)[1:2]))
+	} else {
+		hour, _ = strconv.Atoi(string([]rune(alarmtime)[0:2]))
+	}
+
+	if string([]rune(alarmtime)[3]) == "0" {
+		minutes, _ = strconv.Atoi(string([]rune(alarmtime)[4]))
+	} else {
+		minutes, _ = strconv.Atoi(string([]rune(alarmtime)[3:]))
+	}
+
+	timecurrent := time.Now()
+	difference := timecurrent.Minute() - time.Date(int(year), month, int(day), hour, minutes, 0, 0, time.Local).Minute()
+	if difference == 10 {
+		return true
+	} else {
+		return false
+	}
 }
