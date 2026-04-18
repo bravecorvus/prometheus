@@ -64,9 +64,8 @@ func (app *App) Initialize() {
 		app.FoundNixie = false
 	} else {
 		app.FoundNixie = true
-		defer app.Port.Close()
+		app.Port = port
 	}
-	app.Port = port
 }
 
 // findAlarm returns a pointer to the alarm matching the given name, or nil.
