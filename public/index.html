@@ -1,658 +1,318 @@
-<!--Andrew Lee 2017-->
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prometheus Clock</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script type="text/javascript" src="nixie/nixie.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
 
-    <head>
-        <link rel="shortcut icon" href="favicon.png" type="image/png"/>
-        <script src="/js/jquery-3.1.1.min.js"></script>
-        <script type="text/javascript" src="nixie/nixie.js"></script>
-        <script type="text/javascript" src="https://unpkg.com/vue@2.1.10/dist/vue.js"></script>
-        <link rel="stylesheet" type="text/css" href="/css/styles.css">
-    </head>
+<div id="app">
 
-    <body>
+    <nav class="nav-down" :class="active">
+        <a href="#" id="home" :style="navStyle('home')" @click.prevent="makeActive('home')">Home</a>
+        <a href="#" id="settings" :style="navStyle('settings')" @click.prevent="makeActive('settings')">Settings</a>
+        <a href="#" id="about" :style="navStyle('about')" @click.prevent="makeActive('about')">About</a>
+    </nav>
 
+    <div id="pagetitle">
+        <p id="atomicclock">Prometheus Clock</p>
+        <br><br><br><br>
+        <form id="snoozeform" action="/snooze" method="post">
+            <input id="snooze" type="submit" name="snooze" value="Snooze">
+        </form>
+        <div id="nd1" @click="document.getElementById('snoozeform').submit()"></div>
+    </div>
 
+    <br><br><br>
 
-        <div id="app"> <!--Vue.js-->
+    <!-- Home -->
+    <div id="homecontent" v-if="active === 'home'">
+        <div id="main">
+            <div id="leftside">
+                <div v-for="(alarm, index) in alarmsleft" :key="alarm.name" :id="alarm.name">
+                    <input v-model="alarm.time" class="time" type="time">
+                    <button @click="submitTime(alarm)">Submit Time</button>
+                    <br><br>
 
-            <nav class="nav-down" v-bind:class="active" v-on:click.prevent>
-                <a href="#" class="home" id="home" v-on:click="makeActive('home')">Home</a>
-                <a href="#" class="settings" id="settings" v-on:click="makeActive('settings')">Settings</a>
-                <a href="#" class="about" id="about" v-on:click="makeActive('about')">About</a>
-            </nav>
+                    <label class="switch">
+                        <input type="checkbox" :checked="alarm.sound === 'on'" @click="toggleSound(alarm)">
+                        <div class="slider round"></div>
+                    </label>
+                    <label>Sound</label>
+                    <br><br>
 
-            <div id="pagetitle">
-                <p id="atomicclock">Prometheus Clock</p>
-                <br>
-                <br>
-                <br>
-                <br>
-                <form id="snoozeform" action="/snooze" method="post" ><input id="snooze" type="submit" name="snooze" value="Snooze"></input></form>
-                <div id="nd1" onClick="document.getElementById('snoozeform').submit();"></div>
+                    <label class="switch">
+                        <input type="checkbox" :checked="alarm.vibration === 'on'" @click="toggleVibration(alarm)">
+                        <div class="slider round"></div>
+                    </label>
+                    <label>Vibration</label>
+                    <br><br><br>
+                </div>
             </div>
 
-            <br>
-            <br>
-            <br>
-
-            <div id="homecontent" v-if="active=='home'">
-            <div id="main" >
-
-                <div id="leftside">
-                    <div v-for="(alarm, index) in alarmsleft" :id="alarm.name">
-                        <input v-model="alarmsleft[index].time" class="time" type="time"></input>
-                        <button @click="submittimeleft(index)">Submit Time</button>
-
-                        <br>
-                        <br>
-
-                        <label class="switch">
-                        <input :value="alarmsleft[index].sound" v-if="alarmsleft[index].sound=='on'" @click="submitsoundleft(index)" type="checkbox" /checked>
-                        <input :value="alarmsleft[index].sound" v-else @click="submitsoundleft(index)" type="checkbox">
-                        <div class="slider round"></div>
-                        </label>
-                        </form>
-                        <label>Sound</label>
-
-                        <br>
-                        <br>
-
-                        <label class="switch">
-                        <input :value="alarmsleft[index].vibration" v-if="alarmsleft[index].vibration=='on'" @click="submitvibrationleft(index)" type="checkbox" /checked>
-                        <input :value="alarmsleft[index].vibration" v-else @click="submitvibrationleft(index)" type="checkbox">
-                        <div class="slider round"></div>
-                        </label>
-                        </form>
-                        <label>Vibration</label>
-
-                        <br>
-                        <br>
-                        <br>
-
-                    </div> <!--alarm.name-->
-
-                </div><!--leftside-->
-
-                <div id="rightside"> 
-                    <div v-for="(alarm, index) in alarmsright" :id="alarm.name">
-                        <input v-model="alarmsright[index].time" class="time" type="time"></input>
-                        <button @click="submittimeright(index)">Submit Time</button>
-
-                        <br>
-                        <br>
-
-                        <label class="switch">
-                        <input :value="alarmsright[index].sound" v-if="alarmsright[index].sound=='on'" @click="submitsoundright(index)" type="checkbox" /checked>
-                        <input :value="alarmsright[index].sound" v-else @click="submitsoundright(index)" type="checkbox">
-                        <div class="slider round"></div>
-                        </label>
-                        </form>
-                        <label>Sound</label>
-
-                        <br>
-                        <br>
-
-                        <label class="switch">
-                        <input :value="alarmsright[index].vibration" v-if="alarmsright[index].vibration=='on'" @click="submitvibrationright(index)" type="checkbox" /checked>
-                        <input :value="alarmsright[index].vibration" v-else @click="submitvibrationright(index)" type="checkbox">
-                        <div class="slider round"></div>
-                        </label>
-                        </form>
-                        <label>Vibration</label>
-
-                        <br>
-                        <br>
-                        <br>
-
-                    </div><!--alarm.name-->
-
-                </div><!--rightside-->
-
-            </div><!--homecontent-->
-            </div><!--main-->
-
-
-        <div v-else-if="active=='about'" id="aboutcontent">
-            <img src="img/home.jpg" style="left: 50%; margin-right: -50%;"/>
-        </div><!--aboutcontent-->
-
-
-
-            <div id="afterclock">
-
-                <div id="afterclockleft">
-                    <br>
-                    <form enctype="multipart/form-data">
-
-                        <div class="row">
-                            <div class="column-small-12 padd0 align-center">
-                                <div id="drop-box">
-                                    <h3><em>Alarm Audio</em></h3>
-                                    <p>Current Track: {{this.trackinfo}}</p>
-                                    <br>
-                                    <br>
-                                    <p>Change Track:</p>
-                                </div><!--drop-box-->
-                            </div><!--column-small-12-->
-                            <div class="column-small-12 padd0">
-                                <input type="file" name="file" id="file" />
-                            </div><!--column-small-12...-->
-                        </div><!--row-->
-
-                    </form>
-                    <br>
-                    <br>
-
-
-          <div id="colordiv">
-              <h3><em>LED Settings (Nixie Clock)</em><h3>
-              <br>
-              <h4>Enable or Disable LED<h4>
-              <label class="switch">
-                  <input :value="enableled" v-if="enableled==true" @click="submitenableled()" type="checkbox" /checked>
-                  <input :value="enableled" v-else @click="submitenableled()" type="checkbox">
-                  <div class="slider round"></div>
-              </label>
-          </div> <!--id="colordiv"-->
-
-        <div>
-            <h4 id="colorh4">Change LED Color</h4>
-            <input v-model="colors" type="text" id="color" style="background: black !important;">
-            <button id="colorbutton" @click="submitcolors()">Submit New Color</button>
-        </div><!--end float left div-->
-
-                </div><!--afterclockleft-->
-
-                <div id="afterclockright">
-                    <br>
-                    <h3><em>Enable IP Change Email Notifications</em></h3>
-                    <br>
-                    <br>
+            <div id="rightside">
+                <div v-for="(alarm, index) in alarmsright" :key="alarm.name" :id="alarm.name">
+                    <input v-model="alarm.time" class="time" type="time">
+                    <button @click="submitTime(alarm)">Submit Time</button>
+                    <br><br>
 
                     <label class="switch">
-                        <input :value="enableemail" v-if="enableemail==true" @click="submitenableemail()" type="checkbox" /checked>
-                        <input :value="enableemail" v-else @click="submitenableemail()" type="checkbox">
+                        <input type="checkbox" :checked="alarm.sound === 'on'" @click="toggleSound(alarm)">
                         <div class="slider round"></div>
                     </label>
+                    <label>Sound</label>
+                    <br><br>
 
-
-
-                        <div v-if="enableemail==true" style="float: right; margin-left: 10px;">
-                            <button @click="submitemail()" style="float: right;">Submit New Email</button>
-                            <input v-model="email" class="text" type="text" style="float: right;"></input>
-                        </div><!--v-if-->
-
-                    <div v-else>
-                        <br>
-                    </div><!--v-else-->
-
-                    <br>
-                    <br>
-                    <br>
-                    <h3><em>Use Custom Sound Card</em></h3>
                     <label class="switch">
-                        <input :value="customsoundcard" v-if="customsoundcard==true" @click="submitcustomsoundcard()" type="checkbox" /checked>
-                        <input :value="customsoundcard" v-else @click="submitcustomsoundcard()" type="checkbox">
+                        <input type="checkbox" :checked="alarm.vibration === 'on'" @click="toggleVibration(alarm)">
                         <div class="slider round"></div>
                     </label>
+                    <label>Vibration</label>
+                    <br><br><br>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- About -->
+    <div v-else-if="active === 'about'" id="aboutcontent">
+        <img src="img/home.jpg" style="left: 50%; margin-right: -50%;">
+    </div>
 
+    <!-- Settings -->
+    <div id="afterclock" v-show="active === 'settings'">
+        <div id="afterclockleft">
+            <br>
+            <div class="row">
+                <div class="column-small-12 padd0 align-center">
+                    <div id="drop-box" @click="triggerFileInput">
+                        <h3><em>Alarm Audio</em></h3>
+                        <p>Current Track: {{ trackinfo }}</p>
+                        <br><br>
+                        <p>Change Track:</p>
+                    </div>
+                </div>
+                <div class="column-small-12 padd0">
+                    <input type="file" accept="audio/*" id="file" ref="fileInput" @change="fileUpload" style="display:none;">
+                </div>
+            </div>
+            <br><br>
 
-                </div> <!--id="afterclockright"-->
-            </div><!--afterclock-->
+            <div id="colordiv">
+                <h3><em>LED Settings (Nixie Clock)</em></h3>
+                <br>
+                <h4>Enable or Disable LED</h4>
+                <label class="switch">
+                    <input type="checkbox" :checked="enableled" @click="toggleEnableLed">
+                    <div class="slider round"></div>
+                </label>
+            </div>
 
+            <div v-show="enableled">
+                <h4 id="colorh4">Change LED Color</h4>
+                <input v-model="colors" type="color" id="color">
+                <button id="colorbutton" @click="submitColors">Submit New Color</button>
+            </div>
+        </div>
 
+        <div id="afterclockright">
+            <br>
+            <h3><em>Enable IP Change Email Notifications</em></h3>
+            <br><br>
 
+            <label class="switch">
+                <input type="checkbox" :checked="enableemail" @click="toggleEnableEmail">
+                <div class="slider round"></div>
+            </label>
 
-        <!-- <div id="colordiv" style="float: left !important; padding-left: 5% !important; padding-top: 20%; margin-left: -33% !important;"> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <br> -->
-            <!-- <h3><em>LED Settings (Nixie Clock)</em><h3> -->
-            <!-- <br> -->
-            <!-- <h4>Enable or Disable LED<h4> -->
-            <!-- <label class="switch"> -->
-                <!-- <input :value="enableled" v-if="enableled==true" @click="submitenableled()" type="checkbox" /checked> -->
-                <!-- <input :value="enableled" v-else @click="submitenableled()" type="checkbox"> -->
-                <!-- <div class="slider round"></div> -->
-            <!-- </label> -->
-        <!-- </div> [>id="colordiv"<] -->
-<!--  -->
-        <!-- <div style="float: left; padding-right:60%; margin-left: -20%; padding-left: 35% !important; padding-top: 5%; margin-top: -5%;"> -->
-            <!-- <h4 id="colorh4">Change LED Color</h4> -->
-            <!-- <input v-model="colors" type="text" id="color" style="background: black !important;"> -->
-            <!-- <button id="colorbutton" @click="submitcolors()">Submit New Color</button> -->
-        <!-- </div>[>end float left div<] -->
+            <div v-if="enableemail" style="float: right; margin-left: 10px;">
+                <button @click="submitEmail" style="float: right;">Submit New Email</button>
+                <input v-model="email" class="text" type="text" style="float: right;">
+            </div>
+            <div v-else><br></div>
 
-        </div><!--app-->
+            <br><br><br>
+            <h3><em>Use Custom Sound Card</em></h3>
+            <label class="switch">
+                <input type="checkbox" :checked="customsoundcard" @click="toggleCustomSoundCard">
+                <div class="slider round"></div>
+            </label>
+        </div>
+    </div>
 
+</div>
 
+<script>
+const { createApp } = Vue;
 
+createApp({
+    data() {
+        return {
+            alarmsleft: [],
+            alarmsright: [],
+            trackinfo: '',
+            email: '',
+            enableemail: false,
+            customsoundcard: false,
+            active: 'home',
+            colors: '#000000',
+            enableled: false,
+        };
+    },
 
+    methods: {
+        navStyle(tab) {
+            if (this.active === tab) {
+                return 'color: #ffffff !important; border-bottom: 3px solid white';
+            }
+            return 'color: #5e5b64 !important; border-bottom: none';
+        },
 
+        makeActive(item) {
+            this.active = item;
+        },
 
+        postForm(url, data) {
+            const body = new URLSearchParams(data);
+            fetch(url, { method: 'POST', body });
+        },
 
+        submitTime(alarm) {
+            this.postForm('/time', { name: alarm.name, value: alarm.time });
+        },
 
-        <script>
-            var vm = new Vue({
-                el: '#app',
-                data: {
-                    alarmsleft: [],
-                    alarmsright: [],
-                    trackinfo: [],
-                    email: [],
-                    enableemail: [],
-                    customsoundcard: [],
-                    active: 'home',
-                    colors: [],
-                    enableled: [],
-                },
+        toggleSound(alarm) {
+            alarm.sound = alarm.sound === 'on' ? 'off' : 'on';
+            this.postForm('/sound', { name: alarm.name, value: alarm.sound });
+        },
 
+        toggleVibration(alarm) {
+            alarm.vibration = alarm.vibration === 'on' ? 'off' : 'on';
+            this.postForm('/vibration', { name: alarm.name, value: alarm.vibration });
+        },
 
+        toggleEnableEmail() {
+            this.enableemail = !this.enableemail;
+            this.postForm('/enableemail', { value: this.enableemail });
+        },
 
+        toggleCustomSoundCard() {
+            this.customsoundcard = !this.customsoundcard;
+            this.postForm('/customsoundcard', { value: this.customsoundcard });
+        },
 
-                methods: {
+        submitEmail() {
+            this.postForm('/newemail', { value: this.email });
+        },
 
+        toggleEnableLed() {
+            this.enableled = !this.enableled;
+            this.postForm('/submitenableled', { value: this.enableled });
+        },
 
+        submitColors() {
+            this.postForm('/submitcolors', { value: this.colors });
+        },
 
-                    makeActive: function(item){
+        triggerFileInput() {
+            this.$refs.fileInput.click();
+        },
 
-                        var elem = document.getElementById(this.active);
-                        elem.setAttribute("style","color: #5e5b64 !important; border-bottom: none");
-                        this.active = item;
-                        var elem = document.getElementById(this.active);
-                        elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
-                        if (this.active == 'settings') {
-                            document.getElementById("colordiv").style.display = "";
-                            document.getElementById("afterclock").style.display = "";
-                            if (this.enableled == true) {
-                                document.getElementById("color").style.display = "";
-                                document.getElementById("colorh4").style.display = "";
-                                document.getElementById("colorbutton").style.display = "";
-                            } else {
-                                document.getElementById("color").style.display = "none";
-                                document.getElementById("colorh4").style.display = "none";
-                                document.getElementById("colorbutton").style.display = "none";
-                            }
-                        } else {
-                            document.getElementById("afterclock").style.display = "none";
-                            document.getElementById("colordiv").style.display = "none";
-                            document.getElementById("color").style.display = "none";
-                            document.getElementById("colorh4").style.display = "none";
-                            document.getElementById("colorbutton").style.display = "none";
-                        }
+        fileUpload(event) {
+            const files = event.target.files;
+            if (!files.length) return;
 
-                    },
+            const file = files[0];
+            if (!file.type.match('audio.*')) {
+                alert('Audio files only. Please select another file.');
+                return;
+            }
 
+            const data = new FormData();
+            data.append('audio', file, file.name);
 
-                    submittimeright(arg) {
-                        $.ajax(
-                            {
-                                url: "/time",
-                                type: 'post',
-                                data: {
-                                    name: this.alarmsright[arg].name,
-                                    value: this.alarmsright[arg].time 
-                                }
-                            }
-                        );
-                    },
-
-                    submittimeleft(arg) {
-                        $.ajax(
-                            {
-                                url: "/time",
-                                type: 'post',
-                                data: {
-                                    name: this.alarmsleft[arg].name,
-                                    value: this.alarmsleft[arg].time 
-                                }
-                            }
-                        );
-                    },
-
-                    submitsoundright(arg) {
-                        if (this.alarmsright[arg].sound == 'on') {
-                            this.alarmsright[arg].sound = 'off';
-                        } else {
-                            this.alarmsright[arg].sound = 'on';
-                        }
-                        $.ajax(
-                            {
-                                url: "/sound",
-                                type: 'post',
-                                data: {
-                                    name: this.alarmsright[arg].name,
-                                    value: this.alarmsright[arg].sound 
-                                }
-                            }
-                        );
-                    },
-
-                    submitsoundleft(arg) {
-                        if (this.alarmsleft[arg].sound == 'on') {
-                            this.alarmsleft[arg].sound = 'off';
-                        } else {
-                            this.alarmsleft[arg].sound = 'on';
-                        }
-                        $.ajax(
-                            {
-                                url: "/sound",
-                                type: 'post',
-                                data: {
-                                    name: this.alarmsleft[arg].name,
-                                    value: this.alarmsleft[arg].sound 
-                                }
-                            }
-                        );
-                    },
-
-                    submitvibrationright(arg) {
-                        if (this.alarmsright[arg].vibration == 'on') {
-                            this.alarmsright[arg].vibration = 'off';
-                        } else {
-                            this.alarmsright[arg].vibration = 'on';
-                        }
-                        $.ajax(
-                            {
-                                url: "/vibration",
-                                type: 'post',
-                                data: {
-                                    name: this.alarmsright[arg].name,
-                                    value: this.alarmsright[arg].vibration 
-                                }
-                            }
-                        );
-                    },
-
-                    submitvibrationleft(arg) {
-                        if (this.alarmsleft[arg].vibration == 'on') {
-                            this.alarmsleft[arg].vibration = 'off';
-                        } else {
-                            this.alarmsleft[arg].vibration = 'on';
-                        }
-                        $.ajax(
-                            {
-                                url: "/vibration",
-                                type: 'post',
-                                data: {
-                                    name: this.alarmsleft[arg].name,
-                                    value: this.alarmsleft[arg].vibration 
-                                }
-                            }
-                        );
-                    },
-
-                    submitenableemail() {
-                        if (this.enableemail == true) {
-                            this.enableemail = false;
-                        } else {
-                            this.enableemail = true;
-                        }
-                        $.ajax(
-                            {
-                                url: "/enableemail",
-                                type: 'post',
-                                data: {
-                                    value: this.enableemail,
-                                }
-                            }
-                        );
-                    },
-
-                    submitcustomsoundcard() {
-                        if (this.customsoundcard == true) {
-                            this.customsoundcard = false;
-                        } else {
-                            this.customsoundcard = true;
-                        }
-                        $.ajax(
-                            {
-                                url: "/customsoundcard",
-                                type: 'post',
-                                data: {
-                                    value: this.customsoundcard,
-                                }
-                            }
-                        );
-                    },
-
-                    submitemail() {
-                        $.ajax(
-                            {
-                                url: "/newemail",
-                                type: 'post',
-                                data: {
-                                    value: this.email, 
-                                }
-                            }
-                        );
-                    },
-
-                    submitenableled() {
-                        if (this.enableled == true) {
-                            this.enableled = false;
-                            document.getElementById("color").style.display = "none";
-                            document.getElementById("colorh4").style.display = "none";
-                            document.getElementById("colorbutton").style.display = "none";
-                        } else {
-                            this.enableled = true;
-                            document.getElementById("color").style.display = "";
-                            document.getElementById("colorh4").style.display = "";
-                            document.getElementById("colorbutton").style.display = "";
-                        }
-                        $.ajax(
-                            {
-                                url: "/submitenableled",
-                                type: 'post',
-                                data: {
-                                    value: this.enableled,
-                                }
-                            }
-                        );
-                    },
-
-                    submitcolors(arg) {
-                        this.colors = document.getElementById("color").value;
-                        $.ajax(
-                            {
-                                url: "/submitcolors",
-                                type: 'post',
-                                data: {
-                                    value: this.colors, 
-                                }
-                            }
-                        );
-                        vm.$forceUpdate();
-                    },
-
-                    changecolors() {
-                        this.colors = document.getElementById("color").value;
+            fetch('/upload', { method: 'POST', body: data })
+                .then(resp => {
+                    if (resp.ok) {
+                        this.trackinfo = file.name;
+                    } else {
+                        alert('Error uploading file. Please try again.');
                     }
-
-                },
-
-
-                created() {
-                    var elem = document.getElementById(this.active);
-                    elem.setAttribute("style","color: #ffffff !important; border-bottom: 3px solid white");
-                    document.getElementById("colordiv").style.display = "none";
-                    document.getElementById("color").style.display = "none";
-                    document.getElementById("colorh4").style.display = "none";
-                    document.getElementById("colorbutton").style.display = "none";
-                    document.getElementById("colorbutton").style.display = "none";
-                    document.getElementById("afterclock").style.display = "none";
-
-                    $.ajaxSetup({ cache: false });
-
-                    $.getJSON('../json/alarms.json')
-                        .done(data => {
-                            this.alarmsleft = data.slice(0, 2);
-                            this.alarmsright = data.slice(2);
-                        });
-
-                        $.get('../json/email')
-                            .done( data => {
-                            this.email = String(data).replace(/\n/g, '');
-                    });
-
-                    $.get('../json/enableemail')
-                        .done( data => {
-                            if (data.replace(/\n/g, '') == "true") {
-                                this.enableemail = true;
-                            } else {
-                                this.enableemail = false;
-                            }
-                    });
-
-                    $.get('../json/trackinfo')
-                        .done( data => {
-                            this.trackinfo = String(data).replace(/\n/g, '');
-                    });
-
-                    $.get('../json/colors')
-                        .done( data => {
-                            this.colors = String(data).replace(/\n/g, '');
-                    });
-
-                    $.get('../json/customsoundcard')
-                        .done( data => {
-                            if (data.replace(/\n/g, '') == "true") {
-                                this.customsoundcard = true;
-                            } else {
-                                this.customsoundcard = false;
-                            }
-                    });
-
-                    $.get('../json/enableled')
-                        .done( data => {
-                            if (data.replace(/\n/g, '') == "true") {
-                                this.enableled = true;
-                            } else {
-                                this.enableled = false;
-                            }
-                    });
-
-                },
-                mounted() {
-                    document.body.style.zoom = 1.0;
-                },
-
-            })
-
-
-                var nd = new NixieClock();
-                nd.id = 'nd1';
-                nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
-                nd.charWidth = 90;
-                nd.charHeight = 150;
-                nd.extraGapsWidths[1] = 12;
-                nd.extraGapsWidths[3] = 12;
-                nd.charGapWidth = 10;
-                document.getElementById(nd.id).parentNode.style.background = "black";
-                document.getElementById(nd.id).parentNode.style.border = "2px solid #AAAAAA";
-                nd.init();
-                nd.run();
-                nd.setText('-1.234567890');
-
-
-                function showColor(){
-                    if (this.active == "settings")  {
-                        console.log("makeActive()");
-                        this.makeActive();
-                    }
-                }
-
-                $(function(){
-
-                    $("#drop-box").click(function(){
-                        $("#file").click();
-                    });
-
-                    $(document).on('drop dragover', function (e) {
-                        e.preventDefault();
-                    }); 
-
-                    $('input[type=file]').on('change', fileUpload);
-
-                    function fileUpload(event){  
-
-                        $("#drop-box").html("<p>"+event.target.value+" uploading...</p>");
-                        files = event.target.files;
-                        var data = new FormData();
-                        var error = 0;
-                        for (var i = 0; i < files.length; i++) {
-                            var file = files[i];
-                            console.log(file.size);
-                            if (!file.type.match('audio.*')) {
-                                $("#drop-box").html("<p> Audio only. Select another file</p>");
-                                error = 1;
-                            } else {
-                                data.append('audio', file, file.name);
-                            }
-                        }
-
-                        if(!error){
-                            var xhr = new XMLHttpRequest();
-                            xhr.open("POST", "/upload", true);
-                            xhr.send(data);
-                            xhr.onload = function () {
-                            if (xhr.status === 200) {
-                                $("#afterclock").html("\
-                                <div id='afterclockleft'>\
-                                    <form enctype='multipart/form-data'>\
-                                        <div class='row'>\
-                                            <div class='column-small-12 padd0 align-center'>\
-                                                <div id='drop-box'>\
-                                                    <p>Select Files</p>\
-                                                </div>\
-                                            </div>\
-                                            <div class='column-small-12 padd0'>\
-                                                <input type='file' name='file' id='file' />\
-                                            </div>\
-                                        </div>\
-                                    </form>\
-                                </div>\
-                                <br>\
-                                <p>File Uploaded. Select more files</p>");
-                            } else {
-                                $("#afterclock").html("<p> Error in upload, try again.</p>");
-                            }
-                        };
-                    }
-                }
-
                 });
+        },
+    },
 
-            </script>
-
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>  
-        <script>
-
-            $('#color').colorpicker({
-				format: 'hex',
-                useAlpha: false
+    created() {
+        fetch('/json/alarms.json')
+            .then(r => r.json())
+            .then(data => {
+                this.alarmsleft = data.slice(0, 2);
+                this.alarmsright = data.slice(2);
             });
 
-            window.onscroll = function() {navbarhandler()};
-			function navbarhandler() {
-				if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-                    $('nav').removeClass('nav-down').addClass('nav-up');
-				} else {
-					$('nav').removeClass('nav-up').addClass('nav-down');
-				}
-			}
+        fetch('/json/email')
+            .then(r => r.text())
+            .then(data => { this.email = data.trim(); });
 
-        </script>
-    </body>
+        fetch('/json/enableemail')
+            .then(r => r.text())
+            .then(data => { this.enableemail = data.trim() === 'true'; });
+
+        fetch('/json/trackinfo')
+            .then(r => r.text())
+            .then(data => { this.trackinfo = data.trim(); });
+
+        fetch('/json/colors')
+            .then(r => r.text())
+            .then(data => { this.colors = data.trim(); });
+
+        fetch('/json/customsoundcard')
+            .then(r => r.text())
+            .then(data => { this.customsoundcard = data.trim() === 'true'; });
+
+        fetch('/json/enableled')
+            .then(r => r.text())
+            .then(data => { this.enableled = data.trim() === 'true'; });
+    },
+
+    mounted() {
+        // Initialize Nixie clock display
+        const nd = new NixieClock();
+        nd.id = 'nd1';
+        nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
+        nd.charWidth = 90;
+        nd.charHeight = 150;
+        nd.extraGapsWidths[1] = 12;
+        nd.extraGapsWidths[3] = 12;
+        nd.charGapWidth = 10;
+        const container = document.getElementById(nd.id);
+        if (container && container.parentNode) {
+            container.parentNode.style.background = 'black';
+            container.parentNode.style.border = '2px solid #AAAAAA';
+        }
+        nd.init();
+        nd.run();
+    },
+}).mount('#app');
+
+// Navbar scroll hide/show
+window.onscroll = function() {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+        nav.classList.remove('nav-down');
+        nav.classList.add('nav-up');
+    } else {
+        nav.classList.remove('nav-up');
+        nav.classList.add('nav-down');
+    }
+};
+</script>
+
+</body>
 </html>

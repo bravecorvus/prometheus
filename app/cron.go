@@ -5,805 +5,168 @@ import (
 	"os/exec"
 	"prometheus/gpio"
 	"prometheus/nixie"
+	"prometheus/structs"
 	"prometheus/utils"
 	"time"
 )
 
 func (app *App) SendTime() {
+	timeStr := nixie.CurrentTimeAsString()
 
-	// fmt.Println("RGB(", Red, Green, Blue, ")")
-
-	if app.EnableLed {
-		if app.FoundNixie {
-			b := []byte(nixie.CurrentTimeAsString() + app.Red + app.Green + app.Blue)
-			_, err := app.Port.Write(b)
-			if err != nil {
-				fmt.Println(err.Error())
-			}
+	if app.FoundNixie {
+		var payload string
+		if app.EnableLed {
+			payload = timeStr + app.Red + app.Green + app.Blue
 		} else {
-			app.Options.PortName = nixie.FindArduino()
-			if app.Options.PortName != "" {
-				app.FoundNixie = true
-			} else {
-				app.FoundNixie = false
-			}
+			payload = timeStr
 		}
-
+		if _, err := app.Port.Write([]byte(payload)); err != nil {
+			fmt.Println(err.Error())
+		}
 	} else {
-
-		if app.FoundNixie {
-			b := []byte(nixie.CurrentTimeAsString())
-			_, err := app.Port.Write(b)
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-		} else {
-			app.Options.PortName = nixie.FindArduino()
-			if app.Options.PortName != "" {
-				app.FoundNixie = true
-			} else {
-				app.FoundNixie = false
-			}
-		}
+		app.Options.PortName = nixie.FindArduino()
+		app.FoundNixie = app.Options.PortName != ""
 	}
-
 }
 
 func (app *App) AlarmLoop() {
-	breaktime := false
-	duration := time.Second * 3
 	t := time.Now()
 	currenttime := t.Format("15:04")
+
 	if app.EnableEmail {
 		utils.CheckIPChange()
 	}
 
-	if app.Alarm1.Alarmtime == currenttime {
-
-		go utils.RestartNetwork()
-		app.Alarm1.CurrentlyRunning = true
-
-		if app.Alarm1.Sound && app.Alarm1.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			if app.CustomSoundCard {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm1.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						breaktime = false
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm1.Alarmtime) {
-						app.Alarm1.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-			} else {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm1.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-
-						gpio.VibOff()
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println(errrrrorkill.Error())
-						}
-						breaktime = false
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm1.Alarmtime) {
-						app.Alarm1.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-			}
-
-		} else if app.Alarm1.Sound && !app.Alarm1.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-			if app.CustomSoundCard {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-				for {
-					time.Sleep(time.Second * 1)
-					if !app.Alarm1.CurrentlyRunning {
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else if utils.OverTenMinutes(app.Alarm1.Alarmtime) {
-						app.Alarm1.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					}
-				}
-			} else {
-
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-				for {
-					time.Sleep(time.Second * 1)
-					if !app.Alarm1.CurrentlyRunning {
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm1.Alarmtime) {
-						app.Alarm1.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					}
-				}
-			}
-
-		} else if !app.Alarm1.Sound && app.Alarm1.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			for {
-				gpio.VibOn()
-				for i := 1; i <= 50; i++ {
-					time.Sleep(time.Millisecond * 50)
-					if !app.Alarm1.CurrentlyRunning {
-						breaktime = true
-						break
-					}
-				}
-				if breaktime {
-					gpio.VibOff()
-					breaktime = false
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-
-				} else if utils.OverTenMinutes(app.Alarm1.Alarmtime) {
-					app.Alarm1.CurrentlyRunning = false
-					gpio.VibOff()
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-				} else {
-					gpio.VibOff()
-					time.Sleep(duration)
-				}
-			}
-		} else {
-			app.Alarm1.CurrentlyRunning = false
+	for i := range app.Alarms {
+		if app.Alarms[i].Alarmtime == currenttime {
+			go utils.RestartNetwork()
+			app.runAlarm(&app.Alarms[i])
+			return
 		}
+	}
+}
 
-	} else if app.Alarm2.Alarmtime == currenttime {
+// runAlarm handles a single alarm trigger with the appropriate sound/vibration combination.
+func (app *App) runAlarm(alarm *structs.Alarm) {
+	alarm.CurrentlyRunning = true
+	app.setAlarmLED()
 
-		// Check if there is network connectivity (if not, then restart network interfaces)
-		go utils.RestartNetwork()
-		app.Alarm2.CurrentlyRunning = true
+	switch {
+	case alarm.Sound && alarm.Vibration:
+		app.runSoundAndVibration(alarm)
+	case alarm.Sound:
+		app.runSoundOnly(alarm)
+	case alarm.Vibration:
+		app.runVibrationOnly(alarm)
+	default:
+		alarm.CurrentlyRunning = false
+	}
+}
 
-		if app.Alarm2.Sound && app.Alarm2.Vibration {
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
+func (app *App) setAlarmLED() {
+	app.Red = "255"
+	app.Green = "000"
+	app.Blue = "000"
+}
 
-			if app.CustomSoundCard {
+func (app *App) resetLED() {
+	app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
+}
 
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
+func (app *App) buildPlayCommand() *exec.Cmd {
+	if app.CustomSoundCard {
+		return exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
+	}
+	return exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
+}
 
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm2.CurrentlyRunning {
-							breaktime = true
-							app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						breaktime = false
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
+func (app *App) runSoundAndVibration(alarm *structs.Alarm) {
+	playsound := app.buildPlayCommand()
+	if err := playsound.Start(); err != nil {
+		fmt.Println(err.Error())
+	}
 
-					} else if utils.OverTenMinutes(app.Alarm2.Alarmtime) {
-						app.Alarm2.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-			} else {
-
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm2.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						breaktime = false
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else if utils.OverTenMinutes(app.Alarm2.Alarmtime) {
-						app.Alarm2.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-			}
-
-		} else if app.Alarm2.Sound && !app.Alarm2.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			if app.CustomSoundCard {
-
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					time.Sleep(time.Second * 1)
-					if !app.Alarm2.CurrentlyRunning {
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else if utils.OverTenMinutes(app.Alarm2.Alarmtime) {
-						app.Alarm2.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					}
-				}
-
-			} else {
-
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-				for {
-
-					time.Sleep(time.Second * 1)
-					if !app.Alarm2.CurrentlyRunning {
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm2.Alarmtime) {
-						app.Alarm2.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					}
-				}
-			}
-
-		} else if !app.Alarm2.Sound && app.Alarm2.Vibration {
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			for {
-				gpio.VibOn()
-				for i := 1; i <= 50; i++ {
-					time.Sleep(time.Millisecond * 50)
-					if !app.Alarm2.CurrentlyRunning {
-						breaktime = true
-						break
-					}
-				}
-				if breaktime {
-					gpio.VibOff()
-					breaktime = false
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-
-				} else if utils.OverTenMinutes(app.Alarm2.Alarmtime) {
-					app.Alarm2.CurrentlyRunning = false
-					gpio.VibOff()
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-				} else {
-					gpio.VibOff()
-					time.Sleep(duration)
-				}
-			}
-		} else {
-			app.Alarm2.CurrentlyRunning = false
+	duration := time.Second * 3
+	for {
+		gpio.VibOn()
+		stopped := waitForStop(alarm, 50, 50*time.Millisecond)
+		if stopped {
+			gpio.VibOff()
+			killProcess(playsound)
+			app.resetLED()
+			return
 		}
-
-	} else if app.Alarm3.Alarmtime == currenttime {
-		// Check if there is network connectivity (if not, then restart network interfaces)
-		go utils.RestartNetwork()
-		app.Alarm3.CurrentlyRunning = true
-
-		if app.Alarm3.Sound && app.Alarm3.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			if app.CustomSoundCard {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm3.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						breaktime = false
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm3.Alarmtime) {
-						app.Alarm3.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-			} else {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm3.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						breaktime = false
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm3.Alarmtime) {
-						app.Alarm3.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-			}
-
-		} else if app.Alarm3.Sound && !app.Alarm3.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			if app.CustomSoundCard {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					time.Sleep(time.Second * 1)
-					if !app.Alarm3.CurrentlyRunning {
-						errrrrorkill := playsound.Process.Kill()
-						if errrrrorkill != nil {
-							fmt.Println(errrrrorkill.Error())
-						}
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-
-						break
-					} else if utils.OverTenMinutes(app.Alarm3.Alarmtime) {
-						app.Alarm3.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					}
-				}
-
-			} else {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					time.Sleep(time.Second * 1)
-					if !app.Alarm3.CurrentlyRunning {
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else if utils.OverTenMinutes(app.Alarm3.Alarmtime) {
-						app.Alarm3.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					}
-				}
-
-			}
-
-		} else if !app.Alarm3.Sound && app.Alarm3.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			for {
-				gpio.VibOn()
-				for i := 1; i <= 50; i++ {
-					time.Sleep(time.Millisecond * 50)
-					if !app.Alarm3.CurrentlyRunning {
-						breaktime = true
-						break
-					}
-				}
-				if breaktime {
-					gpio.VibOff()
-					breaktime = false
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-				} else if utils.OverTenMinutes(app.Alarm3.Alarmtime) {
-					app.Alarm3.CurrentlyRunning = false
-					gpio.VibOff()
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-				} else {
-					gpio.VibOff()
-					time.Sleep(duration)
-				}
-			}
-		} else {
-			app.Alarm3.CurrentlyRunning = false
+		if utils.OverTenMinutes(alarm.Alarmtime) {
+			alarm.CurrentlyRunning = false
+			gpio.VibOff()
+			killProcess(playsound)
+			app.resetLED()
+			return
 		}
+		gpio.VibOff()
+		time.Sleep(duration)
+	}
+}
 
-	} else if app.Alarm4.Alarmtime == currenttime {
-		// Check if there is network connectivity (if not, then restart network interfaces)
-		go utils.RestartNetwork()
-		app.Alarm4.CurrentlyRunning = true
+func (app *App) runSoundOnly(alarm *structs.Alarm) {
+	playsound := app.buildPlayCommand()
+	if err := playsound.Start(); err != nil {
+		fmt.Println(err.Error())
+	}
 
-		if app.Alarm4.Sound && app.Alarm4.Vibration {
+	for {
+		time.Sleep(time.Second)
+		if !alarm.CurrentlyRunning {
+			killProcess(playsound)
+			app.resetLED()
+			return
+		}
+		if utils.OverTenMinutes(alarm.Alarmtime) {
+			alarm.CurrentlyRunning = false
+			killProcess(playsound)
+			app.resetLED()
+			return
+		}
+	}
+}
 
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
+func (app *App) runVibrationOnly(alarm *structs.Alarm) {
+	duration := time.Second * 3
+	for {
+		gpio.VibOn()
+		stopped := waitForStop(alarm, 50, 50*time.Millisecond)
+		if stopped {
+			gpio.VibOff()
+			app.resetLED()
+			return
+		}
+		if utils.OverTenMinutes(alarm.Alarmtime) {
+			alarm.CurrentlyRunning = false
+			gpio.VibOff()
+			app.resetLED()
+			return
+		}
+		gpio.VibOff()
+		time.Sleep(duration)
+	}
+}
 
-			if app.CustomSoundCard {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
+// waitForStop polls alarm.CurrentlyRunning in small increments.
+// Returns true if the alarm was stopped by the user.
+func waitForStop(alarm *structs.Alarm, iterations int, interval time.Duration) bool {
+	for i := 0; i < iterations; i++ {
+		time.Sleep(interval)
+		if !alarm.CurrentlyRunning {
+			return true
+		}
+	}
+	return false
+}
 
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm4.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						breaktime = false
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else if utils.OverTenMinutes(app.Alarm4.Alarmtime) {
-						app.Alarm4.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-
-			} else {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					gpio.VibOn()
-					for i := 1; i <= 50; i++ {
-						time.Sleep(time.Millisecond * 50)
-						if !app.Alarm4.CurrentlyRunning {
-							breaktime = true
-							break
-						}
-					}
-					if breaktime {
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-						breaktime = false
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm4.Alarmtime) {
-						app.Alarm4.CurrentlyRunning = false
-						gpio.VibOff()
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else {
-						gpio.VibOff()
-						time.Sleep(duration)
-					}
-
-				}
-
-			}
-
-		} else if app.Alarm4.Sound && !app.Alarm4.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			if app.CustomSoundCard {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04", "-A=alsa", "--alsa-audio-device=default")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					time.Sleep(time.Second * 1)
-					if !app.Alarm4.CurrentlyRunning {
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-
-					} else if utils.OverTenMinutes(app.Alarm4.Alarmtime) {
-						app.Alarm4.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					}
-				}
-
-			} else {
-				var playsound = exec.Command("cvlc", utils.Pwd()+"/public/assets/"+app.Soundname, "--gain=0.04")
-				if err := playsound.Start(); err != nil {
-					fmt.Println(err.Error())
-				}
-
-				for {
-					time.Sleep(time.Second * 1)
-					if !app.Alarm4.CurrentlyRunning {
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					} else if utils.OverTenMinutes(app.Alarm4.Alarmtime) {
-						app.Alarm4.CurrentlyRunning = false
-						if err := playsound.Process.Kill(); err != nil {
-							fmt.Println(err.Error())
-						}
-
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					}
-				}
-
-			}
-
-		} else if !app.Alarm4.Sound && app.Alarm4.Vibration {
-
-			app.Red = "255"
-			app.Green = "000"
-			app.Blue = "000"
-
-			for {
-				gpio.VibOn()
-				for i := 1; i <= 50; i++ {
-					time.Sleep(time.Millisecond * 50)
-					if !app.Alarm4.CurrentlyRunning {
-						breaktime = true
-						app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-						break
-					}
-				}
-				if breaktime {
-					gpio.VibOff()
-					breaktime = false
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-				} else if utils.OverTenMinutes(app.Alarm4.Alarmtime) {
-					app.Alarm4.CurrentlyRunning = false
-					gpio.VibOff()
-					app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
-					break
-				} else {
-					gpio.VibOff()
-					time.Sleep(duration)
-				}
-			}
-		} else {
-			app.Alarm4.CurrentlyRunning = false
+func killProcess(cmd *exec.Cmd) {
+	if cmd.Process != nil {
+		if err := cmd.Process.Kill(); err != nil {
+			fmt.Println(err.Error())
 		}
 	}
 }

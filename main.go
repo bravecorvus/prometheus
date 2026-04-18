@@ -47,7 +47,7 @@ func main() {
 
 	//Handle the AJAX post call to submit a new time for a certain alarm
 	http.HandleFunc("/time", globals.TimeHandler)
-	http.HandleFunc("/sound", globals.TimeHandler)
+	http.HandleFunc("/sound", globals.SoundHandler)
 	http.HandleFunc("/vibration", globals.VibrationHandler)
 	http.HandleFunc("/snooze", globals.SnoozeHandler)
 	http.HandleFunc("/enableemail", globals.EnableEmailHandler)
