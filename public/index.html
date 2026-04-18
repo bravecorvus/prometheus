@@ -24,7 +24,9 @@
         <form ref="snoozeform" id="snoozeform" action="/snooze" method="post">
             <input id="snooze" type="submit" name="snooze" value="Snooze">
         </form>
-        <div id="nd1" @click="$refs.snoozeform.submit()"></div>
+        <div class="nixie-wrap" @click="$refs.snoozeform.submit()">
+            <div id="nd1"></div>
+        </div>
     </div>
 
     <!-- Home: Alarms -->
