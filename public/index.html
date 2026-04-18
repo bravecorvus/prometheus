@@ -13,136 +13,110 @@
 
 <div id="app">
 
-    <nav class="nav-down" :class="active">
-        <a href="#" id="home" :style="navStyle('home')" @click.prevent="makeActive('home')">Home</a>
-        <a href="#" id="settings" :style="navStyle('settings')" @click.prevent="makeActive('settings')">Settings</a>
-        <a href="#" id="about" :style="navStyle('about')" @click.prevent="makeActive('about')">About</a>
+    <nav>
+        <a href="#" :class="{ active: active === 'home' }" @click.prevent="active = 'home'">Home</a>
+        <a href="#" :class="{ active: active === 'settings' }" @click.prevent="active = 'settings'">Settings</a>
+        <a href="#" :class="{ active: active === 'about' }" @click.prevent="active = 'about'">About</a>
     </nav>
 
-    <div id="pagetitle">
+    <div class="header">
         <p id="atomicclock">Prometheus Clock</p>
-        <br><br><br><br>
-        <form id="snoozeform" ref="snoozeform" action="/snooze" method="post">
+        <form ref="snoozeform" id="snoozeform" action="/snooze" method="post">
             <input id="snooze" type="submit" name="snooze" value="Snooze">
         </form>
         <div id="nd1" @click="$refs.snoozeform.submit()"></div>
     </div>
 
-    <br><br><br>
-
-    <!-- Home -->
-    <div id="homecontent" v-if="active === 'home'">
-        <div id="main">
-            <div id="leftside">
-                <div v-for="(alarm, index) in alarmsleft" :key="alarm.name" :id="alarm.name">
+    <!-- Home: Alarms -->
+    <div class="content" v-if="active === 'home'">
+        <div class="alarm-grid">
+            <div class="alarm-card" v-for="(alarm, i) in alarms" :key="alarm.name">
+                <div class="alarm-label">Alarm {{ i + 1 }}</div>
+                <div class="time-row">
                     <input v-model="alarm.time" class="time" type="time">
-                    <button @click="submitTime(alarm)">Submit Time</button>
-                    <br><br>
-
+                    <button @click="submitTime(alarm)">Set</button>
+                </div>
+                <div class="toggle-row">
+                    <label class="toggle-label">Sound</label>
                     <label class="switch">
                         <input type="checkbox" :checked="alarm.sound === 'on'" @click="toggleSound(alarm)">
-                        <div class="slider round"></div>
+                        <div class="slider"></div>
                     </label>
-                    <label>Sound</label>
-                    <br><br>
-
+                </div>
+                <div class="toggle-row">
+                    <label class="toggle-label">Vibration</label>
                     <label class="switch">
                         <input type="checkbox" :checked="alarm.vibration === 'on'" @click="toggleVibration(alarm)">
-                        <div class="slider round"></div>
+                        <div class="slider"></div>
                     </label>
-                    <label>Vibration</label>
-                    <br><br><br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="content" v-else-if="active === 'settings'">
+        <div class="settings-grid">
+
+            <div class="settings-card">
+                <h3>Alarm Audio</h3>
+                <div id="drop-box" @click="$refs.fileInput.click()">
+                    <p>Current Track: <strong>{{ trackinfo }}</strong></p>
+                    <p style="margin-top: 8px;">Tap to change</p>
+                </div>
+                <input type="file" accept="audio/*" ref="fileInput" @change="fileUpload" style="display:none;">
+            </div>
+
+            <div class="settings-card">
+                <h3>LED Settings</h3>
+                <div class="setting-row">
+                    <label class="toggle-label">Enable LED</label>
+                    <label class="switch">
+                        <input type="checkbox" :checked="enableled" @click="toggleEnableLed">
+                        <div class="slider"></div>
+                    </label>
+                </div>
+                <div v-show="enableled">
+                    <h4>LED Color</h4>
+                    <div class="color-row">
+                        <input v-model="colors" type="color">
+                        <button @click="submitColors">Apply</button>
+                    </div>
                 </div>
             </div>
 
-            <div id="rightside">
-                <div v-for="(alarm, index) in alarmsright" :key="alarm.name" :id="alarm.name">
-                    <input v-model="alarm.time" class="time" type="time">
-                    <button @click="submitTime(alarm)">Submit Time</button>
-                    <br><br>
-
+            <div class="settings-card">
+                <h3>IP Change Notifications</h3>
+                <div class="setting-row">
+                    <label class="toggle-label">Email on IP change</label>
                     <label class="switch">
-                        <input type="checkbox" :checked="alarm.sound === 'on'" @click="toggleSound(alarm)">
-                        <div class="slider round"></div>
+                        <input type="checkbox" :checked="enableemail" @click="toggleEnableEmail">
+                        <div class="slider"></div>
                     </label>
-                    <label>Sound</label>
-                    <br><br>
-
-                    <label class="switch">
-                        <input type="checkbox" :checked="alarm.vibration === 'on'" @click="toggleVibration(alarm)">
-                        <div class="slider round"></div>
-                    </label>
-                    <label>Vibration</label>
-                    <br><br><br>
+                </div>
+                <div v-if="enableemail" class="email-row">
+                    <input v-model="email" type="text" placeholder="you@example.com">
+                    <button @click="submitEmail">Save</button>
                 </div>
             </div>
+
+            <div class="settings-card">
+                <h3>Audio Output</h3>
+                <div class="setting-row">
+                    <label class="toggle-label">Custom Sound Card</label>
+                    <label class="switch">
+                        <input type="checkbox" :checked="customsoundcard" @click="toggleCustomSoundCard">
+                        <div class="slider"></div>
+                    </label>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <!-- About -->
-    <div v-else-if="active === 'about'" id="aboutcontent">
-        <img src="img/home.jpg" style="left: 50%; margin-right: -50%;">
-    </div>
-
-    <!-- Settings -->
-    <div id="afterclock" v-show="active === 'settings'">
-        <div id="afterclockleft">
-            <br>
-            <div class="row">
-                <div class="column-small-12 padd0 align-center">
-                    <div id="drop-box" @click="triggerFileInput">
-                        <h3><em>Alarm Audio</em></h3>
-                        <p>Current Track: {{ trackinfo }}</p>
-                        <br><br>
-                        <p>Change Track:</p>
-                    </div>
-                </div>
-                <div class="column-small-12 padd0">
-                    <input type="file" accept="audio/*" id="file" ref="fileInput" @change="fileUpload" style="display:none;">
-                </div>
-            </div>
-            <br><br>
-
-            <div id="colordiv">
-                <h3><em>LED Settings (Nixie Clock)</em></h3>
-                <br>
-                <h4>Enable or Disable LED</h4>
-                <label class="switch">
-                    <input type="checkbox" :checked="enableled" @click="toggleEnableLed">
-                    <div class="slider round"></div>
-                </label>
-            </div>
-
-            <div v-show="enableled">
-                <h4 id="colorh4">Change LED Color</h4>
-                <input v-model="colors" type="color" id="color">
-                <button id="colorbutton" @click="submitColors">Submit New Color</button>
-            </div>
-        </div>
-
-        <div id="afterclockright">
-            <br>
-            <h3><em>Enable IP Change Email Notifications</em></h3>
-            <br><br>
-
-            <label class="switch">
-                <input type="checkbox" :checked="enableemail" @click="toggleEnableEmail">
-                <div class="slider round"></div>
-            </label>
-
-            <div v-if="enableemail" style="float: right; margin-left: 10px;">
-                <button @click="submitEmail" style="float: right;">Submit New Email</button>
-                <input v-model="email" class="text" type="text" style="float: right;">
-            </div>
-            <div v-else><br></div>
-
-            <br><br><br>
-            <h3><em>Use Custom Sound Card</em></h3>
-            <label class="switch">
-                <input type="checkbox" :checked="customsoundcard" @click="toggleCustomSoundCard">
-                <div class="slider round"></div>
-            </label>
-        </div>
+    <div class="content" v-else-if="active === 'about'" id="aboutcontent">
+        <img src="img/home.jpg">
     </div>
 
 </div>
@@ -153,8 +127,7 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
-            alarmsleft: [],
-            alarmsright: [],
+            alarms: [],
             trackinfo: '',
             email: '',
             enableemail: false,
@@ -166,20 +139,8 @@ createApp({
     },
 
     methods: {
-        navStyle(tab) {
-            if (this.active === tab) {
-                return 'color: #ffffff !important; border-bottom: 3px solid white';
-            }
-            return 'color: #5e5b64 !important; border-bottom: none';
-        },
-
-        makeActive(item) {
-            this.active = item;
-        },
-
         postForm(url, data) {
-            const body = new URLSearchParams(data);
-            fetch(url, { method: 'POST', body });
+            fetch(url, { method: 'POST', body: new URLSearchParams(data) });
         },
 
         submitTime(alarm) {
@@ -219,69 +180,31 @@ createApp({
             this.postForm('/submitcolors', { value: this.colors });
         },
 
-        triggerFileInput() {
-            this.$refs.fileInput.click();
-        },
-
         fileUpload(event) {
-            const files = event.target.files;
-            if (!files.length) return;
-
-            const file = files[0];
+            const file = event.target.files[0];
+            if (!file) return;
             if (!file.type.match('audio.*')) {
-                alert('Audio files only. Please select another file.');
+                alert('Audio files only.');
                 return;
             }
-
             const data = new FormData();
             data.append('audio', file, file.name);
-
             fetch('/upload', { method: 'POST', body: data })
-                .then(resp => {
-                    if (resp.ok) {
-                        this.trackinfo = file.name;
-                    } else {
-                        alert('Error uploading file. Please try again.');
-                    }
-                });
+                .then(r => { if (r.ok) this.trackinfo = file.name; });
         },
     },
 
     created() {
-        fetch('/json/alarms.json')
-            .then(r => r.json())
-            .then(data => {
-                this.alarmsleft = data.slice(0, 2);
-                this.alarmsright = data.slice(2);
-            });
-
-        fetch('/json/email')
-            .then(r => r.text())
-            .then(data => { this.email = data.trim(); });
-
-        fetch('/json/enableemail')
-            .then(r => r.text())
-            .then(data => { this.enableemail = data.trim() === 'true'; });
-
-        fetch('/json/trackinfo')
-            .then(r => r.text())
-            .then(data => { this.trackinfo = data.trim(); });
-
-        fetch('/json/colors')
-            .then(r => r.text())
-            .then(data => { this.colors = data.trim(); });
-
-        fetch('/json/customsoundcard')
-            .then(r => r.text())
-            .then(data => { this.customsoundcard = data.trim() === 'true'; });
-
-        fetch('/json/enableled')
-            .then(r => r.text())
-            .then(data => { this.enableled = data.trim() === 'true'; });
+        fetch('/json/alarms.json').then(r => r.json()).then(d => { this.alarms = d; });
+        fetch('/json/email').then(r => r.text()).then(d => { this.email = d.trim(); });
+        fetch('/json/enableemail').then(r => r.text()).then(d => { this.enableemail = d.trim() === 'true'; });
+        fetch('/json/trackinfo').then(r => r.text()).then(d => { this.trackinfo = d.trim(); });
+        fetch('/json/colors').then(r => r.text()).then(d => { this.colors = d.trim(); });
+        fetch('/json/customsoundcard').then(r => r.text()).then(d => { this.customsoundcard = d.trim() === 'true'; });
+        fetch('/json/enableled').then(r => r.text()).then(d => { this.enableled = d.trim() === 'true'; });
     },
 
     mounted() {
-        // Initialize Nixie clock display
         const nd = new NixieClock();
         nd.id = 'nd1';
         nd.urlCharsetImage = 'nixie/zm1080_l2_09bdm_90x150_8b.png';
@@ -290,28 +213,21 @@ createApp({
         nd.extraGapsWidths[1] = 12;
         nd.extraGapsWidths[3] = 12;
         nd.charGapWidth = 10;
-        const container = document.getElementById(nd.id);
-        if (container && container.parentNode) {
-            container.parentNode.style.background = 'black';
-            container.parentNode.style.border = '2px solid #AAAAAA';
+        const el = document.getElementById(nd.id);
+        if (el && el.parentNode) {
+            el.parentNode.style.background = 'black';
+            el.parentNode.style.border = '2px solid #AAAAAA';
         }
         nd.init();
         nd.run();
     },
 }).mount('#app');
 
-// Navbar scroll hide/show
-window.onscroll = function() {
+window.addEventListener('scroll', () => {
     const nav = document.querySelector('nav');
     if (!nav) return;
-    if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-        nav.classList.remove('nav-down');
-        nav.classList.add('nav-up');
-    } else {
-        nav.classList.remove('nav-up');
-        nav.classList.add('nav-down');
-    }
-};
+    nav.classList.toggle('nav-up', window.scrollY > 50);
+});
 </script>
 
 </body>
