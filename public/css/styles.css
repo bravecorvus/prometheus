@@ -86,15 +86,14 @@ nav a.active {
 
 .nixie-wrap {
   width: 100%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
   margin: 16px auto 0;
   cursor: pointer;
+  text-align: center;
 }
 
 #nd1 {
-  flex-shrink: 0;
+  display: inline-block;
+  transform-origin: top left;
 }
 
 #snooze, #snoozeform {

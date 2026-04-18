@@ -222,6 +222,27 @@ createApp({
         }
         nd.init();
         nd.run();
+
+        // Scale nixie to fit the screen width
+        this.$nextTick(() => {
+            const nixieEl = document.getElementById('nd1');
+            const wrap = nixieEl ? nixieEl.parentElement : null;
+            if (nixieEl && wrap) {
+                const scaleNixie = () => {
+                    nixieEl.style.transform = 'none';
+                    wrap.style.height = '';
+                    const nixieW = nixieEl.scrollWidth;
+                    const availW = wrap.clientWidth;
+                    if (nixieW > availW) {
+                        const s = availW / nixieW;
+                        nixieEl.style.transform = 'scale(' + s + ')';
+                        wrap.style.height = (nixieEl.scrollHeight * s) + 'px';
+                    }
+                };
+                scaleNixie();
+                window.addEventListener('resize', scaleNixie);
+            }
+        });
     },
 }).mount('#app');
 
