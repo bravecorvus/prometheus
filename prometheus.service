@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus Alarm Clock
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/prometheus
+ExecStart=/home/pi/prometheus/prometheus
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
