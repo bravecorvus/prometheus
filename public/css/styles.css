@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 /* Fonts */
 @font-face {
   font-family: Quicksand;
@@ -84,6 +89,22 @@ nav a.active {
   max-width: 700px;
   margin: 16px auto 0;
   cursor: pointer;
+  overflow: hidden;
+  transform-origin: top center;
+}
+
+@media (max-width: 767px) {
+  #nd1 {
+    transform: scale(0.55);
+    margin-bottom: -60px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 959px) {
+  #nd1 {
+    transform: scale(0.8);
+    margin-bottom: -20px;
+  }
 }
 
 #snooze, #snoozeform {
