@@ -22,10 +22,10 @@
     <div id="pagetitle">
         <p id="atomicclock">Prometheus Clock</p>
         <br><br><br><br>
-        <form id="snoozeform" action="/snooze" method="post">
+        <form id="snoozeform" ref="snoozeform" action="/snooze" method="post">
             <input id="snooze" type="submit" name="snooze" value="Snooze">
         </form>
-        <div id="nd1" @click="document.getElementById('snoozeform').submit()"></div>
+        <div id="nd1" @click="$refs.snoozeform.submit()"></div>
     </div>
 
     <br><br><br>
