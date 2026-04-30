@@ -9,4 +9,7 @@ require (
 	gopkg.in/go-playground/colors.v1 v1.2.0
 )
 
-require golang.org/x/sys v0.43.0 // indirect
+require (
+	github.com/gorilla/websocket v1.5.3 // indirect
+	golang.org/x/sys v0.43.0 // indirect
+)

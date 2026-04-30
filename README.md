@@ -21,6 +21,31 @@ The current golang program accomplishes all 3 of these things marvelously. Check
 | [archive/expressnode-python3](archive/expressnode-python3)  | Where all the original implementation based on [Python3](https://www.python.org/) and [Node](https://nodejs.org/en/) is stored. Depreciated and super unstable so I recommend you just leave this implementation be. |
 
 
+## Build modes
+
+Prometheus has two build modes selected with Go build tags:
+
+- **Production** (default) — full hardware: GPIO bed-shaker control, USB-serial Nixie tube display, `cvlc` audio playback, IP-change email notifications. Requires a Raspberry Pi with the wired hardware described in the [hardware guide](https://github.com/gilgameshskytrooper/prometheus/wiki/Hardware).
+- **Demo** (`-tags demo`) — for hosting a public-facing UI showcase. All GPIO and serial code paths are bypassed at compile time; alarm triggers broadcast WebSocket events instead, and the frontend renders a toast notification (e.g. "Vibration started", "Sound playing") to emulate what would happen on real hardware. No `cvlc` or `/dev/gpiomem` required.
+
+```bash
+# Production binary (real hardware)
+go build -o prometheus .
+
+# Demo binary (no hardware; toast popups via WebSocket)
+go build -tags demo -o prometheus-demo .
+
+# Cross-compile demo for a Raspberry Pi (arm64)
+GOOS=linux GOARCH=arm64 go build -tags demo -o prometheus-demo-arm64 .
+```
+
+The demo build wires up two extra HTTP routes:
+
+- `GET /api/mode` — returns `{"demo":true}` when built with the demo tag, used by the frontend to decide whether to open the WebSocket.
+- `GET /ws` — WebSocket endpoint that pushes JSON events (`vibration_on`, `vibration_off`, `sound_start`, `sound_stop`) to connected browsers.
+
+`config/config.go` and `config/config_demo.go` define `config.DemoMode` as a compile-time constant, so unused branches are dead-code-eliminated. This means the demo binary contains no `go-rpio`, no `cvlc` exec calls, and no serial-port code paths.
+
 ## Implementation
 > *To get started quickly, check out the [hardware guide](https://github.com/gilgameshskytrooper/prometheus/wiki/Hardware) and the [software installation guide](https://github.com/gilgameshskytrooper/prometheus/wiki/Software) at the project wiki.*
 

@@ -121,6 +121,12 @@
         <img src="img/home.jpg">
     </div>
 
+    <div class="toast-stack">
+        <div v-for="t in toasts" :key="t.id" class="toast" :class="'toast-' + t.kind">
+            {{ t.message }}
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -137,6 +143,10 @@ createApp({
             active: 'home',
             colors: '#000000',
             enableled: false,
+            demo: false,
+            toasts: [],
+            toastSeq: 0,
+            ws: null,
         };
     },
 
@@ -182,6 +192,35 @@ createApp({
             this.postForm('/submitcolors', { value: this.colors });
         },
 
+        showToast(message, kind) {
+            const id = ++this.toastSeq;
+            this.toasts.push({ id, message, kind: kind || 'info' });
+            setTimeout(() => {
+                this.toasts = this.toasts.filter(t => t.id !== id);
+            }, 4000);
+        },
+
+        connectDemoWS() {
+            const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const url = proto + '//' + window.location.host + '/ws';
+            const ws = new WebSocket(url);
+            ws.onmessage = (e) => {
+                let data;
+                try { data = JSON.parse(e.data); } catch (_) { return; }
+                switch (data.event) {
+                    case 'vibration_on':  this.showToast('Vibration started', 'warn'); break;
+                    case 'vibration_off': this.showToast('Vibration stopped', 'info'); break;
+                    case 'sound_start':   this.showToast('Sound playing', 'warn'); break;
+                    case 'sound_stop':    this.showToast('Sound stopped', 'info'); break;
+                }
+            };
+            ws.onclose = () => {
+                this.ws = null;
+                setTimeout(() => { if (this.demo) this.connectDemoWS(); }, 2000);
+            };
+            this.ws = ws;
+        },
+
         fileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -197,6 +236,10 @@ createApp({
     },
 
     created() {
+        fetch('/api/mode').then(r => r.json()).then(d => {
+            this.demo = !!d.demo;
+            if (this.demo) this.connectDemoWS();
+        }).catch(() => {});
         fetch('/json/alarms.json').then(r => r.json()).then(d => { this.alarms = d; });
         fetch('/json/email').then(r => r.text()).then(d => { this.email = d.trim(); });
         fetch('/json/enableemail').then(r => r.text()).then(d => { this.enableemail = d.trim() === 'true'; });

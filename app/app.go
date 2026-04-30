@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"prometheus/config"
 	"prometheus/nixie"
 	"prometheus/structs"
 	"prometheus/utils"
@@ -51,6 +52,12 @@ func (app *App) Initialize() {
 	app.EnableEmail = utils.GetEnableEmail()
 	app.CustomSoundCard = utils.UseCustomSoundCard()
 	app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
+
+	if config.DemoMode {
+		app.FoundNixie = false
+		return
+	}
+
 	app.Options.PortName = nixie.FindArduino()
 	app.Options.BaudRate = 115200
 	app.Options.DataBits = 8

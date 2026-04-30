@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"prometheus/config"
 	"prometheus/utils"
 
 	"prometheus/app"
@@ -33,8 +34,10 @@ func main() {
 	// Initialize all 4 instances of alarm clocks
 	// Create function that updates clock once a minute (used to see if any times match up)
 	c := cron.New()
-	// Send relevant time clock over serial USB
-	c.AddFunc("@every 1s", func() { globals.SendTime() })
+	if !config.DemoMode {
+		// Send relevant time clock over serial USB
+		c.AddFunc("@every 1s", func() { globals.SendTime() })
+	}
 	//Run the following once a minute
 	//Check all 4 alarms to see if the current time matches any configurations
 	c.AddFunc("0 * * * * *", func() { globals.AlarmLoop() })
@@ -56,6 +59,8 @@ func main() {
 	http.HandleFunc("/submitcolors", globals.SubmitColorsHandler)
 	http.HandleFunc("/submitenableled", globals.SubmitEnableLEDHandler)
 	http.HandleFunc("/upload", globals.UploadHandler)
+	http.HandleFunc("/api/mode", globals.ModeHandler)
+	http.HandleFunc("/ws", globals.ServeWS)
 
 	fmt.Println(http.ListenAndServe(":3000", nil))
 

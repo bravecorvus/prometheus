@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"os/exec"
+	"prometheus/config"
 	"prometheus/gpio"
 	"prometheus/nixie"
 	"prometheus/structs"
@@ -10,7 +11,40 @@ import (
 	"time"
 )
 
+func vibOn() {
+	if config.DemoMode {
+		DemoHub.Broadcast("vibration_on")
+		return
+	}
+	gpio.VibOn()
+}
+
+func vibOff() {
+	if config.DemoMode {
+		DemoHub.Broadcast("vibration_off")
+		return
+	}
+	gpio.VibOff()
+}
+
+// startSound either spawns cvlc (prod) or broadcasts a demo event.
+// Returns a stop function the caller invokes when the alarm ends.
+func (app *App) startSound() func() {
+	if config.DemoMode {
+		DemoHub.Broadcast("sound_start")
+		return func() { DemoHub.Broadcast("sound_stop") }
+	}
+	cmd := app.buildPlayCommand()
+	if err := cmd.Start(); err != nil {
+		fmt.Println(err.Error())
+	}
+	return func() { killProcess(cmd) }
+}
+
 func (app *App) SendTime() {
+	if config.DemoMode {
+		return
+	}
 	timeStr := nixie.CurrentTimeAsString()
 
 	if app.FoundNixie {
@@ -33,13 +67,15 @@ func (app *App) AlarmLoop() {
 	t := time.Now()
 	currenttime := t.Format("15:04")
 
-	if app.EnableEmail {
+	if app.EnableEmail && !config.DemoMode {
 		utils.CheckIPChange()
 	}
 
 	for i := range app.Alarms {
 		if app.Alarms[i].Alarmtime == currenttime {
-			go utils.RestartNetwork()
+			if !config.DemoMode {
+				go utils.RestartNetwork()
+			}
 			app.runAlarm(&app.Alarms[i])
 			return
 		}
@@ -81,49 +117,43 @@ func (app *App) buildPlayCommand() *exec.Cmd {
 }
 
 func (app *App) runSoundAndVibration(alarm *structs.Alarm) {
-	playsound := app.buildPlayCommand()
-	if err := playsound.Start(); err != nil {
-		fmt.Println(err.Error())
-	}
+	stopSound := app.startSound()
 
 	duration := time.Second * 3
 	for {
-		gpio.VibOn()
+		vibOn()
 		stopped := waitForStop(alarm, 50, 50*time.Millisecond)
 		if stopped {
-			gpio.VibOff()
-			killProcess(playsound)
+			vibOff()
+			stopSound()
 			app.resetLED()
 			return
 		}
 		if utils.OverTenMinutes(alarm.Alarmtime) {
 			alarm.CurrentlyRunning = false
-			gpio.VibOff()
-			killProcess(playsound)
+			vibOff()
+			stopSound()
 			app.resetLED()
 			return
 		}
-		gpio.VibOff()
+		vibOff()
 		time.Sleep(duration)
 	}
 }
 
 func (app *App) runSoundOnly(alarm *structs.Alarm) {
-	playsound := app.buildPlayCommand()
-	if err := playsound.Start(); err != nil {
-		fmt.Println(err.Error())
-	}
+	stopSound := app.startSound()
 
 	for {
 		time.Sleep(time.Second)
 		if !alarm.CurrentlyRunning {
-			killProcess(playsound)
+			stopSound()
 			app.resetLED()
 			return
 		}
 		if utils.OverTenMinutes(alarm.Alarmtime) {
 			alarm.CurrentlyRunning = false
-			killProcess(playsound)
+			stopSound()
 			app.resetLED()
 			return
 		}
@@ -133,20 +163,20 @@ func (app *App) runSoundOnly(alarm *structs.Alarm) {
 func (app *App) runVibrationOnly(alarm *structs.Alarm) {
 	duration := time.Second * 3
 	for {
-		gpio.VibOn()
+		vibOn()
 		stopped := waitForStop(alarm, 50, 50*time.Millisecond)
 		if stopped {
-			gpio.VibOff()
+			vibOff()
 			app.resetLED()
 			return
 		}
 		if utils.OverTenMinutes(alarm.Alarmtime) {
 			alarm.CurrentlyRunning = false
-			gpio.VibOff()
+			vibOff()
 			app.resetLED()
 			return
 		}
-		gpio.VibOff()
+		vibOff()
 		time.Sleep(duration)
 	}
 }
