@@ -6,6 +6,7 @@ import (
 	"prometheus/config"
 	"prometheus/gpio"
 	"prometheus/nixie"
+	"prometheus/store"
 	"prometheus/structs"
 	"prometheus/utils"
 	"time"
@@ -68,7 +69,7 @@ func (app *App) AlarmLoop() {
 	currenttime := t.Format("15:04")
 
 	if app.EnableEmail && !config.DemoMode {
-		utils.CheckIPChange()
+		app.checkIPChange()
 	}
 
 	for i := range app.Alarms {
@@ -78,6 +79,21 @@ func (app *App) AlarmLoop() {
 			}
 			app.runAlarm(&app.Alarms[i])
 			return
+		}
+	}
+}
+
+// checkIPChange compares the current wlan0 IP against the last-known IP in
+// the store. If it changed, persist the new value and email it out.
+func (app *App) checkIPChange() {
+	current := utils.GetIP()
+	if last := app.Store.GetString(store.KeyLastIP); last != current {
+		if err := app.Store.PutString(store.KeyLastIP, current); err != nil {
+			fmt.Println("save last_ip:", err)
+		}
+		send := exec.Command("email/prometheusemail", app.Email, current)
+		if err := send.Run(); err != nil {
+			fmt.Println("failed to send email")
 		}
 	}
 }
@@ -106,7 +122,8 @@ func (app *App) setAlarmLED() {
 }
 
 func (app *App) resetLED() {
-	app.Red, app.Green, app.Blue, app.EnableLed = utils.ColorInitialize()
+	app.Red, app.Green, app.Blue = utils.ParseHexToRGB(app.Store.GetString(store.KeyColors))
+	app.EnableLed = app.Store.GetBool(store.KeyEnableLed)
 }
 
 func (app *App) buildPlayCommand() *exec.Cmd {
