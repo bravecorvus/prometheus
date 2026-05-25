@@ -1,22 +1,22 @@
+.DS_Store
+node_modules/
+
+# Build outputs
+/prometheus
+/prometheus-demo
+/prometheus-*-arm64
+
+# Local data (db, uploaded audio)
+/data/
+
+# Old artifacts from prior layouts
 PrivateCommands.txt
 pihomefuse/
 pirootfuse/
-node_modules/
-npm-debug.log
 piatomicclockprojectfuse/
 AtomicClock.sublime-project
 AtomicClock.sublime-workspace
-.DS_Store
 Mounting.txt
-time.json
-snooze.json
-IP.txt
-alarm.m4a
-public/assets/alarm.m4a
-public/json/time.json
-public/json/\._time\.txt
-main
-prometheus
 Macbook
 server.crt
 server.key

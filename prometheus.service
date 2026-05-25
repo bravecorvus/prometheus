@@ -1,14 +1,29 @@
 [Unit]
 Description=Prometheus Alarm Clock
-After=network.target
+After=network-online.target sound.target
+Wants=network-online.target
 
 [Service]
 Type=simple
 User=pi
 WorkingDirectory=/home/pi/prometheus
 ExecStart=/home/pi/prometheus/prometheus
+
+# Keep restarts conservative; the cron loops self-recover, we don't need to
+# thrash on a transient panic.
 Restart=on-failure
 RestartSec=5
+
+# Sandboxing. CAP_NET_BIND_SERVICE isn't needed (we bind :3000); GPIO and
+# serial access come from the pi user being in groups gpio + dialout.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/pi/prometheus/data
+PrivateTmp=true
+
+# Give it a moment to flush the bbolt DB on shutdown.
+TimeoutStopSec=10
 
 [Install]
 WantedBy=multi-user.target

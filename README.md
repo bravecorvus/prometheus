@@ -14,37 +14,103 @@ The current golang program accomplishes all 3 of these things marvelously. Check
 
 ### Project Hierarchy
 
-| 	Directory   | Description 	                                                               				|
-| ------------- | ----------------------------------------------------------------------------------------- |
-| [assets/](assets/)  | Content related the the aesthetic presentation of this project such as images  |
-| [assets/hberg32/](assets/hberg32)  | Original codebase as well as schematic that hberg32 kindly gave to me to use for this project |
-| [archive/expressnode-python3](archive/expressnode-python3)  | Where all the original implementation based on [Python3](https://www.python.org/) and [Node](https://nodejs.org/en/) is stored. Depreciated and super unstable so I recommend you just leave this implementation be. |
+| Directory | Description |
+| --- | --- |
+| [backend/](backend/) | Go HTTP server, alarm cron loops, bbolt store, GPIO + serial drivers |
+| [frontend/](frontend/) | React + Vite + Tailwind + shadcn UI |
+| [assets/](assets/) | Project documentation images (READMEs, schematics) |
+| [archive/](archive/) | Original Python3/Node prototype (deprecated, kept for reference) |
+| [NCS314/](NCS314/) | Vendor docs for the Nixie clock shield |
+| [prometheus.service](prometheus.service) | systemd unit; assumes deploy layout under `/home/pi/prometheus/` |
 
 
 ## Build modes
 
 Prometheus has two build modes selected with Go build tags:
 
-- **Production** (default) — full hardware: GPIO bed-shaker control, USB-serial Nixie tube display, `cvlc` audio playback, IP-change email notifications. Requires a Raspberry Pi with the wired hardware described in the [hardware guide](https://github.com/gilgameshskytrooper/prometheus/wiki/Hardware).
-- **Demo** (`-tags demo`) — for hosting a public-facing UI showcase. All GPIO and serial code paths are bypassed at compile time; alarm triggers broadcast WebSocket events instead, and the frontend renders a toast notification (e.g. "Vibration started", "Sound playing") to emulate what would happen on real hardware. No `cvlc` or `/dev/gpiomem` required.
+- **Production** (default) — full hardware: GPIO bed-shaker control, USB-serial Nixie tube display, `cvlc` audio playback, IP-change email notifications.
+- **Demo** (`-tags demo`) — for hosting a public-facing UI showcase. All GPIO and serial code paths are bypassed at compile time; alarm triggers broadcast WebSocket events instead, and the frontend renders a toast (e.g. "Vibration started") to emulate hardware. No `cvlc` or `/dev/gpiomem` required.
+
+`backend/config/config.go` and `config_demo.go` define `config.DemoMode` as a compile-time constant, so unused branches are dead-code-eliminated.
+
+### Build the backend
 
 ```bash
-# Production binary (real hardware)
-go build -o prometheus .
+cd backend
 
-# Demo binary (no hardware; toast popups via WebSocket)
-go build -tags demo -o prometheus-demo .
+# Production binary for the Pi (arm64)
+GOOS=linux GOARCH=arm64 go build -o ../prometheus .
 
-# Cross-compile demo for a Raspberry Pi (arm64)
-GOOS=linux GOARCH=arm64 go build -tags demo -o prometheus-demo-arm64 .
+# Demo binary for arm64
+GOOS=linux GOARCH=arm64 go build -tags demo -o ../prometheus-demo .
+
+# Native (macOS / dev)
+go build -o ../prometheus .
 ```
 
-The demo build wires up two extra HTTP routes:
+### Build the frontend
 
-- `GET /api/mode` — returns `{"demo":true}` when built with the demo tag, used by the frontend to decide whether to open the WebSocket.
-- `GET /ws` — WebSocket endpoint that pushes JSON events (`vibration_on`, `vibration_off`, `sound_start`, `sound_stop`) to connected browsers.
+```bash
+cd frontend
+pnpm install
+pnpm build       # outputs ./dist
+```
 
-`config/config.go` and `config/config_demo.go` define `config.DemoMode` as a compile-time constant, so unused branches are dead-code-eliminated. This means the demo binary contains no `go-rpio`, no `cvlc` exec calls, and no serial-port code paths.
+### Local development
+
+Run the backend on :3000 and the Vite dev server on :5173 (Vite proxies `/api`, `/audio`, and `/ws` over to the backend):
+
+```bash
+# terminal A — backend (dev demo mode is convenient on a laptop)
+cd backend && go run -tags demo .
+
+# terminal B — frontend with hot reload
+cd frontend && pnpm dev
+```
+
+Then open http://localhost:5173.
+
+### Deploy to a Raspberry Pi
+
+The Pi only needs the compiled artifacts — no Node, no Go toolchain. The `prometheus.service` unit assumes everything lives under `/home/pi/prometheus/`:
+
+```
+/home/pi/prometheus/
+├── prometheus          # the cross-compiled Go binary
+├── dist/               # frontend/dist contents
+├── data/               # bbolt DB + uploaded audio (created at first run)
+├── email/
+│   └── prometheusemail # the existing email helper binary
+└── prometheus.service  # for reference / install
+```
+
+From your dev machine:
+
+```bash
+# build both artifacts
+(cd backend  && GOOS=linux GOARCH=arm64 go build -o ../prometheus .)
+(cd frontend && pnpm install && pnpm build)
+
+# scp them over
+scp prometheus                 pi@prometheus.local:/home/pi/prometheus/prometheus
+scp -r frontend/dist           pi@prometheus.local:/home/pi/prometheus/
+scp prometheus.service         pi@prometheus.local:/home/pi/prometheus/
+```
+
+First-time install on the Pi:
+
+```bash
+sudo cp /home/pi/prometheus/prometheus.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now prometheus
+journalctl -u prometheus -f
+```
+
+Subsequent updates:
+
+```bash
+sudo systemctl restart prometheus
+```
 
 ## Implementation
 > *To get started quickly, check out the [hardware guide](https://github.com/gilgameshskytrooper/prometheus/wiki/Hardware) and the [software installation guide](https://github.com/gilgameshskytrooper/prometheus/wiki/Software) at the project wiki.*
