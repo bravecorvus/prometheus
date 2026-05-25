@@ -79,12 +79,12 @@ export default function App() {
   return (
     <div className="min-h-svh bg-background">
       <div className="mx-auto max-w-5xl px-4 py-6 space-y-6 sm:px-6 sm:py-8">
-        <header className="flex items-baseline justify-between">
-          <h1 className="text-2xl font-semibold tracking-tight">
+        <header className="relative">
+          <h1 className="text-2xl font-semibold tracking-tight text-center">
             Prometheus<span className="text-primary">.</span>
           </h1>
           {state.demo && (
-            <span className="rounded-full bg-secondary px-3 py-1 text-xs uppercase tracking-wider text-secondary-foreground">
+            <span className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full bg-secondary px-3 py-1 text-xs uppercase tracking-wider text-secondary-foreground">
               Demo mode
             </span>
           )}
@@ -93,14 +93,16 @@ export default function App() {
         <NixieClock onSnooze={onSnooze} />
 
         <Tabs defaultValue="home" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-grid">
-            <TabsTrigger value="home">Alarms</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-            <TabsTrigger value="about">About</TabsTrigger>
-          </TabsList>
+          <div className="flex justify-center">
+            <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-grid">
+              <TabsTrigger value="home">Alarms</TabsTrigger>
+              <TabsTrigger value="settings">Settings</TabsTrigger>
+              <TabsTrigger value="about">About</TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="home" className="pt-4">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               {state.alarms.map((alarm, i) => (
                 <AlarmCard
                   key={alarm.name}
