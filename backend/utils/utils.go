@@ -113,7 +113,12 @@ func padRGB(val uint8) string {
 }
 
 // ParseHexToRGB converts a hex color string to zero-padded RGB strings.
+// Empty input is treated as "no color set yet" and returns zeros silently;
+// a malformed (non-empty) string logs once and also returns zeros.
 func ParseHexToRGB(hexStr string) (string, string, string) {
+	if hexStr == "" {
+		return "000", "000", "000"
+	}
 	hex, err := colors.ParseHEX(hexStr)
 	if err != nil {
 		fmt.Println("ERROR failed to parse hex color:", hexStr)
