@@ -23,9 +23,11 @@ import (
 )
 
 // Layout under the working directory. On the Pi this is set to
-// /home/pi/prometheus by the systemd unit.
+// /home/pi/prometheus by the systemd unit, matching the repo layout exactly:
+// backend/prometheus is the binary, frontend/dist holds the built UI, and
+// data/ holds runtime state shared between dev and prod.
 const (
-	distDir   = "dist"
+	distDir   = "frontend/dist"
 	assetsDir = "data/assets"
 	dbFile    = "data/prometheus.db"
 )

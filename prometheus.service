@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=simple
 User=pi
 WorkingDirectory=/home/pi/prometheus
-ExecStart=/home/pi/prometheus/prometheus
+ExecStart=/home/pi/prometheus/backend/prometheus
 
 # Keep restarts conservative; the cron loops self-recover, we don't need to
 # thrash on a transient panic.

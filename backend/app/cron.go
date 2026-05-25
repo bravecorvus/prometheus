@@ -89,7 +89,7 @@ func (app *App) checkIPChange() {
 		if err := app.Store.PutString(store.KeyLastIP, current); err != nil {
 			fmt.Println("save last_ip:", err)
 		}
-		send := exec.Command("email/prometheusemail", app.Email, current)
+		send := exec.Command("backend/email/prometheusemail", app.Email, current)
 		if err := send.Run(); err != nil {
 			fmt.Println("failed to send email")
 		}
