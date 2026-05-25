@@ -72,16 +72,17 @@ Then open http://localhost:5173.
 
 ### Deploy to a Raspberry Pi
 
-The Pi only needs the compiled artifacts — no Node, no Go toolchain. The `prometheus.service` unit assumes everything lives under `/home/pi/prometheus/`:
+The Pi mirrors the repo layout. After a `git clone` of the repo into `/home/pi/prometheus/`, the source-controlled files (service unit, email helper binary, etc.) are already in place; deploying an update just means scp'ing the two build artifacts on top of the clone:
 
 ```
 /home/pi/prometheus/
-├── prometheus          # the cross-compiled Go binary
-├── dist/               # frontend/dist contents
-├── data/               # bbolt DB + uploaded audio (created at first run)
-├── email/
-│   └── prometheusemail # the existing email helper binary
-└── prometheus.service  # for reference / install
+├── backend/
+│   ├── prometheus              # the cross-compiled Go binary  (scp'd)
+│   └── email/prometheusemail   # email helper (already in git)
+├── frontend/
+│   └── dist/                   # built UI                       (scp'd)
+├── data/                       # bbolt DB + uploaded audio (created at first run)
+└── prometheus.service          # systemd unit (already in git)
 ```
 
 From your dev machine:
@@ -91,10 +92,9 @@ From your dev machine:
 (cd backend  && GOOS=linux GOARCH=arm64 go build -o ../prometheus .)
 (cd frontend && pnpm install && pnpm build)
 
-# scp them over
-scp prometheus                 pi@prometheus.local:/home/pi/prometheus/prometheus
-scp -r frontend/dist           pi@prometheus.local:/home/pi/prometheus/
-scp prometheus.service         pi@prometheus.local:/home/pi/prometheus/
+# scp them into the repo layout on the Pi
+scp prometheus       pi@prometheus.local:/home/pi/prometheus/backend/prometheus
+scp -r frontend/dist pi@prometheus.local:/home/pi/prometheus/frontend/
 ```
 
 First-time install on the Pi:
