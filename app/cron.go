@@ -74,9 +74,6 @@ func (app *App) AlarmLoop() {
 
 	for i := range app.Alarms {
 		if app.Alarms[i].Alarmtime == currenttime {
-			if !config.DemoMode {
-				go utils.RestartNetwork()
-			}
 			app.runAlarm(&app.Alarms[i])
 			return
 		}

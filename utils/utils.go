@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -86,22 +85,6 @@ func Pwd() string {
 		fmt.Println(err)
 	}
 	return dir
-}
-
-func RestartNetwork() {
-	_, err := http.Get("http://google.com")
-	if err != nil {
-		ifdown := exec.Command("ifdown", "wlan0")
-		if err := ifdown.Run(); err != nil {
-			fmt.Println("ifdown wlan0 command failed")
-		}
-		time.Sleep(time.Second * 5)
-		ifup := exec.Command("ifup", "wlan0")
-		if err := ifup.Run(); err != nil {
-			fmt.Println("ifup wlan0 command failed")
-			go RestartNetwork()
-		}
-	}
 }
 
 func CheckShairportRunning() bool {
