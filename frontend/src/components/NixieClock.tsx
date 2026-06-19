@@ -29,33 +29,34 @@ export function NixieClock({ onSnooze }: Props) {
     clock.run();
 
     const { width: nativeW, height: nativeH } = clock.size();
-    // The nixie lib sets the inner container to position: relative and
-    // builds absolutely positioned digit divs inside. We re-anchor it as
-    // position: absolute within the stage so we can place + scale it
-    // explicitly from the top-left, without relying on flexbox+transform
-    // interactions (which clip badly because flex lays out the unscaled box).
     inner.style.position = "absolute";
     inner.style.transformOrigin = "top left";
 
-    // Breathing room around the digits: clears the rounded corners (16px)
-    // and gives the orange drop-shadow glow room to bleed.
-    const PAD_X = 16;
-    const PAD_Y = 16;
+    // Padding needs to clear the stage's 16px rounded corner radius (digits
+    // that fall inside a corner's clip arc get sliced), plus the orange
+    // drop-shadow bloom. 24px on each side leaves a safe margin.
+    const PAD_X = 24;
+    const PAD_Y = 24;
     const fit = () => {
-      const availW = stage.clientWidth - PAD_X * 2;
+      const stageW = stage.clientWidth;
+      if (stageW === 0) return; // pre-layout; ResizeObserver will retry
+      const availW = stageW - PAD_X * 2;
       const scale = Math.min(1, availW / nativeW);
       const scaledW = nativeW * scale;
       const scaledH = nativeH * scale;
       inner.style.transform = `scale(${scale})`;
-      inner.style.left = (stage.clientWidth - scaledW) / 2 + "px";
+      inner.style.left = (stageW - scaledW) / 2 + "px";
       inner.style.top = PAD_Y + "px";
       stage.style.height = scaledH + PAD_Y * 2 + "px";
     };
-    fit();
+    // Initial fit deferred to next frame so stage has its final width after
+    // Tailwind utility CSS has settled.
+    const raf = requestAnimationFrame(fit);
     const ro = new ResizeObserver(fit);
     ro.observe(stage);
 
     return () => {
+      cancelAnimationFrame(raf);
       ro.disconnect();
       clock.stop();
     };
