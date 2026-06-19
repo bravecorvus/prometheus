@@ -76,5 +76,5 @@
 
 .nixie-stage > div {
   filter: drop-shadow(0 0 12px rgba(255, 140, 0, 0.35));
-  transform-origin: top left;
+  transform-origin: center;
 }
