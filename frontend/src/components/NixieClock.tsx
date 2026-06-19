@@ -29,11 +29,16 @@ export function NixieClock({ onSnooze }: Props) {
     clock.run();
 
     const { width: nativeW, height: nativeH } = clock.size();
+    // Breathing room around the digits: enough to clear the stage's rounded
+    // corners horizontally and the drop-shadow glow vertically. Without these
+    // the scaled clock sits flush against the clip region and edges get cut.
+    const PAD_X = 16;
+    const PAD_Y = 16;
     const fit = () => {
-      const availW = stage.clientWidth - 8;
+      const availW = stage.clientWidth - PAD_X * 2;
       const scale = Math.min(1, availW / nativeW);
       inner.style.transform = `scale(${scale})`;
-      stage.style.height = nativeH * scale + "px";
+      stage.style.height = nativeH * scale + PAD_Y * 2 + "px";
     };
     fit();
     const ro = new ResizeObserver(fit);
