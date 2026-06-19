@@ -60,14 +60,12 @@
 }
 
 /* Nixie tube glow + scaling container. The nixie.ts module emits absolutely
-   positioned div children with sprite-sheet backgrounds; this wrapper just
-   holds them, applies a touch of warm bloom, and lets the parent constrain
-   the size via CSS transforms. */
+   positioned div children with sprite-sheet backgrounds; the wrapper is
+   position: relative so we can absolutely position + transform-scale the
+   digit container explicitly (set inline by NixieClock.tsx). */
 .nixie-stage {
+  position: relative;
   background: radial-gradient(ellipse at center, #0a0500 0%, #000 70%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
   cursor: pointer;
   user-select: none;
@@ -76,5 +74,4 @@
 
 .nixie-stage > div {
   filter: drop-shadow(0 0 12px rgba(255, 140, 0, 0.35));
-  transform-origin: center;
 }

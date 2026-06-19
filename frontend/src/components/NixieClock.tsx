@@ -29,16 +29,27 @@ export function NixieClock({ onSnooze }: Props) {
     clock.run();
 
     const { width: nativeW, height: nativeH } = clock.size();
-    // Breathing room around the digits: enough to clear the stage's rounded
-    // corners horizontally and the drop-shadow glow vertically. Without these
-    // the scaled clock sits flush against the clip region and edges get cut.
+    // The nixie lib sets the inner container to position: relative and
+    // builds absolutely positioned digit divs inside. We re-anchor it as
+    // position: absolute within the stage so we can place + scale it
+    // explicitly from the top-left, without relying on flexbox+transform
+    // interactions (which clip badly because flex lays out the unscaled box).
+    inner.style.position = "absolute";
+    inner.style.transformOrigin = "top left";
+
+    // Breathing room around the digits: clears the rounded corners (16px)
+    // and gives the orange drop-shadow glow room to bleed.
     const PAD_X = 16;
     const PAD_Y = 16;
     const fit = () => {
       const availW = stage.clientWidth - PAD_X * 2;
       const scale = Math.min(1, availW / nativeW);
+      const scaledW = nativeW * scale;
+      const scaledH = nativeH * scale;
       inner.style.transform = `scale(${scale})`;
-      stage.style.height = nativeH * scale + PAD_Y * 2 + "px";
+      inner.style.left = (stage.clientWidth - scaledW) / 2 + "px";
+      inner.style.top = PAD_Y + "px";
+      stage.style.height = scaledH + PAD_Y * 2 + "px";
     };
     fit();
     const ro = new ResizeObserver(fit);
