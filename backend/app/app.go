@@ -30,6 +30,7 @@ type App struct {
 	Red, Green, Blue string
 	Options          serial.OpenOptions
 	Port             io.ReadWriteCloser
+	portMu           sync.Mutex // serializes writes to Port; the Arduino has no framing
 	FoundNixie       bool
 	Store            *store.Store
 	AssetsDir        string

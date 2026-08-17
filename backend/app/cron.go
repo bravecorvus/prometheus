@@ -47,21 +47,30 @@ func (app *App) SendTime() {
 	if config.DemoMode {
 		return
 	}
-	timeStr := nixie.CurrentTimeAsString()
-
-	if app.FoundNixie {
-		var payload string
-		if app.EnableLed {
-			payload = timeStr + app.Red + app.Green + app.Blue
-		} else {
-			payload = timeStr
-		}
-		if _, err := app.Port.Write([]byte(payload)); err != nil {
-			fmt.Println(err.Error())
-		}
-	} else {
+	if !app.FoundNixie {
 		app.Options.PortName = nixie.FindArduino()
 		app.FoundNixie = app.Options.PortName != ""
+		return
+	}
+
+	// Always send a fixed 15-byte payload: HHMMSSRRRGGGBBB. The Arduino sketch
+	// has no framing (no newline, no length prefix), so a variable-length send
+	// desyncs the reader — one 6-byte "LED off" tick leaves 9 stale bytes in
+	// the buffer and the next tick's HHMMSS gets interpreted as color values,
+	// which is why LEDs light up randomly. When the user disables LEDs we
+	// still send RGB, just with "000000000".
+	timeStr := nixie.CurrentTimeAsString()
+	r, g, b := "000", "000", "000"
+	if app.EnableLed {
+		r, g, b = app.Red, app.Green, app.Blue
+	}
+	payload := timeStr + r + g + b
+
+	app.portMu.Lock()
+	_, err := app.Port.Write([]byte(payload))
+	app.portMu.Unlock()
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 }
 

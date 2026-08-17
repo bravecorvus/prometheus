@@ -68,11 +68,18 @@ export default function App() {
     });
   }
 
+  // Tapping the Nixie always reloads the page. If an alarm is currently
+  // ringing, the reload is preceded by a snooze POST so the alarm is silenced
+  // and its next-fire time gets bumped by 5 minutes (sound/vibration settings
+  // are preserved server-side). When no alarm is ringing, snooze() is a
+  // no-op on the backend, and we just do the reload.
   async function onSnooze() {
     try {
       await snooze();
     } catch (err) {
       toast.error("Snooze failed", { description: String(err) });
+    } finally {
+      window.location.reload();
     }
   }
 

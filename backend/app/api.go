@@ -84,15 +84,16 @@ func (app *App) AlarmPatchHandler(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, alarm)
 }
 
-// SnoozeHandler shifts whichever alarm is currently ringing forward by 10
+// SnoozeHandler shifts whichever alarm is currently ringing forward by 5
 // minutes. It's the action the user triggers by tapping the Nixie display.
+// The alarm's Sound/Vibration settings are preserved — only its time moves.
 func (app *App) SnoozeHandler(w http.ResponseWriter, r *http.Request) {
 	app.alarmsMu.Lock()
 	defer app.alarmsMu.Unlock()
 	for i := range app.Alarms {
 		if app.Alarms[i].CurrentlyRunning {
 			app.Alarms[i].CurrentlyRunning = false
-			app.Alarms[i].AddTime(app.Alarms[i].Alarmtime, "m", 10)
+			app.Alarms[i].AddTime(app.Alarms[i].Alarmtime, "m", 5)
 			app.persistAlarms()
 			break
 		}
